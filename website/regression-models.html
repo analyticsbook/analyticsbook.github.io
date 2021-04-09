@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta property="og:title" content="Regression models | Data Analytics" />
+<meta property="og:type" content="book" />
+
+
+
+
+
+<meta name="author" content="Shuai Huang &amp; Houtao Deng" />
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  TeX: { equationNumbers: { autoNumber: "AMS" } }
+});
+</script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<meta name="description" content="Regression models | Data Analytics">
+
+<title>Regression models | Data Analytics</title>
+
+<script src="libs/header-attrs-2.7/header-attrs.js"></script>
+<link href="libs/tufte-css-2015.12.29/tufte.css" rel="stylesheet" />
+<link href="libs/tufte-css-2015.12.29/envisioned.css" rel="stylesheet" />
+<script src="https://use.typekit.net/ajy6rnl.js"></script>
+<script>try{Typekit.load({ async: true });}catch(e){}</script>
+<!-- <link rel="stylesheet" href="css/normalize.css"> -->
+<!-- <link rel="stylesheet" href="css/envisioned.css"/> -->
+<link rel="stylesheet" href="css/tablesaw-stackonly.css"/>
+<link rel="stylesheet" href="css/nudge.css"/>
+<link rel="stylesheet" href="css/sourcesans.css"/>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+
+
+</head>
+
+<body>
+
+<!--bookdown:toc:start-->
+
+<nav class="pushy pushy-left" id="TOC">
+<ul>
+<li><a href="#preface">Preface</a></li>
+<li><a href="#acknowledgments">Acknowledgments</a></li>
+<li><a href="#chapter-1.-introduction">Chapter 1. Introduction</a></li>
+<li><a href="#chapter-2.-abstraction-regression-tree-models">Chapter 2. Abstraction: Regression &amp; Tree Models</a></li>
+<li><a href="#chapter-3.-recognition-logistic-regression-ranking">Chapter 3. Recognition: Logistic Regression &amp; Ranking</a></li>
+<li><a href="#chapter-4.-resonance-bootstrap-random-forests">Chapter 4. Resonance: Bootstrap &amp; Random Forests</a></li>
+<li><a href="#chapter-5.-learning-i-cross-validation-oob">Chapter 5. Learning (I): Cross-validation &amp; OOB</a></li>
+<li><a href="#chapter-6.-diagnosis-residuals-heterogeneity">Chapter 6. Diagnosis: Residuals &amp; Heterogeneity</a></li>
+<li><a href="#chapter-7.-learning-ii-svm-ensemble-learning">Chapter 7. Learning (II): SVM &amp; Ensemble Learning</a></li>
+<li><a href="#chapter-8.-scalability-lasso-pca">Chapter 8. Scalability: LASSO &amp; PCA</a></li>
+<li><a href="#chapter-9.-pragmatism-experience-experimental">Chapter 9. Pragmatism: Experience &amp; Experimental</a></li>
+<li><a href="#chapter-10.-synthesis-architecture-pipeline">Chapter 10. Synthesis: Architecture &amp; Pipeline</a></li>
+<li><a href="#conclusion">Conclusion</a></li>
+<li><a href="#appendix-a-brief-review-of-background-knowledge">Appendix: A Brief Review of Background Knowledge</a></li>
+</ul>
+</nav>
+
+<!--bookdown:toc:end-->
+
+<div class="menu-btn"><h3>☰ Menu</h3></div>
+
+<div class="site-overlay"></div>
+
+
+<div class="row">
+<div class="col-sm-12">
+
+<nav class="pushy pushy-left" id="TOC">
+<ul>
+<li><a href="index.html#preface">Preface</a></li>
+<li><a href="acknowledgments.html#acknowledgments">Acknowledgments</a></li>
+<li><a href="chapter-1-introduction.html#chapter-1.-introduction">Chapter 1. Introduction</a></li>
+<li><a href="chapter-2-abstraction-regression-tree-models.html#chapter-2.-abstraction-regression-tree-models">Chapter 2. Abstraction: Regression &amp; Tree Models</a></li>
+<li><a href="chapter-3-recognition-logistic-regression-ranking.html#chapter-3.-recognition-logistic-regression-ranking">Chapter 3. Recognition: Logistic Regression &amp; Ranking</a></li>
+<li><a href="chapter-4-resonance-bootstrap-random-forests.html#chapter-4.-resonance-bootstrap-random-forests">Chapter 4. Resonance: Bootstrap &amp; Random Forests</a></li>
+<li><a href="chapter-5-learning-i-cross-validation-oob.html#chapter-5.-learning-i-cross-validation-oob">Chapter 5. Learning (I): Cross-validation &amp; OOB</a></li>
+<li><a href="chapter-6-diagnosis-residuals-heterogeneity.html#chapter-6.-diagnosis-residuals-heterogeneity">Chapter 6. Diagnosis: Residuals &amp; Heterogeneity</a></li>
+<li><a href="chapter-7-learning-ii-svm-ensemble-learning.html#chapter-7.-learning-ii-svm-ensemble-learning">Chapter 7. Learning (II): SVM &amp; Ensemble Learning</a></li>
+<li><a href="chapter-8-scalability-lasso-pca.html#chapter-8.-scalability-lasso-pca">Chapter 8. Scalability: LASSO &amp; PCA</a></li>
+<li><a href="chapter-9-pragmatism-experience-experimental.html#chapter-9.-pragmatism-experience-experimental">Chapter 9. Pragmatism: Experience &amp; Experimental</a></li>
+<li><a href="chapter-10-synthesis-architecture-pipeline.html#chapter-10.-synthesis-architecture-pipeline">Chapter 10. Synthesis: Architecture &amp; Pipeline</a></li>
+<li><a href="conclusion.html#conclusion">Conclusion</a></li>
+<li><a href="appendix-a-brief-review-of-background-knowledge.html#appendix-a-brief-review-of-background-knowledge">Appendix: A Brief Review of Background Knowledge</a></li>
+</ul>
+</nav>
+
+</div>
+</div>
+<div class="row">
+<div class="col-sm-12">
+<div id="regression-models" class="section level2 unnumbered">
+<h2>Regression models</h2>
+<div id="rationale-and-formulation" class="section level3 unnumbered">
+<h3>Rationale and formulation</h3>
+<p>Let’s consider a simple regression model, where there is only one predictor <span class="math inline">\(x\)</span> to predict the outcome <span class="math inline">\(y\)</span>. Linear regression model assumes a linear form of <span class="math inline">\(f(x)\)</span></p>
+<p><span class="math display" id="eq:2-simLR-fx">\[\begin{equation}
+f(x)=\beta_{0}+\beta_{1} x ,
+\tag{3}
+\end{equation}\]</span></p>
+<p>where <span class="math inline">\(\beta_0\)</span> is called the <strong>intercept</strong> , and <span class="math inline">\(\beta_1\)</span> is called the <strong>slope</strong> . Both are also called <strong>regression coefficients</strong> , or more generally, <strong>parameters</strong>.</p>
+<p>And <span class="math inline">\(\epsilon\)</span> is modeled as a normal distribution<label for="tufte-sn-12" class="margin-toggle sidenote-number">12</label><input type="checkbox" id="tufte-sn-12" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">12</span> I.e., could be other types of distributions, but normal distribution is the norm.</span> with mean <span class="math inline">\(0\)</span>,</p>
+<p><span class="math display" id="eq:2-simLR-eps">\[\begin{equation}
+\epsilon \sim N\left(0, \sigma_{\varepsilon}^{2}\right),
+\tag{4}
+\end{equation}\]</span></p>
+<p>where <span class="math inline">\(\sigma_{\varepsilon}^{2}\)</span> is the <strong>variance</strong> of the error.</p>
+<p>For any given value of <span class="math inline">\(x\)</span>, we know the model of <span class="math inline">\(y\)</span> is</p>
+<p><span class="math display" id="eq:2-simLR-y">\[\begin{equation}
+y = \beta_{0}+\beta_{1}x + \epsilon.
+\tag{5}
+\end{equation}\]</span></p>
+<p>As Figure <a href="regression-models.html#fig:f2-lrpred">5</a> reveals, in linear regression model, <span class="math inline">\(y\)</span> is not modeled as a numerical value, but as a distribution. In other words, <span class="math inline">\(y\)</span> itself is treated as a random variable. Its distribution’s mean is modeled by <span class="math inline">\(x\)</span> and the variance is <em>inherited</em> from <span class="math inline">\(\epsilon\)</span>. Knowing the value of <span class="math inline">\(x\)</span> helps us to determine the <em>location</em> of this distribution, but not the <em>shape</em>—the shape is always fixed.</p>
+<p></p>
+<div class="figure"><span id="fig:f2-lrpred"></span>
+<p class="caption marginnote shownote">
+Figure 5: In a linear regression model, <span class="math inline">\(y\)</span> is modeled as a distribution as well
+</p>
+<img src="graphics/2_lrpred.png" alt="In a linear regression model, $y$ is modeled as a distribution as well" width="100%"  />
+</div>
+<p></p>
+<p>To make a prediction of <span class="math inline">\(y\)</span> for any given <span class="math inline">\(x\)</span>, <span class="math inline">\(\beta_{0}+\beta_{1}x\)</span> comes as a natural choice. It is too natural that it is often unnoticed or unquestioned. Nonetheless, to predict a random variable, using its mean is the “best” choice, but it is not the only possibility, as Figure <a href="regression-models.html#fig:f2-lrpred">5</a> reveals that <span class="math inline">\(y\)</span> itself is a random variable, and to predict a random variable, we could also use a confidence interval instead of a point estimate. It depends on what you’d like to predict. If the goal is to predict what is the most likely value for <span class="math inline">\(y\)</span> given <span class="math inline">\(x\)</span>, then the best guess is <span class="math inline">\(\beta_{0}+\beta_{1}x\)</span>.<label for="tufte-sn-13" class="margin-toggle sidenote-number">13</label><input type="checkbox" id="tufte-sn-13" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">13</span> An important job for statisticians is to prove some ideas are our best choices, i.e., by showing that these choices are optimal decisions under some specific conditions (accurately defined by mathematical terms). It is often that intuitions come before proofs, so many theories are actually developed retrospectively.</span></p>
+<!-- \begin{figure} -->
+<!--     \checkoddpage \ifoddpage \forcerectofloat \else \forceversofloat \fi -->
+<!--    \includegraphics[width=0.95\textwidth]{graphics/2_lrpred.png} -->
+<!--    \caption{} -->
+<!--    \label{fig:2-lrpred} -->
+<!-- \end{figure} -->
+<p>There are more assumptions that have been made to enable the model in Eq. <a href="regression-models.html#eq:2-simLR-y">(5)</a>.</p>
+<p><!-- begin{itemize} --></p>
+<ul>
+<li> There is a linear relationship between <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span>. And this linear relationship remains the same for all the values of <span class="math inline">\(x\)</span>. This is often referred to as a <em>global</em> relationship between <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span>. Sometimes this assumption is considered strong, e.g., as shown in Figure <a href="#fig:f2-2"><strong>??</strong></a>, in drug research it is often found that the dose (<span class="math inline">\(x\)</span>) is related to the effect of the drug (<span class="math inline">\(y\)</span>) in a varying manner that depends on the value of <span class="math inline">\(x\)</span>. Still, from Figure <a href="#fig:f2-2"><strong>??</strong></a> we can see that the linear line captures an essential component in the relationship between <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span>, providing a good statistical approximation. Regression models that capture <em>locality</em> in the relationship between <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> are introduced in <strong>Chapter 9</strong>.</li>
+</ul>
+
+<ul>
+<li> The model acknowledges a degree of unpredictability of <span class="math inline">\(y\)</span>. Eq. <a href="regression-models.html#eq:2-simLR-y">(5)</a> indicates that <span class="math inline">\(y\)</span> is generated by a combination of the signal (i.e., <span class="math inline">\(\beta_{0}+\beta_{1}x\)</span>) and the noise (i.e., <span class="math inline">\(\epsilon\)</span>). Since we could never predict noise, we compute a metric called <strong>R-squared</strong> to quantify the predictability of a model</li>
+</ul>
+<p><span class="math display" id="eq:2-R2">\[\begin{equation}
+        \text{R-squared} = \frac{\sigma_{y}^{2}-\sigma_{\varepsilon}^{2}}{\sigma_{y}^{2}}.
+\tag{6}
+    \end{equation}\]</span>
+Here, <span class="math inline">\(\sigma_{y}^{2}\)</span> is the variance of <span class="math inline">\(y\)</span>. The <em>R-squared</em> ranges from <span class="math inline">\(0\)</span> (zero predictability) to <span class="math inline">\(1\)</span> (perfect predictability).</p>
+<ul>
+<li> The <em>significance</em> of <span class="math inline">\(x\)</span> in predicting <span class="math inline">\(y\)</span>, and the <em>accuracy</em> of <span class="math inline">\(x\)</span> in predicting <span class="math inline">\(y\)</span>, are two different concepts. A predictor <span class="math inline">\(x\)</span> could be inadequate in predicting <span class="math inline">\(y\)</span>, i.e., the R-squared could be as low as <span class="math inline">\(0.1\)</span>, but it still could be statistically significant. In other words, the relation between <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> is not strong, but it is not spurious either. This often happens in social science research and education research projects. Some scenarios are shown in Figure <a href="regression-models.html#fig:f2-signvsaccu">6</a>.</li>
+</ul>
+<p></p>
+<div class="figure fullwidth"><span id="fig:f2-signvsaccu"></span>
+<img src="graphics/2_fourtypes.png" alt="Significance vs. accuracy" width="100%"  />
+<p class="caption marginnote shownote">
+Figure 6: Significance vs. accuracy
+</p>
+</div>
+<p></p>
+<ul>
+<li> The noise is usually modeled as a normal distribution, but this assumption could be relaxed. A detailed discussion about how to check the normality assumption in data analysis can be found in <strong>Chapter 5</strong>.</li>
+</ul>
+<p><!-- end{itemize} --></p>
+</div>
+<div id="theory-and-method" class="section level3 unnumbered">
+<h3>Theory and method</h3>
+<p><em>Parameter estimation.</em> To estimate a model is to estimate its parameters, i.e., for the model shown in Eq. <a href="regression-models.html#eq:2-simLR-y">(5)</a>, unknown parameters include <span class="math inline">\(\beta_{0}\)</span>, <span class="math inline">\(\beta_{1}\)</span>, and <span class="math inline">\(\sigma_{\varepsilon}^{2}\)</span>. Usually, we estimate the regression coefficients first. Then, as shown in Figure <a href="overview.html#fig:f2-datamodel">3</a>, errors could be computed, and further, <span class="math inline">\(\sigma_{\varepsilon}^{2}\)</span> could be estimated<label for="tufte-sn-14" class="margin-toggle sidenote-number">14</label><input type="checkbox" id="tufte-sn-14" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">14</span> I.e., as a standard practice of sample variance estimation by taking the residuals (i.e., <span class="math inline">\(\epsilon_1\)</span>, <span class="math inline">\(\epsilon_2\)</span> and <span class="math inline">\(\epsilon_3\)</span>) as <em>samples</em> of the population of <em>error</em>.</span>.</p>
+<p>A training dataset is collected to estimate the parameters. The basic idea is that the best estimate should lead to a line, as shown in Figure <a href="overview.html#fig:f2-datamodel">3</a>, that fits the training data as close as possible. To quantify this quality of fitness of a line, two principles are shown in Figure <a href="regression-models.html#fig:f2-3">7</a>: one based on perpendicular offset (left), while another one based on vertical offset (right). History of statistics has chosen the vertical offset as a more favorable approach, since it leads to tractability in analytic forms<label for="tufte-sn-15" class="margin-toggle sidenote-number">15</label><input type="checkbox" id="tufte-sn-15" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">15</span> When there were no computers yet, analytic tractability was, and still is, held as a sacred quality of a model.</span>.</p>
+<p></p>
+<div class="figure"><span id="fig:f2-3"></span>
+<p class="caption marginnote shownote">
+Figure 7: Two principles to fit a linear regression model: (left) perpendicular offsets; (right) vertical offsets. The distances between the dots (the training data) with the line (the trained model) provide a quantitative metric of how well the model fits the data.
+</p>
+<img src="graphics/2_3.png" alt="Two principles to fit a linear regression model: (left) perpendicular offsets; (right) vertical offsets. The distances between the dots (the training data) with the line (the trained model) provide a quantitative metric of how well the model fits the data." width="100%"  />
+</div>
+<p></p>
+<p>The principle of minimizing vertical offsets leads to the <strong>least-squares estimation</strong> of linear regression models. We can exercise the least squares estimation using the simple regression model shown in Eq. <a href="regression-models.html#eq:2-simLR-y">(5)</a>. The objective, based on the principle suggested in Figure <a href="regression-models.html#fig:f2-3">7</a> (right), is to find the line that <strong>minimizes</strong> the <strong>sum of the squared</strong> of the vertical derivations of the observed data points from the line.</p>
+<p>Suppose that we have collected <span class="math inline">\(N\)</span> data points, denoted as, <span class="math inline">\(\left(x_{n}, y_{n}\right)\)</span> for <span class="math inline">\(n=1,2, \dots, N\)</span>.<label for="tufte-sn-16" class="margin-toggle sidenote-number">16</label><input type="checkbox" id="tufte-sn-16" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">16</span> Data is paired, i.e., <span class="math inline">\(y_{n}\)</span> corresponds to <span class="math inline">\(x_{n}\)</span>.</span> For each data point, i.e., the <span class="math inline">\(n_{th}\)</span> data point, the residual <span class="math inline">\(\epsilon_{n}\)</span> is defined as</p>
+<p><span class="math display" id="eq:2-simLR-res">\[\begin{equation}
+\epsilon_{n} = y_{n}-\left(\beta_{0}+\beta_{1} x_{n}\right).
+\tag{7}
+\end{equation}\]</span></p>
+<p>Then, we define the sum of the squared of the vertical derivations of the observed data points from the line as</p>
+<p><span class="math display" id="eq:2-simLR-LS">\[\begin{equation}
+l\left(\beta_{0}, \beta_{1}\right)=\sum_{n=1}^{N}\epsilon_{n}^2.
+\tag{8}
+\end{equation}\]</span></p>
+<p>Plugging Eq. <a href="regression-models.html#eq:2-simLR-res">(7)</a> in Eq. <a href="regression-models.html#eq:2-simLR-LS">(8)</a> we have</p>
+<p><span class="math display" id="eq:2-simLR-LS-2">\[\begin{equation}
+l\left(\beta_{0}, \beta_{1}\right)=\sum_{n=1}^{N}\left[y_{n}-\left(\beta_{0}+\beta_{1} x_{n}\right)\right]^{2}.
+\tag{9}
+\end{equation}\]</span></p>
+<p>To estimate <span class="math inline">\(\beta_{0}\)</span> and <span class="math inline">\(\beta_{1}\)</span> is to minimize this least squares <strong>loss function</strong> <span class="math inline">\(l\left(\beta_{0}, \beta_{1}\right)\)</span>. This is an <strong>unconstrained continuous optimization</strong> problem. We take derivatives of <span class="math inline">\(l\left(\beta_{0}, \beta_{1}\right)\)</span> regarding the two parameters and set them to be zero, to derive the estimation equations—this is a common practice of the <strong>First Derivative Test</strong>, illustrated in Figure <a href="regression-models.html#fig:f2-1stderivativetest">8</a>.</p>
+<p></p>
+<p>
+<span class="marginnote shownote">
+<!--
+<div class="figure">--><span id="fig:f2-1stderivativetest"></span>
+<img src="graphics/2_1stderivativetest.png" alt="Illustration of the **First Derivative Test**  in optimization, i.e., the optimal solution would lead the first derivative to be zero. It is widely used in statistics and machine learning to find optimal solutions of some model formulations. More applications of this technique can be found in later chapters." width="250px"  />
+<!--
+<p class="caption marginnote">-->Figure 8: Illustration of the <strong>First Derivative Test</strong> in optimization, i.e., the optimal solution would lead the first derivative to be zero. It is widely used in statistics and machine learning to find optimal solutions of some model formulations. More applications of this technique can be found in later chapters.<!--</p>-->
+<!--</div>--></span>
+</p>
+<p></p>
+<p><span class="math display">\[
+\frac{\partial l\left(\beta_{0}, \beta_{1}\right)}{\partial \beta_{0}}=-2 \sum_{n=1}^{N}\left[y_{n}-\left(\beta_{0}+\beta_{1} x_{n}\right)\right]=0,
+\]</span>
+<span class="math display">\[
+\frac{\partial l\left(\beta_{0}, \beta_{1}\right)}{\partial \beta_{1}}=-2 \sum_{n=1}^{N} x_{n}\left[y_{n}-\left(\beta_{0}+\beta_{1} x_{n}\right)\right]=0.
+\]</span></p>
+<p>These two could be rewritten in a more succinct way</p>
+<p><span class="math display">\[
+\left[ \begin{array}{cc}{N} &amp; {\sum_{n=1}^{N} x_{n}} \\ {\sum_{n=1}^{N} x_{n}} &amp; {\sum_{n=1}^{N} x_{n}^{2}}\end{array}\right] \left[ \begin{array}{c}{\beta_{0}} \\ {\beta_{1}}\end{array}\right]=\left[ \begin{array}{c}{\sum_{n=1}^{N} y_{n}} \\ {\sum_{n=1}^{N} x_{n} y_{n}}\end{array}\right].
+\]</span></p>
+<p>We solve these two equations and derive the estimators of <span class="math inline">\(\beta_{0}\)</span> and <span class="math inline">\(\beta_{1}\)</span>, denoted as <span class="math inline">\(\hat{\beta}_{0}\)</span> and <span class="math inline">\(\hat{\beta}_{1}\)</span>, respectively, as</p>
+<p><span class="math display" id="eq:2-beta-hat-scalar">\[\begin{equation}
+    \begin{aligned}
+    &amp;\hat{\beta}_{1}=\frac{\sum_{n=1}^{N}\left(x_{n}-\overline{x}\right)\left(y_{n}-\overline{y}\right)}{\sum_{n=1}^{N} x_{n}^{2}-N \overline{x}^{2}}, \\
+    &amp;\hat{\beta}_{0}= \overline{y} - \hat{\beta}_{1} \overline{x}.
+    \end{aligned}
+\tag{10}
+\end{equation}\]</span></p>
+<p>where <span class="math inline">\(\overline{x}\)</span> and <span class="math inline">\(\overline{y}\)</span> are the sample mean of the two variables, respectively.</p>
+<p>There is a structure hidden inside Eq. <a href="regression-models.html#eq:2-beta-hat-scalar">(10)</a>. Note that the estimator <span class="math inline">\(\hat{\beta}_{1}\)</span> can be rewritten as</p>
+<p><span class="math display" id="eq:2-beta1hat">\[\begin{equation}
+\hat{\beta}_{1}=\frac{\sum_{n=1}^{N}\left(x_{n}-\overline{x}\right)\left(y_{n}-\overline{y}\right)}{N-1} \Big/ \frac{\sum_{n=1}^{N} x_{n}^{2}-N \overline{x}^{2}}{N-1},
+\tag{11}
+\end{equation}\]</span></p>
+<p>and note that the sample variance of <span class="math inline">\(x\)</span> is defined as</p>
+<p><span class="math display">\[
+\operatorname{var}(x)=\frac{\sum_{n=1}^{N} x_{n}^{2}-N \overline{x}^{2}}{N-1},
+\]</span></p>
+<p>while the numerator in Eq. <a href="regression-models.html#eq:2-beta1hat">(11)</a> is called the <strong>sample covariance</strong>.<label for="tufte-sn-17" class="margin-toggle sidenote-number">17</label><input type="checkbox" id="tufte-sn-17" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">17</span> The covariance is a measure of the joint variability of two random variables. Denoted as <span class="math inline">\(\operatorname{cov}(x, y)\)</span>, the larger the covariance, the stronger the two variables interact.</span></p>
+<p>Thus, we can <em>re</em>write the estimators of <span class="math inline">\(\beta_{1}\)</span> and <span class="math inline">\(\beta_{0}\)</span> as</p>
+<p><span class="math display" id="eq:2-simLR-LSE">\[\begin{equation}
+    \begin{aligned}
+    &amp;\hat{\beta}_{1}=\frac{\operatorname{cov}(x, y)}{\operatorname{var}(x)}, \\
+    &amp;\hat{\beta}_{0} = \overline{y} - \hat{\beta}_{1} \overline{x}.
+    \end{aligned}
+\tag{12}
+\end{equation}\]</span></p>
+<p><em>A small data example.</em> Let’s practice the estimation method using a simple example. The dataset is shown in Table <a href="regression-models.html#tab:t2-1ex">2</a>.</p>
+<p></p>
+<p><!--
+<caption>--><span class="marginnote shownote"><span id="tab:t2-1ex">Table 2: </span>An example dataset</span><!--</caption>--></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left"><span class="math inline">\(x\)</span></th>
+<th align="left"><span class="math inline">\(1\)</span></th>
+<th align="left"><span class="math inline">\(3\)</span></th>
+<th align="left"><span class="math inline">\(3\)</span></th>
+<th align="left"><span class="math inline">\(5\)</span></th>
+<th align="left"><span class="math inline">\(5\)</span></th>
+<th align="left"><span class="math inline">\(6\)</span></th>
+<th align="left"><span class="math inline">\(8\)</span></th>
+<th align="left"><span class="math inline">\(9\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><span class="math inline">\(y\)</span></td>
+<td align="left"><span class="math inline">\(2\)</span></td>
+<td align="left"><span class="math inline">\(3\)</span></td>
+<td align="left"><span class="math inline">\(5\)</span></td>
+<td align="left"><span class="math inline">\(4\)</span></td>
+<td align="left"><span class="math inline">\(6\)</span></td>
+<td align="left"><span class="math inline">\(5\)</span></td>
+<td align="left"><span class="math inline">\(7\)</span></td>
+<td align="left"><span class="math inline">\(8\)</span></td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<p>Following Eq. <a href="regression-models.html#eq:2-beta-hat-scalar">(10)</a> we can get <span class="math inline">\(\beta_0 = -1.0714\)</span> and <span class="math inline">\(\beta_1 = 1.2143\)</span>. The R codes to verify your calculation are shown below.</p>
+<p></p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="regression-models.html#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Simple example of regression with one predictor</span></span>
+<span id="cb1-2"><a href="regression-models.html#cb1-2" aria-hidden="true" tabindex="-1"></a>data <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="fu">rbind</span>(<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>),<span class="fu">c</span>(<span class="dv">3</span>,<span class="dv">3</span>),<span class="fu">c</span>(<span class="dv">3</span>,<span class="dv">5</span>),</span>
+<span id="cb1-3"><a href="regression-models.html#cb1-3" aria-hidden="true" tabindex="-1"></a>                        <span class="fu">c</span>(<span class="dv">5</span>,<span class="dv">4</span>),<span class="fu">c</span>(<span class="dv">5</span>,<span class="dv">6</span>),<span class="fu">c</span>(<span class="dv">6</span>,<span class="dv">5</span>),</span>
+<span id="cb1-4"><a href="regression-models.html#cb1-4" aria-hidden="true" tabindex="-1"></a>                        <span class="fu">c</span>(<span class="dv">8</span>,<span class="dv">7</span>),<span class="fu">c</span>(<span class="dv">9</span>,<span class="dv">8</span>)))</span>
+<span id="cb1-5"><a href="regression-models.html#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(data) <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;Y&quot;</span>,<span class="st">&quot;X&quot;</span>)</span>
+<span id="cb1-6"><a href="regression-models.html#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(data)</span>
+<span id="cb1-7"><a href="regression-models.html#cb1-7" aria-hidden="true" tabindex="-1"></a>lm.YX <span class="ot">&lt;-</span> <span class="fu">lm</span>(Y <span class="sc">~</span> X, <span class="at">data =</span> data)</span>
+<span id="cb1-8"><a href="regression-models.html#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm.YX)</span></code></pre></div>
+<p></p>
+<p><em>Extension to multivariate regression model.</em> Consider a more general case where there are more than one predictor</p>
+<p><span class="math display" id="eq:2-multiLR">\[\begin{equation}
+    y=\beta_{0}+\sum_{i=1}^{p} \beta_{i} x_{i}+\varepsilon.
+\tag{13}
+\end{equation}\]</span></p>
+<p>To fit this multivariate linear regression model with <span class="math inline">\(p\)</span> predictors, we collect <span class="math inline">\(N\)</span> data points, denoted as</p>
+<p><span class="math display">\[
+\boldsymbol{y}=\left[ \begin{array}{c}{y_{1}} \\ {y_{2}} \\ {\vdots} \\ {y_{N}}\end{array}\right], \text {     }  \boldsymbol{X}=\left[ \begin{array}{ccccc}{1} &amp; {x_{11}} &amp; {x_{21}} &amp; {\cdots} &amp; {x_{p 1}} \\ {1} &amp; {x_{12}} &amp; {x_{22}} &amp; {\cdots} &amp; {x_{p 2}} \\ {\vdots} &amp; {\vdots} &amp; {\vdots} &amp; {\vdots} &amp; {\vdots} \\ {1} &amp; {x_{1 N}} &amp; {x_{2 N}} &amp; {\cdots} &amp; {x_{p N}}\end{array}\right].
+\]</span></p>
+<p>where <span class="math inline">\(\boldsymbol{y} \in R^{N \times 1}\)</span> denotes for the <span class="math inline">\(N\)</span> measurements of the outcome variable, and <span class="math inline">\(\boldsymbol{X} \in R^{N \times(p+1)}\)</span> denotes for the data matrix that includes the <span class="math inline">\(N\)</span> measurements of the <span class="math inline">\(p\)</span> input variables and the intercept term, <span class="math inline">\(\beta_{0}\)</span>, i.e., the first column of <span class="math inline">\(\boldsymbol{X}\)</span> corresponds to <span class="math inline">\(\beta_{0}\)</span>.<label for="tufte-sn-18" class="margin-toggle sidenote-number">18</label><input type="checkbox" id="tufte-sn-18" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">18</span> Again, the data is paired, i.e., <span class="math inline">\(y_{n}\)</span> corresponds to <span class="math inline">\(\boldsymbol{x}_n\)</span> that is the <span class="math inline">\(n_{th}\)</span> row of the matrix <span class="math inline">\(\boldsymbol{X}\)</span>.</span></p>
+<p>To estimate the regression coefficients in Eq. <a href="regression-models.html#eq:2-multiLR">(13)</a>, again, we use the least squares estimation method. The first step is to calculate the sum of the squared of the vertical derivations of the observed data points from “the line”<label for="tufte-sn-19" class="margin-toggle sidenote-number">19</label><input type="checkbox" id="tufte-sn-19" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">19</span> Here, actually, a hyperplane.</span>. Following Eq. <a href="regression-models.html#eq:2-simLR-res">(7)</a>, we can define the residual as</p>
+<p><span class="math display" id="eq:2-multiLR-res">\[\begin{equation}
+\epsilon_{n} = y_n - \left(\beta_{0}+\sum_{i=1}^{p} \beta_{i} x_{in}\right).
+\tag{14}
+\end{equation}\]</span></p>
+<p>Then, following Eq. <a href="regression-models.html#eq:2-simLR-LS">(8)</a>, the sum of the squared of the vertical derivations of the observed data points from “the line” is</p>
+<p><span class="math display" id="eq:2-multiLR-LS">\[\begin{equation}
+l\left(\beta_{0}, ...,  \beta_{p}\right)=\sum_{n=1}^{N}\epsilon_{n}^2.
+\tag{15}
+\end{equation}\]</span></p>
+<p>This is again an unconstrained continuous optimization problem, that could be solved by the same procedure we have done for the simple linear regression model. Here, we show how a vector-/matrix-based representation of this derivation process could make things easier.</p>
+<p>Let’s write up the regression coefficients and residuals in vector forms as</p>
+<p><span class="math display">\[
+\boldsymbol{\beta}=\left[ \begin{array}{c}{\beta_{0}} \\ {\beta_{1}} \\ {\vdots} \\ {\beta_{p}}\end{array}\right], \text { and } \boldsymbol{\varepsilon}=\left[ \begin{array}{c}{\varepsilon_{1}} \\ {\varepsilon_{2}} \\ {\vdots} \\ {\varepsilon_{N}}\end{array}\right].
+\]</span></p>
+<p>Here, <span class="math inline">\(\boldsymbol{\beta} \in R^{(p+1) \times 1}\)</span> denotes for the regression parameters and <span class="math inline">\(\boldsymbol{\varepsilon} \in R^{N \times 1}\)</span> denotes for the <span class="math inline">\(N\)</span> residuals which are assumed to follow a normal distribution with mean as zero and variance as <span class="math inline">\(\sigma_{\varepsilon}^{2}\)</span>.</p>
+<p>Then, based on Eq. <a href="regression-models.html#eq:2-multiLR-res">(14)</a>, we rewrite <span class="math inline">\(\boldsymbol{\varepsilon}\)</span> as
+<span class="math display">\[
+\boldsymbol{\varepsilon} = \boldsymbol{y} - \boldsymbol{X} \boldsymbol{\beta}.
+\]</span></p>
+<p>Eq. <a href="regression-models.html#eq:2-multiLR-LS">(15)</a> could be rewritten as</p>
+<p><span class="math display" id="eq:2-multiLR-LS-matrix">\[\begin{equation}
+l(\boldsymbol{\beta})=(\boldsymbol{y}-\boldsymbol{X} \boldsymbol{\beta})^{T}(\boldsymbol{y}-\boldsymbol{X} \boldsymbol{\beta}).
+\tag{16}
+\end{equation}\]</span></p>
+<p>To estimate <span class="math inline">\(\boldsymbol{\beta}\)</span> is to solve the optimization problem</p>
+<p><span class="math display">\[
+\min _{\boldsymbol{\beta}}(\boldsymbol{y}-\boldsymbol{X} \boldsymbol{\beta})^{T}(\boldsymbol{y}-\boldsymbol{X} \boldsymbol{\beta}).
+\]</span></p>
+<p>To solve this problem, we can take the gradients of the objective function regarding <span class="math inline">\(\boldsymbol{\beta}\)</span> and set them to be zero</p>
+<p><span class="math display">\[
+\frac{\partial(\boldsymbol{y}-\boldsymbol{X} \boldsymbol{\beta})^{T}(\boldsymbol{y}-\boldsymbol{X} \boldsymbol{\beta})}{\partial \boldsymbol{\beta}}=0,
+\]</span></p>
+<p>which gives rise to the equation</p>
+<p><span class="math display">\[
+\boldsymbol{X}^{T}(\boldsymbol{y}-\boldsymbol{X} \boldsymbol{\beta})=0.
+\]</span></p>
+<p>This leads to the <strong>least squares estimator</strong> of <span class="math inline">\(\boldsymbol{\beta}\)</span> as</p>
+<p><span class="math display" id="eq:2-multiLR-LSE">\[\begin{equation}
+  \widehat{\boldsymbol{\beta}}=\left(\boldsymbol{X}^{T} \boldsymbol{X}\right)^{-1} \boldsymbol{X}^{T} \boldsymbol{y}.
+\tag{17}
+\end{equation}\]</span></p>
+<p>A resemblance can be easily detected between the estimator in Eq. <a href="regression-models.html#eq:2-multiLR-LSE">(17)</a> with Eq. <a href="regression-models.html#eq:2-simLR-LSE">(12)</a>, by noticing that <span class="math inline">\(\boldsymbol{X}^{T} \boldsymbol{y}\)</span> reflects the correlation<label for="tufte-sn-20" class="margin-toggle sidenote-number">20</label><input type="checkbox" id="tufte-sn-20" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">20</span> I.e., corresponds to <span class="math inline">\(\operatorname{cov}(x, y)\)</span>.</span> between predictors and output, and <span class="math inline">\(\boldsymbol{X}^{T} \boldsymbol{X}\)</span> reflects the variability<label for="tufte-sn-21" class="margin-toggle sidenote-number">21</label><input type="checkbox" id="tufte-sn-21" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">21</span> I.e., corresponds to <span class="math inline">\(\operatorname{var}(x)\)</span>.</span> of the predictors.</p>
+<p>Eq. <a href="regression-models.html#eq:2-multiLR-LSE">(17)</a> may come as a surprise to some readers. The regression coefficients, <span class="math inline">\(\boldsymbol{\beta}\)</span>, by their definition, are supposed to only characterize the relationship between <span class="math inline">\(\boldsymbol{x}\)</span> and <span class="math inline">\(y\)</span>. However, from Eq. <a href="regression-models.html#eq:2-multiLR-LSE">(17)</a>, it is clear that the variability of <span class="math inline">\(\boldsymbol{x}\)</span> matters. This is not a contradiction. <span class="math inline">\(\boldsymbol{\beta}\)</span> and <span class="math inline">\(\widehat{\boldsymbol{\beta}}\)</span> are <em>two</em> different entities: <span class="math inline">\(\boldsymbol{\beta}\)</span> is a theoretical concept, while <span class="math inline">\(\widehat{\boldsymbol{\beta}}\)</span> is a statistical estimate. Statisticians have established theories<label for="tufte-sn-22" class="margin-toggle sidenote-number">22</label><input type="checkbox" id="tufte-sn-22" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">22</span> E.g, interested readers may read this book: Ravishanker, N. and Dey, D.K., <em>A First Course in Linear Model Theory</em>, Chapman &amp; Hall/CRC, 2001.</span> to study how well <span class="math inline">\(\widehat{\boldsymbol{\beta}}\)</span> estimates <span class="math inline">\(\boldsymbol{\beta}\)</span>. From Eq. <a href="regression-models.html#eq:2-multiLR-LSE">(17)</a>, it is clear that where we observe the linear system<label for="tufte-sn-23" class="margin-toggle sidenote-number">23</label><input type="checkbox" id="tufte-sn-23" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">23</span> I.e., from which <span class="math inline">\(\boldsymbol{x}\)</span> we take measurement of <span class="math inline">\(y\)</span>’s.</span> matters to the modeling of the system. This is one main motivation of the area called the <strong>Design of Experiments</strong> that aims to identify the best locations of <span class="math inline">\(\boldsymbol{x}\)</span> from which we collect observations of the outcome variable, in order to achieve the best parameter estimation results.</p>
+<p>By generalizing the result in Figure <a href="regression-models.html#fig:f2-lrpred">5</a> on the multivariate regression , we can see that <span class="math inline">\(\boldsymbol{y}\)</span> is a random vector<label for="tufte-sn-24" class="margin-toggle sidenote-number">24</label><input type="checkbox" id="tufte-sn-24" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">24</span> “MVN” stands for Multivariate Normal Distribution. See <strong>Appendix</strong> for background knowledge on MVN.</span>,</p>
+<p><span class="math display">\[\begin{equation}
+    \boldsymbol{y} \sim \text{MVN}\left(\boldsymbol{X}^{T}\boldsymbol{\beta},\sigma_{\varepsilon}^{2} \boldsymbol{I}\right).
+\end{equation}\]</span></p>
+<p>And <span class="math inline">\(\widehat{\boldsymbol{\beta}}\)</span>, as shown in Eq. <a href="regression-models.html#eq:2-multiLR-LSE">(17)</a>, is essentially a <em>function</em> of <span class="math inline">\(\boldsymbol{y}\)</span>. Thus, <span class="math inline">\(\widehat{\boldsymbol{\beta}}\)</span> is a random vector as well. In other words, <span class="math inline">\(\widehat{\boldsymbol{\beta}}\)</span> has a distribution. Because of the normality of <span class="math inline">\(\boldsymbol{y}\)</span>, <span class="math inline">\(\widehat{\boldsymbol{\beta}}\)</span> is also distributed as a normal distribution.</p>
+<p>The mean of <span class="math inline">\(\widehat{\boldsymbol{\beta}}\)</span> is <span class="math inline">\(\boldsymbol{\beta}\)</span>, because</p>
+<p>And the covariance matrix of <span class="math inline">\(\widehat{\boldsymbol{\beta}}\)</span> is</p>
+<p>Because</p>
+<p><span class="math display">\[
+\operatorname{cov}(\boldsymbol{y}) = \sigma_{\varepsilon}^{2} \boldsymbol{I},
+\]</span></p>
+<p>we have</p>
+<p><span class="math display">\[
+\operatorname{cov}(\widehat{\boldsymbol{\beta}}) =
+\sigma_{\varepsilon}^{2}\left(\boldsymbol{X}^{T} \boldsymbol{X}\right)^{-1}.
+\]</span></p>
+<p>Thus, we have derived that</p>
+<p><span class="math display" id="eq:2-betaDist-matrix">\[\begin{equation}
+    \boldsymbol{y} \sim \text{MVN}\left(\boldsymbol{X}^{T}\boldsymbol{\beta},\sigma_{\varepsilon}^{2} \boldsymbol{I}\right)  \Rightarrow \widehat{\boldsymbol{\beta}} \sim \text{MVN}\left[\boldsymbol{\beta},\sigma_{\varepsilon}^{2} \left(\boldsymbol{X}^{T} \boldsymbol{X}\right)^{-1}\right].
+\tag{18}
+\end{equation}\]</span></p>
+<!-- \begin{equation} -->
+<!--     \boldsymbol{y} \sim \text{MVN}\left(\boldsymbol{X}^{T}\boldsymbol{\beta}},\sigma_{\varepsilon}^{2} \boldsymbol{I}\right)  \Rightarrow \widehat{\boldsymbol{\beta}} \sim \text{MVN}\left(\boldsymbol{\beta}},\sigma_{\varepsilon}^{2}\left(\boldsymbol{X}^{T} \boldsymbol{X}\right)^{-1}\right). -->
+<!-- \end{equation} -->
+<p>For each individual parameter <span class="math inline">\(\beta_i\)</span>, we can infer that</p>
+<p><span class="math display" id="eq:2-betaDist">\[\begin{equation}
+    \hat{\beta}_{i} \sim N\left(\beta_{i}, \frac{\sigma_{\varepsilon}^{2}}{\boldsymbol{x}_{i}^T \boldsymbol{x}_{i}}\right)
+\tag{19}
+\end{equation}\]</span></p>
+<p><em>Hypothesis testing of regression parameters.</em> Eq. <a href="regression-models.html#eq:2-betaDist">(19)</a> lays the foundation for developing hypothesis testing of the regression parameters.</p>
+<p>A hypothesis testing begins with a null hypothesis, e.g.,</p>
+<p><span class="math display">\[
+H_{0} : \beta_{i}=0.
+\]</span></p>
+<p></p>
+<p>
+<span class="marginnote shownote">
+<!--
+<div class="figure">--><span id="fig:f2-4"></span>
+<img src="graphics/2_4.png" alt="The distribution of $\hat{\beta}_{i}$ " width="250px"  />
+<!--
+<p class="caption marginnote">-->Figure 9: The distribution of <span class="math inline">\(\hat{\beta}_{i}\)</span> <!--</p>-->
+<!--</div>--></span>
+</p>
+<p></p>
+<p>If the null hypothesis is true, then based on Eq. <a href="regression-models.html#eq:2-betaDist">(19)</a>, we have</p>
+<p><span class="math display" id="eq:2-betaDist0">\[\begin{equation}
+    \hat{\beta}_{i} \sim N\left(0, \frac{\sigma_{\varepsilon}^{2}}{\boldsymbol{x}_{i}^T \boldsymbol{x}_{i}}\right).
+\tag{20}
+\end{equation}\]</span></p>
+<p>This distribution is shown in Figure <a href="regression-models.html#fig:f2-4">9</a>. It is a graphical display of the possibilities of the values of <span class="math inline">\(\hat{\beta}_{i}\)</span> that we may observe, <em>if</em> <span class="math inline">\(H_{0}\)</span> is true.</p>
+<p>Then we can derive further implications. Based on Figure <a href="regression-models.html#fig:f2-4">9</a>, we could define a range of <span class="math inline">\(\hat{\beta}_{i}\)</span> that we believe as most plausible<label for="tufte-sn-25" class="margin-toggle sidenote-number">25</label><input type="checkbox" id="tufte-sn-25" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">25</span> Note that I use the word “plausible” instead of “possible.” Any value is always <em>possible</em>, according to Eq. <a href="regression-models.html#eq:2-betaDist0">(20)</a>. But the <em>possibility</em> is not equally distributed, as shown in Figure <a href="regression-models.html#fig:f2-4">9</a>. Some values are more possible than others.</span>. In other words, if the null hypothesis is true, then it is normal to see <span class="math inline">\(\hat{\beta}_{i}\)</span> in this range. This thought leads to Figure <a href="regression-models.html#fig:f2-5">10</a>. This is <em>what is supposed to be</em>, if the null hypothesis is true. And any value outside of this range is considered as a result of rare chance, noise, or abnormality. We define a level of probability that represents our threshold of rare chance. We coin this threshold level as <span class="math inline">\(\alpha\)</span>.</p>
+<p></p>
+<p>
+<span class="marginnote shownote">
+<!--
+<div class="figure">--><span id="fig:f2-5"></span>
+<img src="graphics/2_5.png" alt="The framework of hypothesis testing" width="250px"  />
+<!--
+<p class="caption marginnote">-->Figure 10: The framework of hypothesis testing<!--</p>-->
+<!--</div>--></span>
+</p>
+<p></p>
+<p>With the threshold level <span class="math inline">\(\alpha\)</span>, we conclude that any value of <span class="math inline">\(\hat{\beta}_{i}\)</span> that falls outside of the range is unlikely. If we see <span class="math inline">\(\hat{\beta}_{i}\)</span> falls outside of the range, we reject the null hypothesis <span class="math inline">\(H_{0}\)</span>, based on the conflict between “<em>what is supposed to be</em>” and “<em>what happened to be</em>.”<label for="tufte-sn-26" class="margin-toggle sidenote-number">26</label><input type="checkbox" id="tufte-sn-26" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">26</span> I.e., what we have assumed in <span class="math inline">\(H_{0}\)</span> is <em>what is supposed to be</em>, and what we have observed in data is <em>what happened to be</em>.</span> This framework is shown in Figure <a href="regression-models.html#fig:f2-5">10</a>.</p>
+<p>Hypothesis testing is a decision made with risks. We may be wrong: even if the null hypothesis is true, there is still a small probability, <span class="math inline">\(\alpha\)</span>, that we may observe <span class="math inline">\(\hat{\beta}_{i}\)</span> falls outside of the range. But this is not a blind risk. It is a <em>different kind of risk</em>: we have scientifically derived the risk, understood it well, and accepted the risk as a cost.</p>
+</div>
+<div id="r-lab" class="section level3 unnumbered">
+<h3>R Lab</h3>
+<p>In this section, we illustrate step-by-step a pipeline of R codes to use the linear regression model in real-world data analysis. Real-world data analysis is challenging. The <em>real-world</em> means objectivity, but the <em>real-worldliness</em> suggests subjectivity. The purpose of the R codes in this book serves a similar function as a diving coach who dives into the water to show how the action should be done, but the <em>real-worldliness</em> can only be felt if you also dive into the water and feel the thrill by yourself. Our data analysis examples try to preserve a certain degree of the <em>real-worldliness</em> that embodies both statistical regularities and realistic irregularities<label for="tufte-sn-27" class="margin-toggle sidenote-number">27</label><input type="checkbox" id="tufte-sn-27" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">27</span> Prof. George Box once said, “<em>all models are wrong, some are useful</em>.”</span>. Only the challenge in many real applications is that the boundary between the statistical regularities and realistic irregularities is unclear and undefined.</p>
+<p>Having said that, making informed decisions by drawing from rigorous theories, while at the same time, maintaining a critical attitude about theory, are both needed in practices of data analytics.</p>
+<p>Here, our data is from a study of Alzheimer’s disease<label for="tufte-sn-28" class="margin-toggle sidenote-number">28</label><input type="checkbox" id="tufte-sn-28" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">28</span> Data were obtained from the Alzheimer’s Disease Neuroimaging Initiative (ADNI) database (<a href="http://adni.loni.usc.edu">http://adni.loni.usc.edu</a>). The ADNI was launched in 2003 as a public-private partnership, led by Principal Investigator Michael W. Weiner, MD. The primary goal of ADNI has been to test whether serial magnetic resonance imaging (MRI), positron emission tomography (PET), other biological markers, and clinical and neuropsychological assessment can be combined to measure the progression of mild cognitive impairment (MCI) and early Alzheimer’s disease (AD).</span> that collected some demographics, genetic, and neuroimaging variables from hundreds of subjects. The goal of this dataset is to use these predictors to predict some outcome variables, e.g., one is called the Mini-Mental State Examination (<code>MMSCORE</code>), which is a clinical score for determining Alzheimer’s disease. It ranges from <span class="math inline">\(1\)</span> to <span class="math inline">\(30\)</span>, while <span class="math inline">\(25\)</span> to <span class="math inline">\(30\)</span> is normal, <span class="math inline">\(20\)</span> to <span class="math inline">\(24\)</span> suggests mild dementia, <span class="math inline">\(13\)</span> to <span class="math inline">\(20\)</span> suggests moderate dementia, and less than <span class="math inline">\(12\)</span> indicates severe dementia.</p>
+<p><em>The 5-Step R Pipeline.</em> We start with a pipeline of conducting linear regression analysis in R with 5 steps. Please keep in mind that these 5 steps are not a fixed formula: it is a selection of the authors to make it simple.</p>
+<p><strong>Step 1</strong> loads the data into the R work environment.</p>
+<p></p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="regression-models.html#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1 -&gt; Read data into R workstation</span></span>
+<span id="cb2-2"><a href="regression-models.html#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># RCurl is the R package to read csv file using a link</span></span>
+<span id="cb2-3"><a href="regression-models.html#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(RCurl)</span>
+<span id="cb2-4"><a href="regression-models.html#cb2-4" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;https://raw.githubusercontent.com&quot;</span>,</span>
+<span id="cb2-5"><a href="regression-models.html#cb2-5" aria-hidden="true" tabindex="-1"></a>              <span class="st">&quot;/analyticsbook/book/main/data/AD.csv&quot;</span>)</span>
+<span id="cb2-6"><a href="regression-models.html#cb2-6" aria-hidden="true" tabindex="-1"></a>AD <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="at">text=</span><span class="fu">getURL</span>(url))</span>
+<span id="cb2-7"><a href="regression-models.html#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># str(AD)</span></span></code></pre></div>
+<p></p>
+<p><strong>Step 2</strong> is for data preprocessing. This is a standard chunk of code, and it will be used again in future chapters. As this is the first time we see it, here, let’s break it into several pieces. The first piece is to create your <code>X</code> matrix (predictors) and <code>Y</code> vector (outcome variable). The use of <code>X</code> for predictors and <code>Y</code> for outcome are common practice.</p>
+<p></p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="regression-models.html#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2 -&gt; Data preprocessing.</span></span>
+<span id="cb3-2"><a href="regression-models.html#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove variable DX_bl</span></span>
+<span id="cb3-3"><a href="regression-models.html#cb3-3" aria-hidden="true" tabindex="-1"></a>AD <span class="ot">&lt;-</span> AD[ , <span class="sc">-</span><span class="fu">which</span>(<span class="fu">names</span>(AD) <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;DX_bl&quot;</span>))] </span>
+<span id="cb3-4"><a href="regression-models.html#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Pick up the first 15 variables for predictors</span></span>
+<span id="cb3-5"><a href="regression-models.html#cb3-5" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> AD[,<span class="dv">1</span><span class="sc">:</span><span class="dv">15</span>]</span>
+<span id="cb3-6"><a href="regression-models.html#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Pick up the variable MMSCORE for outcome</span></span>
+<span id="cb3-7"><a href="regression-models.html#cb3-7" aria-hidden="true" tabindex="-1"></a>Y <span class="ot">&lt;-</span> AD<span class="sc">$</span>MMSCORE</span></code></pre></div>
+<p></p>
+<p>Then, we make a <code>data.frame</code> to enclose both the predictors and outcome variable together. Many R functions presume the data are <em>packaged</em> in this way.</p>
+<p></p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="regression-models.html#cb4-1" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(X,Y)</span>
+<span id="cb4-2"><a href="regression-models.html#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(data)[<span class="dv">16</span>] <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;MMSCORE&quot;</span>)</span></code></pre></div>
+<p></p>
+<p>Then, we split the data into two parts<label for="tufte-sn-29" class="margin-toggle sidenote-number">29</label><input type="checkbox" id="tufte-sn-29" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">29</span> Usually, there is a client who splits the data for you, sends you the training data only, and withholds the testing data. When you submit your model trained on the training data, the client could verify your model using the testing data. Here, even the dataset we are working on is already the training data, we still split this nominal training data into halves and use one half as the actual training data and the other half as the testing data. Why do we do so? Please see <strong>Chapter 5</strong>.</span>. We name the two parts as <em>training data</em> and <em>testing data</em>, respectively. The training data is to fit the model. The testing data is excluded from the model training: it will be used to test the model after the final model has been selected using the training data solely.</p>
+<p></p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="regression-models.html#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>) <span class="co"># generate the same random sequence</span></span>
+<span id="cb5-2"><a href="regression-models.html#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a training data (half the original data size)</span></span>
+<span id="cb5-3"><a href="regression-models.html#cb5-3" aria-hidden="true" tabindex="-1"></a>train.ix <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">nrow</span>(data),<span class="fu">floor</span>( <span class="fu">nrow</span>(data)<span class="sc">/</span><span class="dv">2</span>) )</span>
+<span id="cb5-4"><a href="regression-models.html#cb5-4" aria-hidden="true" tabindex="-1"></a>data.train <span class="ot">&lt;-</span> data[train.ix,]</span>
+<span id="cb5-5"><a href="regression-models.html#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a testing data (half the original data size)</span></span>
+<span id="cb5-6"><a href="regression-models.html#cb5-6" aria-hidden="true" tabindex="-1"></a>data.test <span class="ot">&lt;-</span> data[<span class="sc">-</span>train.ix,]</span></code></pre></div>
+<p></p>
+<p><strong>Step 3</strong> builds up a linear regression model. We use the <code>lm()</code> function to fit the regression model<label for="tufte-sn-30" class="margin-toggle sidenote-number">30</label><input type="checkbox" id="tufte-sn-30" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">30</span> Use <code>lm()</code> for more information.</span>.</p>
+<p></p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="regression-models.html#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 3 -&gt; Use lm() function to build a full </span></span>
+<span id="cb6-2"><a href="regression-models.html#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># model with all predictors</span></span>
+<span id="cb6-3"><a href="regression-models.html#cb6-3" aria-hidden="true" tabindex="-1"></a>lm.AD <span class="ot">&lt;-</span> <span class="fu">lm</span>(MMSCORE <span class="sc">~</span> ., <span class="at">data =</span> data.train)</span>
+<span id="cb6-4"><a href="regression-models.html#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm.AD)</span></code></pre></div>
+<p></p>
+<p>The result is shown in below</p>
+<p></p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="regression-models.html#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Call:</span></span>
+<span id="cb7-2"><a href="regression-models.html#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="do">## lm(formula = MMSCORE ~ ., data = data.train)</span></span>
+<span id="cb7-3"><a href="regression-models.html#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb7-4"><a href="regression-models.html#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Residuals:</span></span>
+<span id="cb7-5"><a href="regression-models.html#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="do">##     Min      1Q  Median      3Q     Max </span></span>
+<span id="cb7-6"><a href="regression-models.html#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="do">## -6.3662 -0.8555  0.1540  1.1241  4.2517 </span></span>
+<span id="cb7-7"><a href="regression-models.html#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb7-8"><a href="regression-models.html#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="do">## Coefficients:</span></span>
+<span id="cb7-9"><a href="regression-models.html#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="do">##             Estimate Std. Error t value Pr(&gt;|t|)    </span></span>
+<span id="cb7-10"><a href="regression-models.html#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="do">## (Intercept) 17.93920    2.38980   7.507 1.16e-12 ***</span></span>
+<span id="cb7-11"><a href="regression-models.html#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="do">## AGE          0.02212    0.01664   1.329 0.185036    </span></span>
+<span id="cb7-12"><a href="regression-models.html#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="do">## PTGENDER    -0.11141    0.22077  -0.505 0.614280    </span></span>
+<span id="cb7-13"><a href="regression-models.html#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="do">## PTEDUCAT     0.16943    0.03980   4.257 2.96e-05 ***</span></span>
+<span id="cb7-14"><a href="regression-models.html#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="do">## FDG          0.65003    0.17836   3.645 0.000328 ***</span></span>
+<span id="cb7-15"><a href="regression-models.html#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="do">## AV45        -1.10136    0.62510  -1.762 0.079348 .  </span></span>
+<span id="cb7-16"><a href="regression-models.html#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="do">## HippoNV      7.66067    1.68395   4.549 8.52e-06 ***</span></span>
+<span id="cb7-17"><a href="regression-models.html#cb7-17" aria-hidden="true" tabindex="-1"></a><span class="do">## e2_1        -0.26059    0.36036  -0.723 0.470291    </span></span>
+<span id="cb7-18"><a href="regression-models.html#cb7-18" aria-hidden="true" tabindex="-1"></a><span class="do">## e4_1        -0.42123    0.24192  -1.741 0.082925 .  </span></span>
+<span id="cb7-19"><a href="regression-models.html#cb7-19" aria-hidden="true" tabindex="-1"></a><span class="do">## rs3818361    0.24991    0.21449   1.165 0.245120    </span></span>
+<span id="cb7-20"><a href="regression-models.html#cb7-20" aria-hidden="true" tabindex="-1"></a><span class="do">## rs744373    -0.25192    0.20787  -1.212 0.226727    </span></span>
+<span id="cb7-21"><a href="regression-models.html#cb7-21" aria-hidden="true" tabindex="-1"></a><span class="do">## rs11136000  -0.23207    0.21836  -1.063 0.288926    </span></span>
+<span id="cb7-22"><a href="regression-models.html#cb7-22" aria-hidden="true" tabindex="-1"></a><span class="do">## rs610932    -0.11403    0.21906  -0.521 0.603179    </span></span>
+<span id="cb7-23"><a href="regression-models.html#cb7-23" aria-hidden="true" tabindex="-1"></a><span class="do">## rs3851179    0.16251    0.21402   0.759 0.448408    </span></span>
+<span id="cb7-24"><a href="regression-models.html#cb7-24" aria-hidden="true" tabindex="-1"></a><span class="do">## rs3764650    0.47607    0.24428   1.949 0.052470 .  </span></span>
+<span id="cb7-25"><a href="regression-models.html#cb7-25" aria-hidden="true" tabindex="-1"></a><span class="do">## rs3865444   -0.34550    0.20559  -1.681 0.094149 .  </span></span>
+<span id="cb7-26"><a href="regression-models.html#cb7-26" aria-hidden="true" tabindex="-1"></a><span class="do">## ---</span></span>
+<span id="cb7-27"><a href="regression-models.html#cb7-27" aria-hidden="true" tabindex="-1"></a><span class="do">## Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1</span></span>
+<span id="cb7-28"><a href="regression-models.html#cb7-28" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb7-29"><a href="regression-models.html#cb7-29" aria-hidden="true" tabindex="-1"></a><span class="do">## Residual standard error: 1.63 on 242 degrees of freedom</span></span>
+<span id="cb7-30"><a href="regression-models.html#cb7-30" aria-hidden="true" tabindex="-1"></a><span class="do">## Multiple R-squared:  0.3395, Adjusted R-squared:  0.2986 </span></span>
+<span id="cb7-31"><a href="regression-models.html#cb7-31" aria-hidden="true" tabindex="-1"></a><span class="do">## F-statistic: 8.293 on 15 and 242 DF,  p-value: 3.575e-15</span></span></code></pre></div>
+<p></p>
+<p><strong>Step 4</strong> is model selection. There are many variables that are not significant, i.e., their <em>p-values</em> are larger than <span class="math inline">\(0.05\)</span>. The <code>step()</code> function is used for automatic model selection<label for="tufte-sn-31" class="margin-toggle sidenote-number">31</label><input type="checkbox" id="tufte-sn-31" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">31</span> Use <code>help(step)</code> for more information.</span>, i.e., it implements a brute-force approach to identify the best combinations of variables in a linear regression model.</p>
+<p></p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="regression-models.html#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 4 -&gt; use step() to automatically delete </span></span>
+<span id="cb8-2"><a href="regression-models.html#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co"># all the insignificant variables</span></span>
+<span id="cb8-3"><a href="regression-models.html#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Automatic model selection</span></span>
+<span id="cb8-4"><a href="regression-models.html#cb8-4" aria-hidden="true" tabindex="-1"></a>lm.AD.reduced <span class="ot">&lt;-</span> <span class="fu">step</span>(lm.AD, <span class="at">direction=</span><span class="st">&quot;backward&quot;</span>, <span class="at">test=</span><span class="st">&quot;F&quot;</span>)</span></code></pre></div>
+<p></p>
+<p>And the final model the <code>step()</code> function identifies is</p>
+<p></p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="regression-models.html#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Step:  AIC=259.92</span></span>
+<span id="cb9-2"><a href="regression-models.html#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="do">## MMSCORE ~ PTEDUCAT + FDG + AV45 + HippoNV + e4_1 + rs744373 + </span></span>
+<span id="cb9-3"><a href="regression-models.html#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="do">##     rs3764650 + rs3865444</span></span>
+<span id="cb9-4"><a href="regression-models.html#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb9-5"><a href="regression-models.html#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="do">##             Df Sum of Sq    RSS    AIC F value    Pr(&gt;F)    </span></span>
+<span id="cb9-6"><a href="regression-models.html#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="do">## &lt;none&gt;                   658.95 259.92                      </span></span>
+<span id="cb9-7"><a href="regression-models.html#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="do">## - rs744373   1     6.015 664.96 260.27  2.2728  0.132934    </span></span>
+<span id="cb9-8"><a href="regression-models.html#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="do">## - AV45       1     7.192 666.14 260.72  2.7176  0.100511    </span></span>
+<span id="cb9-9"><a href="regression-models.html#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="do">## - e4_1       1     8.409 667.36 261.19  3.1774  0.075882 .  </span></span>
+<span id="cb9-10"><a href="regression-models.html#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="do">## - rs3865444  1     8.428 667.38 261.20  3.1848  0.075544 .  </span></span>
+<span id="cb9-11"><a href="regression-models.html#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="do">## - rs3764650  1    10.228 669.18 261.90  3.8649  0.050417 .  </span></span>
+<span id="cb9-12"><a href="regression-models.html#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="do">## - FDG        1    40.285 699.24 273.23 15.2226  0.000123 ***</span></span>
+<span id="cb9-13"><a href="regression-models.html#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="do">## - PTEDUCAT   1    44.191 703.14 274.67 16.6988 5.913e-05 ***</span></span>
+<span id="cb9-14"><a href="regression-models.html#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="do">## - HippoNV    1    53.445 712.40 278.04 20.1954 1.072e-05 ***</span></span>
+<span id="cb9-15"><a href="regression-models.html#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="do">## ---</span></span>
+<span id="cb9-16"><a href="regression-models.html#cb9-16" aria-hidden="true" tabindex="-1"></a><span class="do">## Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1</span></span></code></pre></div>
+<p></p>
+<p>It can be seen that the predictors that are kept in the <em>final model</em> are all significant. Also, the <code>R-squared</code> is <span class="math inline">\(0.3228\)</span> using the <span class="math inline">\(8\)</span> selected predictors. This is not bad comparing with the <code>R-squared</code>, <span class="math inline">\(0.3395\)</span>, when all the <span class="math inline">\(15\)</span> predictors are used (we call this model the <em>full model</em>).</p>
+<p>We compare the full model with the final model using the F-test that is implemented in <code>anova()</code>.</p>
+<p></p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="regression-models.html#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(lm.AD.reduced,lm.AD)</span></code></pre></div>
+<p></p>
+<p>The returned result, shown below, implies that it is statistically indistinguishable between the two models (<em>p-value</em> of the F-test is <span class="math inline">\(0.529\)</span>). The model <code>lm.AD.reduced</code> provides an equally good explanation of the data as the full model does, but <code>lm.AD.reduced</code> is more economic. The principle of <strong>Occam’s razor</strong><label for="tufte-sn-32" class="margin-toggle sidenote-number">32</label><input type="checkbox" id="tufte-sn-32" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">32</span> “<em>Other things being equal, simpler explanations are generally better than more complex ones</em>,” is the basic idea of Occam’s razor. Albert Einstein was also quoted with a similar expression: “<em>Everything should be made as simple as possible, but no simpler</em>.”</span> would consider the model <code>lm.AD.reduced</code> more in favor.</p>
+<p></p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="regression-models.html#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Analysis of Variance Table</span></span>
+<span id="cb11-2"><a href="regression-models.html#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb11-3"><a href="regression-models.html#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="do">## Model 1: MMSCORE ~ PTEDUCAT + FDG + AV45 + HippoNV +  </span></span>
+<span id="cb11-4"><a href="regression-models.html#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="do">##     e4_1 + rs744373 + rs3764650 + rs3865444</span></span>
+<span id="cb11-5"><a href="regression-models.html#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="do">## Model 2: MMSCORE ~ AGE + PTGENDER + PTEDUCAT + FDG + AV45 +  </span></span>
+<span id="cb11-6"><a href="regression-models.html#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="do">##     HippoNV + e2_1 + e4_1 + rs3818361 + rs744373 + rs11136000 +  </span></span>
+<span id="cb11-7"><a href="regression-models.html#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="do">##     rs610932 + rs3851179 + rs3764650 + rs3865444</span></span>
+<span id="cb11-8"><a href="regression-models.html#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="do">##   Res.Df    RSS Df Sum of Sq      F Pr(&gt;F)</span></span>
+<span id="cb11-9"><a href="regression-models.html#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="do">## 1    249 658.95                           </span></span>
+<span id="cb11-10"><a href="regression-models.html#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="do">## 2    242 642.73  7    16.218 0.8723  0.529</span></span></code></pre></div>
+<p></p>
+<p><strong>Step 5</strong> makes prediction. We can use the function <code>predict()</code><label for="tufte-sn-33" class="margin-toggle sidenote-number">33</label><input type="checkbox" id="tufte-sn-33" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">33</span> <code>predict(obj, data)</code></span> which is a function you can find in many R packages. It usually has two main arguments: <code>obj</code> is the model, and <code>data</code> is the data points you want to predict on. Note that, here, we test the model (that was trained on training data) on the testing data. After gathering the predictions, we use the function <code>cor()</code> to measure how close are the predictions with the true outcome values of the testing data. The higher the correlation, the better the predictions.</p>
+<p></p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="regression-models.html#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 5 -&gt; Predict using your linear regession model</span></span>
+<span id="cb12-2"><a href="regression-models.html#cb12-2" aria-hidden="true" tabindex="-1"></a>pred.lm <span class="ot">&lt;-</span> <span class="fu">predict</span>(lm.AD.reduced, data.test)</span>
+<span id="cb12-3"><a href="regression-models.html#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co"># For regression model, you can use correlation to measure </span></span>
+<span id="cb12-4"><a href="regression-models.html#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co"># how close your predictions with the true outcome </span></span>
+<span id="cb12-5"><a href="regression-models.html#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="co"># values of the data points</span></span>
+<span id="cb12-6"><a href="regression-models.html#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(pred.lm, data.test<span class="sc">$</span>MMSCORE)</span></code></pre></div>
+<p></p>
+<p><em>Beyond the 5-Step Pipeline.</em> The <strong>Exploratory Data Analysis</strong> (<strong>EDA</strong>) is a practical toolbox that consists of many interesting and insightful methods and tools, mostly empirical and graphical. The idea of EDA was promoted by some statisticians<label for="tufte-sn-34" class="margin-toggle sidenote-number">34</label><input type="checkbox" id="tufte-sn-34" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">34</span> E.g., John W. Tukey was a statistician whose career was known to be an advocate of EDA. See his book: <em>Exploratory Data Analysis</em>, Addison-Wesley Publishing Co., 1977.</span>. The EDA could be used before and after we have built the model. For example, a common practice of EDA is to draw the scatterplots to see how potentially the predictors can predict the outcome variable.</p>
+<p></p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="regression-models.html#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Scatterplot matrix to visualize the relationship</span></span>
+<span id="cb13-2"><a href="regression-models.html#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co"># between outcome variable with continuous predictors</span></span>
+<span id="cb13-3"><a href="regression-models.html#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb13-4"><a href="regression-models.html#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages(&quot;GGally&quot;)</span></span>
+<span id="cb13-5"><a href="regression-models.html#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GGally)</span>
+<span id="cb13-6"><a href="regression-models.html#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="co"># draw the scatterplots and also empirical</span></span>
+<span id="cb13-7"><a href="regression-models.html#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="co"># shapes of the distributions of the variables</span></span>
+<span id="cb13-8"><a href="regression-models.html#cb13-8" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggpairs</span>(AD[,<span class="fu">c</span>(<span class="dv">16</span>,<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">6</span>)],</span>
+<span id="cb13-9"><a href="regression-models.html#cb13-9" aria-hidden="true" tabindex="-1"></a>             <span class="at">upper =</span> <span class="fu">list</span>(<span class="at">continuous =</span> <span class="st">&quot;points&quot;</span>),</span>
+<span id="cb13-10"><a href="regression-models.html#cb13-10" aria-hidden="true" tabindex="-1"></a>             <span class="at">lower =</span> <span class="fu">list</span>(<span class="at">continuous =</span> <span class="st">&quot;cor&quot;</span>))</span>
+<span id="cb13-11"><a href="regression-models.html#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(p)</span>
+<span id="cb13-12"><a href="regression-models.html#cb13-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-13"><a href="regression-models.html#cb13-13" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb13-14"><a href="regression-models.html#cb13-14" aria-hidden="true" tabindex="-1"></a><span class="fu">qplot</span>(<span class="fu">factor</span>(PTGENDER),</span>
+<span id="cb13-15"><a href="regression-models.html#cb13-15" aria-hidden="true" tabindex="-1"></a>      MMSCORE, <span class="at">data =</span> AD,<span class="at">geom=</span><span class="fu">c</span>(<span class="st">&quot;boxplot&quot;</span>), <span class="at">fill =</span> <span class="fu">factor</span>(PTGENDER))</span></code></pre></div>
+<p></p>
+<p>Figure <a href="regression-models.html#fig:f2-7">11</a> presents the continuous predictors.</p>
+<p></p>
+<div class="figure"><span id="fig:f2-7"></span>
+<p class="caption marginnote shownote">
+Figure 11: Scatterplots of the continuous predictors versus outcome variable
+</p>
+<img src="graphics/2_7.png" alt="Scatterplots of the continuous predictors versus outcome variable" width="100%"  />
+</div>
+<p></p>
+<p>For the other predictors which are binary, we can use a boxplot, which is shown in Figure <a href="regression-models.html#fig:f2-8">12</a>.</p>
+<p></p>
+<div class="figure"><span id="fig:f2-8"></span>
+<p class="caption marginnote shownote">
+Figure 12: Boxplots of the binary predictors versus outcome variable
+</p>
+<img src="graphics/2_8.png" alt="Boxplots of the binary predictors versus outcome variable" width="100%"  />
+</div>
+<p></p>
+<p>In what follows we show another case of EDA.</p>
+<p>Consider the relationship between <code>MMSCORE</code> and <code>PTEDUCAT</code>, and find a graphical way to investigate if the predictor, <code>AGE</code>, mediates the relationship between <code>MMSCORE</code> and <code>PTEDUCAT</code>. One way to do so is to color the data points in the scatterplot (i.e., the color corresponds to the numerical scale of <code>AGE</code>). The following R codes generate Figure <a href="regression-models.html#fig:f2-9">13</a>.</p>
+<p></p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="regression-models.html#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># How to detect interaction terms</span></span>
+<span id="cb14-2"><a href="regression-models.html#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co"># by exploratory data analysis (EDA)</span></span>
+<span id="cb14-3"><a href="regression-models.html#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(ggplot2)</span>
+<span id="cb14-4"><a href="regression-models.html#cb14-4" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(AD, <span class="fu">aes</span>(<span class="at">x =</span> PTEDUCAT, <span class="at">y =</span> MMSCORE))</span>
+<span id="cb14-5"><a href="regression-models.html#cb14-5" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> p <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">colour=</span>AGE), <span class="at">size=</span><span class="dv">2</span>)</span>
+<span id="cb14-6"><a href="regression-models.html#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="co"># p &lt;- p + geom_smooth(method = &quot;auto&quot;)</span></span>
+<span id="cb14-7"><a href="regression-models.html#cb14-7" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> p <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title=</span><span class="st">&quot;MMSE versus PTEDUCAT&quot;</span>)</span>
+<span id="cb14-8"><a href="regression-models.html#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(p)</span></code></pre></div>
+<p></p>
+<p></p>
+<p>
+<span class="marginnote shownote">
+<!--
+<div class="figure">--><span id="fig:f2-9"></span>
+<img src="graphics/2_9.png" alt="Scatterplots of `MMSCORE` versus `PTEDUCAT`" width="250px"  />
+<!--
+<p class="caption marginnote">-->Figure 13: Scatterplots of <code>MMSCORE</code> versus <code>PTEDUCAT</code><!--</p>-->
+<!--</div>--></span>
+</p>
+<p></p>
+<p>It looks like that the relationship between <code>MMSCORE</code> and <code>PTEDUCAT</code> indeed changes according to different levels of <code>AGE</code>. While this is subtle, we change the strategy and draw two more figures, i.e., we draw the same scatterplot on two levels of <code>AGE</code>, i.e., <code>AGE &lt; 60</code> and <code>AGE &gt; 80</code>. The following R codes generate Figure <a href="regression-models.html#fig:f2-10">14</a>.</p>
+<p></p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="regression-models.html#cb15-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(AD[<span class="fu">which</span>(AD<span class="sc">$</span>AGE <span class="sc">&lt;</span> <span class="dv">60</span>),], </span>
+<span id="cb15-2"><a href="regression-models.html#cb15-2" aria-hidden="true" tabindex="-1"></a>            <span class="fu">aes</span>(<span class="at">x =</span> PTEDUCAT, <span class="at">y =</span> MMSCORE))</span>
+<span id="cb15-3"><a href="regression-models.html#cb15-3" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> p <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="at">size=</span><span class="dv">2</span>)</span>
+<span id="cb15-4"><a href="regression-models.html#cb15-4" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> p <span class="sc">+</span> <span class="fu">geom_smooth</span>(<span class="at">method =</span> lm)</span>
+<span id="cb15-5"><a href="regression-models.html#cb15-5" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> p <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title=</span><span class="st">&quot;MMSE versus PTEDUCAT when AGE &lt; 60&quot;</span>)</span>
+<span id="cb15-6"><a href="regression-models.html#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(p)</span></code></pre></div>
+<p></p>
+<p></p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="regression-models.html#cb16-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(AD[<span class="fu">which</span>(AD<span class="sc">$</span>AGE <span class="sc">&gt;</span> <span class="dv">80</span>),], </span>
+<span id="cb16-2"><a href="regression-models.html#cb16-2" aria-hidden="true" tabindex="-1"></a>            <span class="fu">aes</span>(<span class="at">x =</span> PTEDUCAT, <span class="at">y =</span> MMSCORE))</span>
+<span id="cb16-3"><a href="regression-models.html#cb16-3" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> p <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="at">size=</span><span class="dv">2</span>)</span>
+<span id="cb16-4"><a href="regression-models.html#cb16-4" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> p <span class="sc">+</span> <span class="fu">geom_smooth</span>(<span class="at">method =</span> lm)</span>
+<span id="cb16-5"><a href="regression-models.html#cb16-5" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> p <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title=</span><span class="st">&quot;MMSE versus PTEDUCAT when AGE &gt; 80&quot;</span>)</span>
+<span id="cb16-6"><a href="regression-models.html#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(p)</span></code></pre></div>
+<p></p>
+<p></p>
+<div class="figure" style="text-align: center"><span id="fig:f2-10"></span>
+<p class="caption marginnote shownote">
+Figure 14: Scatterplots of <code>MMSCORE</code> versus <code>PTEDUCAT</code> when (left) <code>AGE &lt; 60</code> or (right) <code>AGE &gt; 80</code>
+</p>
+<img src="graphics/2_10_1.png" alt="Scatterplots of `MMSCORE` versus `PTEDUCAT` when (left) `AGE &lt; 60`  or (right) `AGE &gt; 80`" width="49%" height="49%"  /><img src="graphics/2_10_2.png" alt="Scatterplots of `MMSCORE` versus `PTEDUCAT` when (left) `AGE &lt; 60`  or (right) `AGE &gt; 80`" width="49%" height="49%"  />
+</div>
+<p></p>
+<p>Figure <a href="regression-models.html#fig:f2-10">14</a> shows that the relationship between <code>MMSCORE</code> and <code>PTEDUCAT</code> changes dramatically according to different levels of <code>AGE</code>. In other words, it means that the way the predictor <code>PTEDUCAT</code> impacts the outcome <code>MMSCORE</code> is not simply additive as a regular linear regression model would suggest. Rather, the relationship between the two is modified by <code>AGE</code>. This discovery suggests a different mechanism underlying the three variables, as demonstrated in Figure <a href="regression-models.html#fig:f2-lr-interact">15</a>.</p>
+<p>We then add an interaction term into the regression model</p>
+<p></p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="regression-models.html#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># fit the multiple linear regression model </span></span>
+<span id="cb17-2"><a href="regression-models.html#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="co"># with an interaction term: AGE*PTEDUCAT</span></span>
+<span id="cb17-3"><a href="regression-models.html#cb17-3" aria-hidden="true" tabindex="-1"></a>lm.AD.int <span class="ot">&lt;-</span> <span class="fu">lm</span>(MMSCORE <span class="sc">~</span> AGE <span class="sc">+</span> PTGENDER <span class="sc">+</span> PTEDUCAT </span>
+<span id="cb17-4"><a href="regression-models.html#cb17-4" aria-hidden="true" tabindex="-1"></a>                  <span class="sc">+</span> AGE<span class="sc">*</span>PTEDUCAT, <span class="at">data =</span> AD)</span>
+<span id="cb17-5"><a href="regression-models.html#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm.AD.int)</span></code></pre></div>
+<p></p>
+<p>We can see that this interaction term is significant .</p>
+<p></p>
+<p>
+<span class="marginnote shownote">
+<!--
+<div class="figure">--><span id="fig:f2-lr-interact"></span>
+<img src="graphics/2_lr_interact.png" alt="Different data-generating mechanisms: (left) additive relationships between predictors and outcome; (right) additive relationships and interaction" width="250px"  />
+<!--
+<p class="caption marginnote">-->Figure 15: Different data-generating mechanisms: (left) additive relationships between predictors and outcome; (right) additive relationships and interaction<!--</p>-->
+<!--</div>--></span>
+</p>
+<p></p>
+<p></p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="regression-models.html#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="do">##</span></span>
+<span id="cb18-2"><a href="regression-models.html#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="do">## Call:</span></span>
+<span id="cb18-3"><a href="regression-models.html#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="do">## lm(formula = MMSCORE ~ AGE + PTGENDER </span></span>
+<span id="cb18-4"><a href="regression-models.html#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="do">##     + PTEDUCAT + AGE * PTEDUCAT,</span></span>
+<span id="cb18-5"><a href="regression-models.html#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="do">##     data = AD)</span></span>
+<span id="cb18-6"><a href="regression-models.html#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="do">##</span></span>
+<span id="cb18-7"><a href="regression-models.html#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="do">## Residuals:</span></span>
+<span id="cb18-8"><a href="regression-models.html#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="do">##     Min      1Q  Median      3Q     Max</span></span>
+<span id="cb18-9"><a href="regression-models.html#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="do">## -8.2571 -0.9204  0.5156  1.4219  4.2975</span></span>
+<span id="cb18-10"><a href="regression-models.html#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="do">##</span></span>
+<span id="cb18-11"><a href="regression-models.html#cb18-11" aria-hidden="true" tabindex="-1"></a><span class="do">## Coefficients:</span></span>
+<span id="cb18-12"><a href="regression-models.html#cb18-12" aria-hidden="true" tabindex="-1"></a><span class="do">##               Estimate Std. Error t value Pr(&gt;|t|)</span></span>
+<span id="cb18-13"><a href="regression-models.html#cb18-13" aria-hidden="true" tabindex="-1"></a><span class="do">## (Intercept)  40.809411   5.500441   7.419 4.93e-13 ***</span></span>
+<span id="cb18-14"><a href="regression-models.html#cb18-14" aria-hidden="true" tabindex="-1"></a><span class="do">## AGE          -0.202043   0.074087  -2.727  0.00661 **</span></span>
+<span id="cb18-15"><a href="regression-models.html#cb18-15" aria-hidden="true" tabindex="-1"></a><span class="do">## PTGENDER     -0.470951   0.187143  -2.517  0.01216 *</span></span>
+<span id="cb18-16"><a href="regression-models.html#cb18-16" aria-hidden="true" tabindex="-1"></a><span class="do">## PTEDUCAT     -0.642352   0.336212  -1.911  0.05662 .</span></span>
+<span id="cb18-17"><a href="regression-models.html#cb18-17" aria-hidden="true" tabindex="-1"></a><span class="do">## AGE:PTEDUCAT  0.011083   0.004557   2.432  0.01534 *</span></span>
+<span id="cb18-18"><a href="regression-models.html#cb18-18" aria-hidden="true" tabindex="-1"></a><span class="do">## ---</span></span>
+<span id="cb18-19"><a href="regression-models.html#cb18-19" aria-hidden="true" tabindex="-1"></a><span class="do">## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span></span>
+<span id="cb18-20"><a href="regression-models.html#cb18-20" aria-hidden="true" tabindex="-1"></a><span class="do">##</span></span>
+<span id="cb18-21"><a href="regression-models.html#cb18-21" aria-hidden="true" tabindex="-1"></a><span class="do">## Residual standard error: 2.052 on 512 degrees of freedom</span></span>
+<span id="cb18-22"><a href="regression-models.html#cb18-22" aria-hidden="true" tabindex="-1"></a><span class="do">## Multiple R-squared:  0.07193,    Adjusted R-squared:  0.06468</span></span>
+<span id="cb18-23"><a href="regression-models.html#cb18-23" aria-hidden="true" tabindex="-1"></a><span class="do">## F-statistic:  9.92 on 4 and 512 DF,  p-value: 9.748e-08</span></span></code></pre></div>
+<p></p>
+</div>
+</div>
+<p style="text-align: center;">
+<a href="overview.html"><button class="btn btn-default">Previous</button></a>
+<a href="tree-models.html"><button class="btn btn-default">Next</button></a>
+</p>
+</div>
+</div>
+
+<script src="js/jquery.js"></script>
+<script src="js/tablesaw-stackonly.js"></script>
+<script src="js/nudge.min.js"></script>
+
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+</body>
+</html>

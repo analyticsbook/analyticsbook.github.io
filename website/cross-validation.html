@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta property="og:title" content="Cross-validation | Data Analytics" />
+<meta property="og:type" content="book" />
+
+
+
+
+
+<meta name="author" content="Shuai Huang &amp; Houtao Deng" />
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  TeX: { equationNumbers: { autoNumber: "AMS" } }
+});
+</script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<meta name="description" content="Cross-validation | Data Analytics">
+
+<title>Cross-validation | Data Analytics</title>
+
+<script src="libs/header-attrs-2.7/header-attrs.js"></script>
+<link href="libs/tufte-css-2015.12.29/tufte.css" rel="stylesheet" />
+<link href="libs/tufte-css-2015.12.29/envisioned.css" rel="stylesheet" />
+<script src="https://use.typekit.net/ajy6rnl.js"></script>
+<script>try{Typekit.load({ async: true });}catch(e){}</script>
+<!-- <link rel="stylesheet" href="css/normalize.css"> -->
+<!-- <link rel="stylesheet" href="css/envisioned.css"/> -->
+<link rel="stylesheet" href="css/tablesaw-stackonly.css"/>
+<link rel="stylesheet" href="css/nudge.css"/>
+<link rel="stylesheet" href="css/sourcesans.css"/>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+
+
+</head>
+
+<body>
+
+<!--bookdown:toc:start-->
+
+<nav class="pushy pushy-left" id="TOC">
+<ul>
+<li><a href="#preface">Preface</a></li>
+<li><a href="#acknowledgments">Acknowledgments</a></li>
+<li><a href="#chapter-1.-introduction">Chapter 1. Introduction</a></li>
+<li><a href="#chapter-2.-abstraction-regression-tree-models">Chapter 2. Abstraction: Regression &amp; Tree Models</a></li>
+<li><a href="#chapter-3.-recognition-logistic-regression-ranking">Chapter 3. Recognition: Logistic Regression &amp; Ranking</a></li>
+<li><a href="#chapter-4.-resonance-bootstrap-random-forests">Chapter 4. Resonance: Bootstrap &amp; Random Forests</a></li>
+<li><a href="#chapter-5.-learning-i-cross-validation-oob">Chapter 5. Learning (I): Cross-validation &amp; OOB</a></li>
+<li><a href="#chapter-6.-diagnosis-residuals-heterogeneity">Chapter 6. Diagnosis: Residuals &amp; Heterogeneity</a></li>
+<li><a href="#chapter-7.-learning-ii-svm-ensemble-learning">Chapter 7. Learning (II): SVM &amp; Ensemble Learning</a></li>
+<li><a href="#chapter-8.-scalability-lasso-pca">Chapter 8. Scalability: LASSO &amp; PCA</a></li>
+<li><a href="#chapter-9.-pragmatism-experience-experimental">Chapter 9. Pragmatism: Experience &amp; Experimental</a></li>
+<li><a href="#chapter-10.-synthesis-architecture-pipeline">Chapter 10. Synthesis: Architecture &amp; Pipeline</a></li>
+<li><a href="#conclusion">Conclusion</a></li>
+<li><a href="#appendix-a-brief-review-of-background-knowledge">Appendix: A Brief Review of Background Knowledge</a></li>
+</ul>
+</nav>
+
+<!--bookdown:toc:end-->
+
+<div class="menu-btn"><h3>☰ Menu</h3></div>
+
+<div class="site-overlay"></div>
+
+
+<div class="row">
+<div class="col-sm-12">
+
+<nav class="pushy pushy-left" id="TOC">
+<ul>
+<li><a href="index.html#preface">Preface</a></li>
+<li><a href="acknowledgments.html#acknowledgments">Acknowledgments</a></li>
+<li><a href="chapter-1-introduction.html#chapter-1.-introduction">Chapter 1. Introduction</a></li>
+<li><a href="chapter-2-abstraction-regression-tree-models.html#chapter-2.-abstraction-regression-tree-models">Chapter 2. Abstraction: Regression &amp; Tree Models</a></li>
+<li><a href="chapter-3-recognition-logistic-regression-ranking.html#chapter-3.-recognition-logistic-regression-ranking">Chapter 3. Recognition: Logistic Regression &amp; Ranking</a></li>
+<li><a href="chapter-4-resonance-bootstrap-random-forests.html#chapter-4.-resonance-bootstrap-random-forests">Chapter 4. Resonance: Bootstrap &amp; Random Forests</a></li>
+<li><a href="chapter-5-learning-i-cross-validation-oob.html#chapter-5.-learning-i-cross-validation-oob">Chapter 5. Learning (I): Cross-validation &amp; OOB</a></li>
+<li><a href="chapter-6-diagnosis-residuals-heterogeneity.html#chapter-6.-diagnosis-residuals-heterogeneity">Chapter 6. Diagnosis: Residuals &amp; Heterogeneity</a></li>
+<li><a href="chapter-7-learning-ii-svm-ensemble-learning.html#chapter-7.-learning-ii-svm-ensemble-learning">Chapter 7. Learning (II): SVM &amp; Ensemble Learning</a></li>
+<li><a href="chapter-8-scalability-lasso-pca.html#chapter-8.-scalability-lasso-pca">Chapter 8. Scalability: LASSO &amp; PCA</a></li>
+<li><a href="chapter-9-pragmatism-experience-experimental.html#chapter-9.-pragmatism-experience-experimental">Chapter 9. Pragmatism: Experience &amp; Experimental</a></li>
+<li><a href="chapter-10-synthesis-architecture-pipeline.html#chapter-10.-synthesis-architecture-pipeline">Chapter 10. Synthesis: Architecture &amp; Pipeline</a></li>
+<li><a href="conclusion.html#conclusion">Conclusion</a></li>
+<li><a href="appendix-a-brief-review-of-background-knowledge.html#appendix-a-brief-review-of-background-knowledge">Appendix: A Brief Review of Background Knowledge</a></li>
+</ul>
+</nav>
+
+</div>
+</div>
+<div class="row">
+<div class="col-sm-12">
+<div id="cross-validation" class="section level2 unnumbered">
+<h2>Cross-validation</h2>
+<div id="rationale-and-formulation-7" class="section level3 unnumbered">
+<h3>Rationale and formulation</h3>
+<p>Performance metrics, such as accuracy and R-squared, are context-dependent (<em>Dilemma 1</em>), data-dependent (<em>Dilemma 2</em>), and vulnerable to conscious or unconscious manipulations (<em>Dilemma 3</em>). These limitations make them <em>relative</em> metrics. They are not the <em>absolutes</em> that we can rely on to evaluate models in a universal fashion in all contexts.</p>
+<p>So, what should be the universal and objective criteria to evaluate the learning performance of a model?</p>
+<p>To answer this question, we need to understand the concepts, <strong>underfit</strong> , <strong>good fit</strong>, and <strong>overfit</strong> .</p>
+<p></p>
+<div class="figure fullwidth"><span id="fig:f5-1"></span>
+<img src="graphics/5_1.png" alt="Three types of model performance" width="100%"  />
+<p class="caption marginnote shownote">
+Figure 79: Three types of model performance
+</p>
+</div>
+<p></p>
+<p>Figure <a href="cross-validation.html#fig:f5-1">79</a> shows three models to fit the same dataset that has two classes of data points. The first model is a linear model<label for="tufte-sn-110" class="margin-toggle sidenote-number">110</label><input type="checkbox" id="tufte-sn-110" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">110</span> E.g., <span class="math inline">\(f_1(x)=\beta_{0}+\beta_{1} x_{1}+\beta_{2} x_{2}\)</span>.</span> that yields a straight line as the <strong>decision boundary</strong> . Obviously, many data points are misclassified when using a linear decision boundary. Some curvature is needed to bend the decision boundary, so we introduce some second order terms and an interaction term of the two predictors to create another model<label for="tufte-sn-111" class="margin-toggle sidenote-number">111</label><input type="checkbox" id="tufte-sn-111" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">111</span> E.g., <span class="math inline">\(f_2(x)=\beta_{0}+\beta_{1} x_{1}+\beta_{2} x_{2}+\beta_{11} x_{1}^{2}+\beta_{22} x_{2}^{2}+\beta_{12} x_{1} x_{2}\)</span>.</span>. The decision boundary is shown in Figure <a href="cross-validation.html#fig:f5-1">79</a> (middle). This improved model still could not classify the two classes completely. More interaction terms<label for="tufte-sn-112" class="margin-toggle sidenote-number">112</label><input type="checkbox" id="tufte-sn-112" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">112</span> E.g., <span class="math inline">\(f_3(\boldsymbol{x})=\beta_{0}+\beta_{1} x_{1}+\beta_{2} x_{2}+\beta_{11} x_{1}^{2}+\beta_{22} x_{2}^{2}+\beta_{12} x_{1} x_{2}+\beta_{112} x_{1}^{2} x_{2}+\beta_{122} x_{1} x_{2}^{2}+\cdots\)</span>.</span> are introduced into the model. The decision boundary is shown in Figure <a href="cross-validation.html#fig:f5-1">79</a> (right).</p>
+<p>Now <span class="math inline">\(100\%\)</span> prediction accuracy could be achieved. A sense of suspicion should arise: is this <em>too good to be true</em>?</p>
+<p>What we have seen in Figure <a href="cross-validation.html#fig:f5-1">79</a>, on the positive side, is the capacity we can develop to <em>fit</em> a dataset<label for="tufte-sn-113" class="margin-toggle sidenote-number">113</label><input type="checkbox" id="tufte-sn-113" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">113</span> <em>Fit</em> a dataset is not necessarily model a dataset. Beginners may need time to develop a sense to see the difference between the two.</span>. On the other hand, what is responsible for the sense of suspicion of “too good to be true” is that we didn’t see a <em>validation process</em> at work.</p>
+<p>Recall a general assumption of data modeling is<label for="tufte-sn-114" class="margin-toggle sidenote-number">114</label><input type="checkbox" id="tufte-sn-114" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">114</span> I.e., Eq. <a href="overview.html#eq:2-genericmodel">(2)</a> in <strong>Chapter 2</strong>.</span></p>
+<p><span class="math display">\[\begin{equation*}
+    \underbrace{y}_{data} = \underbrace{f(\boldsymbol{x})}_{signal} + \underbrace{\epsilon}_{noise},
+\end{equation*}\]</span></p>
+<p>where <em>noise</em> is unpredictable. Bearing this framework in mind, we revisit the three models in Figure <a href="cross-validation.html#fig:f5-1">79</a>, which from left to right illustrate <strong>underfit</strong>, <strong>good fit</strong>, and <strong>overfit</strong>, respectively. A model called <em>underfitted</em> means it fails to incorporate some pattern of the signal in the dataset. A model called <em>overfitted</em> means it allows the noise to affect the model<label for="tufte-sn-115" class="margin-toggle sidenote-number">115</label><input type="checkbox" id="tufte-sn-115" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">115</span> Noise, by definition, only happens by accident. While the model, by definition, is to generalize the constancy, i.e., the signal, of the data rather than its unrepeatable randomness.</span>. A dataset could be randomly generated, but the <em>mechanism of generating the randomness</em><label for="tufte-sn-116" class="margin-toggle sidenote-number">116</label><input type="checkbox" id="tufte-sn-116" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">116</span> I.e., like a distribution model.</span> is a constancy. The model in the middle panel of Figure <a href="cross-validation.html#fig:f5-1">79</a> is able to maintain a balance: it captures the structural constancy in the data to form the model, while resisting the noise and refusing to let them bend its decision boundary.</p>
+<p>In summary, Figure <a href="cross-validation.html#fig:f5-1">79</a> illustrates that:</p>
+<p><!-- begin{itemize} --></p>
+<ul>
+<li><p> <strong>Overfit</strong>: Complexity of the model &gt; complexity of the signal;</p></li>
+<li><p> <strong>Good fit</strong>: Complexity of the model = complexity of the signal;</p></li>
+<li><p> <strong>Underfit</strong>: Complexity of the model &lt; complexity of the signal.</p></li>
+</ul>
+<p><!-- end{itemize} --></p>
+<p>In practice, however, the ultimate dilemma is we don’t know what to expect: how much variability in the data comes from the signal or the noise? A sense of proportion always matters, and methods such as cross-validation come to our rescue.</p>
+<p></p>
+<p>
+<span class="marginnote shownote">
+<!--
+<div class="figure">--><span id="fig:f5-2"></span>
+<img src="graphics/5_2.png" alt="The hold-out method" width="250px"  />
+<!--
+<p class="caption marginnote">-->Figure 80: The hold-out method<!--</p>-->
+<!--</div>--></span>
+</p>
+<p></p>
+</div>
+<div id="theorymethod-1" class="section level3 unnumbered">
+<h3>Theory/Method</h3>
+<p>In what follows, a few approaches that help us to identify the model with <em>good fit</em> (i.e., the one shown in Figure <a href="cross-validation.html#fig:f5-1">79</a> (middle), <span class="math inline">\(f_2(x)\)</span>) are introduced. These approaches share the same goal: to train a model on the training data and make sure the learned model would succeed on an <em>unseen</em> testing dataset.</p>
+<p></p>
+<p>
+<span class="marginnote shownote">
+<!--
+<div class="figure">--><span id="fig:f5-3"></span>
+<img src="graphics/5_3.png" alt="The random sampling method" width="250px"  />
+<!--
+<p class="caption marginnote">-->Figure 81: The random sampling method<!--</p>-->
+<!--</div>--></span>
+</p>
+<p></p>
+<p>The first approach is the <strong>hold-out</strong> method. As shown in Figure <a href="cross-validation.html#fig:f5-2">80</a>, the hold-out method randomly divides a given dataset into two parts. The model is trained on the training data only, while its performance is evaluated on the testing data. For instance, for the three models shown in Figure <a href="cross-validation.html#fig:f5-1">79</a>, each of them will be trained on the training dataset and will have their regression coefficients estimated. Then, the learned models will be evaluated on the testing data. The model that has the best performance on the testing data will be selected as the final model.</p>
+<p>Another approach called <strong>random sampling</strong> repeats this random division many times, as shown in Figure <a href="cross-validation.html#fig:f5-3">81</a>. Each time, the <em>model training and selection</em> only uses the training dataset, and the model evaluation only uses the testing dataset. The performance of the models on the three experiments could be averaged and the model that has the best average performance is selected.</p>
+<p></p>
+<p>
+<span class="marginnote shownote">
+<!--
+<div class="figure">--><span id="fig:f5-4"></span>
+<img src="graphics/5_4.png" alt="The K-fold cross-validation method (here, $K=4$)" width="250px"  />
+<!--
+<p class="caption marginnote">-->Figure 82: The K-fold cross-validation method (here, <span class="math inline">\(K=4\)</span>)<!--</p>-->
+<!--</div>--></span>
+</p>
+<p></p>
+<p>The <strong>K-fold cross-validation</strong> is a mix of the <em>random sampling</em> method and the <em>hold-out</em> method. It first divides the dataset into <span class="math inline">\(K\)</span> folds of equal sizes. Then, it trains a model using any combination of <span class="math inline">\(K-1\)</span> folds of the dataset, and tests the model using the remaining one-fold of the dataset. As shown in Figure <a href="cross-validation.html#fig:f5-4">82</a>, the model training and testing process is repeated <span class="math inline">\(K\)</span> times. The performance of the models on the <span class="math inline">\(K\)</span> experiments could be averaged and the model that has the best average performance is selected.</p>
+<p>These approaches can be used for evaluating a model’s performance in a robust way. They are also useful when we’d like to choose among model types<label for="tufte-sn-117" class="margin-toggle sidenote-number">117</label><input type="checkbox" id="tufte-sn-117" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">117</span> E.g., decision tree vs. linear regression.</span> or model formulations<label for="tufte-sn-118" class="margin-toggle sidenote-number">118</label><input type="checkbox" id="tufte-sn-118" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">118</span> E.g., model 1: <span class="math inline">\(y=\beta_{0}+\beta_{1} x_1\)</span>; vs. model 2: <span class="math inline">\(y=\beta_{0}+\beta_{1} x_1+\beta_{2} x_2\)</span>.</span>. While the model type and the model formulation is settled, for example, suppose that we have determined to use linear regression and the model formulation <span class="math inline">\(y=\beta_{0}+\beta_{1} x_1+\beta_{2} x_2\)</span>, these methods could be used to evaluate the performance of this single model. It is not uncommon that in real data analysis, these cross-validation and sampling methods are used in combination and serve different stages of the analysis process.</p>
+</div>
+<div id="r-lab-6" class="section level3 unnumbered">
+<h3>R Lab</h3>
+<p><em>The 4-Step R Pipeline.</em> <strong>Step 1</strong> and <strong>Step 2</strong> are standard procedures to get data into R and further make appropriate preprocessing.</p>
+<p></p>
+<div class="sourceCode" id="cb104"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb104-1"><a href="cross-validation.html#cb104-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1 -&gt; Read data into R workstation</span></span>
+<span id="cb104-2"><a href="cross-validation.html#cb104-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb104-3"><a href="cross-validation.html#cb104-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(RCurl)</span>
+<span id="cb104-4"><a href="cross-validation.html#cb104-4" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;https://raw.githubusercontent.com&quot;</span>,</span>
+<span id="cb104-5"><a href="cross-validation.html#cb104-5" aria-hidden="true" tabindex="-1"></a>              <span class="st">&quot;/analyticsbook/book/main/data/AD.csv&quot;</span>)</span>
+<span id="cb104-6"><a href="cross-validation.html#cb104-6" aria-hidden="true" tabindex="-1"></a>AD <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="at">text=</span><span class="fu">getURL</span>(url))</span>
+<span id="cb104-7"><a href="cross-validation.html#cb104-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb104-8"><a href="cross-validation.html#cb104-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2 -&gt; Data preprocessing </span></span>
+<span id="cb104-9"><a href="cross-validation.html#cb104-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Create your X matrix (predictors) and Y vector </span></span>
+<span id="cb104-10"><a href="cross-validation.html#cb104-10" aria-hidden="true" tabindex="-1"></a><span class="co"># (outcome variable)</span></span>
+<span id="cb104-11"><a href="cross-validation.html#cb104-11" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> AD[,<span class="dv">2</span><span class="sc">:</span><span class="dv">16</span>]</span>
+<span id="cb104-12"><a href="cross-validation.html#cb104-12" aria-hidden="true" tabindex="-1"></a>Y <span class="ot">&lt;-</span> AD<span class="sc">$</span>MMSCORE</span>
+<span id="cb104-13"><a href="cross-validation.html#cb104-13" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(X,Y)</span>
+<span id="cb104-14"><a href="cross-validation.html#cb104-14" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(data)[<span class="dv">16</span>] <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;MMSCORE&quot;</span>)</span></code></pre></div>
+<p></p>
+<p><strong>Step 3</strong> creates a list of models to be evaluated and compared with<label for="tufte-sn-119" class="margin-toggle sidenote-number">119</label><input type="checkbox" id="tufte-sn-119" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">119</span> <em>Linear regression</em>: we often compare models using different predictors; <em>Decision tree</em>: we often compare models with different depths; <em>Random forests</em>: we often compare models with a different number of trees, a different depth of individual trees, or a different number of features to be randomly picked up to split the nodes.</span>.</p>
+<p></p>
+<div class="sourceCode" id="cb105"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb105-1"><a href="cross-validation.html#cb105-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 3 -&gt; gather a list of candidate models</span></span>
+<span id="cb105-2"><a href="cross-validation.html#cb105-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Use linear regression model as an example</span></span>
+<span id="cb105-3"><a href="cross-validation.html#cb105-3" aria-hidden="true" tabindex="-1"></a>model1 <span class="ot">&lt;-</span> <span class="st">&quot;MMSCORE ~ .&quot;</span></span>
+<span id="cb105-4"><a href="cross-validation.html#cb105-4" aria-hidden="true" tabindex="-1"></a>model2 <span class="ot">&lt;-</span> <span class="st">&quot;MMSCORE ~ AGE + PTEDUCAT + FDG + AV45 + HippoNV +</span></span>
+<span id="cb105-5"><a href="cross-validation.html#cb105-5" aria-hidden="true" tabindex="-1"></a><span class="st">                                                  rs3865444&quot;</span></span>
+<span id="cb105-6"><a href="cross-validation.html#cb105-6" aria-hidden="true" tabindex="-1"></a>model3 <span class="ot">&lt;-</span> <span class="st">&quot;MMSCORE ~ AGE + PTEDUCAT&quot;</span></span>
+<span id="cb105-7"><a href="cross-validation.html#cb105-7" aria-hidden="true" tabindex="-1"></a>model4 <span class="ot">&lt;-</span> <span class="st">&quot;MMSCORE ~ FDG + AV45 + HippoNV&quot;</span></span></code></pre></div>
+<p></p>
+<p><strong>Step 4</strong> uses the <span class="math inline">\(10\)</span>-fold cross-validation to evaluate the models and find out which one is the best. The R code is shown below and is divided into two parts. The first part uses the <code>sample()</code> function to create random split of the dataset into <span class="math inline">\(10\)</span> folds.</p>
+<p></p>
+<div class="sourceCode" id="cb106"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb106-1"><a href="cross-validation.html#cb106-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 4 -&gt; Use 10-fold cross-validation to evaluate all models</span></span>
+<span id="cb106-2"><a href="cross-validation.html#cb106-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb106-3"><a href="cross-validation.html#cb106-3" aria-hidden="true" tabindex="-1"></a><span class="co"># First, let me use 10-fold cross-validation to evaluate the</span></span>
+<span id="cb106-4"><a href="cross-validation.html#cb106-4" aria-hidden="true" tabindex="-1"></a><span class="co"># performance of model1</span></span>
+<span id="cb106-5"><a href="cross-validation.html#cb106-5" aria-hidden="true" tabindex="-1"></a>n_folds <span class="ot">=</span> <span class="dv">10</span> </span>
+<span id="cb106-6"><a href="cross-validation.html#cb106-6" aria-hidden="true" tabindex="-1"></a><span class="co"># number of fold (the parameter K in K-fold cross validation)</span></span>
+<span id="cb106-7"><a href="cross-validation.html#cb106-7" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="fu">dim</span>(data)[<span class="dv">1</span>] <span class="co"># the sample size, N, of the dataset</span></span>
+<span id="cb106-8"><a href="cross-validation.html#cb106-8" aria-hidden="true" tabindex="-1"></a>folds_i <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span>n_folds, <span class="at">length.out =</span> N)) </span>
+<span id="cb106-9"><a href="cross-validation.html#cb106-9" aria-hidden="true" tabindex="-1"></a><span class="co"># This randomly creates a labeling vector (1 X N) for </span></span>
+<span id="cb106-10"><a href="cross-validation.html#cb106-10" aria-hidden="true" tabindex="-1"></a><span class="co"># the N samples. For example, here, N = 16, and </span></span>
+<span id="cb106-11"><a href="cross-validation.html#cb106-11" aria-hidden="true" tabindex="-1"></a><span class="co"># I run this function and it returns</span></span>
+<span id="cb106-12"><a href="cross-validation.html#cb106-12" aria-hidden="true" tabindex="-1"></a><span class="co"># the value as 5  4  4 10  6  7  6  8  3  2  1  5  3  9  2  1. </span></span>
+<span id="cb106-13"><a href="cross-validation.html#cb106-13" aria-hidden="true" tabindex="-1"></a><span class="co"># That means, the first sample is allocated to the 5th fold,</span></span>
+<span id="cb106-14"><a href="cross-validation.html#cb106-14" aria-hidden="true" tabindex="-1"></a><span class="co"># the 2nd and 3rd samples are allocated to the 4th fold, etc.</span></span></code></pre></div>
+<p></p>
+<p>The second part shows how we evaluate the models. We only show the code for two models, as the script for evaluating each model is basically the same.</p>
+<p></p>
+<div class="sourceCode" id="cb107"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb107-1"><a href="cross-validation.html#cb107-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Evaluate model1</span></span>
+<span id="cb107-2"><a href="cross-validation.html#cb107-2" aria-hidden="true" tabindex="-1"></a><span class="co"># cv_mse aims to make records of the mean squared error </span></span>
+<span id="cb107-3"><a href="cross-validation.html#cb107-3" aria-hidden="true" tabindex="-1"></a><span class="co"># (MSE) for each fold</span></span>
+<span id="cb107-4"><a href="cross-validation.html#cb107-4" aria-hidden="true" tabindex="-1"></a>cv_mse <span class="ot">&lt;-</span> <span class="cn">NULL</span> </span>
+<span id="cb107-5"><a href="cross-validation.html#cb107-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (k <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_folds) {</span>
+<span id="cb107-6"><a href="cross-validation.html#cb107-6" aria-hidden="true" tabindex="-1"></a>  test_i <span class="ot">&lt;-</span> <span class="fu">which</span>(folds_i <span class="sc">==</span> k) </span>
+<span id="cb107-7"><a href="cross-validation.html#cb107-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># In each iteration of the 10 iterations, remember, we use one</span></span>
+<span id="cb107-8"><a href="cross-validation.html#cb107-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># fold of data as the testing data</span></span>
+<span id="cb107-9"><a href="cross-validation.html#cb107-9" aria-hidden="true" tabindex="-1"></a>  data.train <span class="ot">&lt;-</span> data[<span class="sc">-</span>test_i, ] </span>
+<span id="cb107-10"><a href="cross-validation.html#cb107-10" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Then, the remaining 9 folds&#39; data form our training data</span></span>
+<span id="cb107-11"><a href="cross-validation.html#cb107-11" aria-hidden="true" tabindex="-1"></a>  data.test <span class="ot">&lt;-</span> data[test_i, ]   </span>
+<span id="cb107-12"><a href="cross-validation.html#cb107-12" aria-hidden="true" tabindex="-1"></a>  <span class="co"># This is the testing data, from the ith fold</span></span>
+<span id="cb107-13"><a href="cross-validation.html#cb107-13" aria-hidden="true" tabindex="-1"></a>  lm.AD <span class="ot">&lt;-</span> <span class="fu">lm</span>(model1, <span class="at">data =</span> data.train) </span>
+<span id="cb107-14"><a href="cross-validation.html#cb107-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Fit the linear model with the training data</span></span>
+<span id="cb107-15"><a href="cross-validation.html#cb107-15" aria-hidden="true" tabindex="-1"></a>  y_hat <span class="ot">&lt;-</span> <span class="fu">predict</span>(lm.AD, data.test)     </span>
+<span id="cb107-16"><a href="cross-validation.html#cb107-16" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Predict on the testing data using the trained model</span></span>
+<span id="cb107-17"><a href="cross-validation.html#cb107-17" aria-hidden="true" tabindex="-1"></a>  true_y <span class="ot">&lt;-</span> data.test<span class="sc">$</span>MMSCORE                  </span>
+<span id="cb107-18"><a href="cross-validation.html#cb107-18" aria-hidden="true" tabindex="-1"></a>  <span class="co"># get the true y values for the testing data</span></span>
+<span id="cb107-19"><a href="cross-validation.html#cb107-19" aria-hidden="true" tabindex="-1"></a>  cv_mse[k] <span class="ot">&lt;-</span> <span class="fu">mean</span>((true_y <span class="sc">-</span> y_hat)<span class="sc">^</span><span class="dv">2</span>)    </span>
+<span id="cb107-20"><a href="cross-validation.html#cb107-20" aria-hidden="true" tabindex="-1"></a>  <span class="co"># mean((true_y - y_hat)^2): mean squared error (MSE). </span></span>
+<span id="cb107-21"><a href="cross-validation.html#cb107-21" aria-hidden="true" tabindex="-1"></a>  <span class="co"># The smaller this error, the better your model is</span></span>
+<span id="cb107-22"><a href="cross-validation.html#cb107-22" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb107-23"><a href="cross-validation.html#cb107-23" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(cv_mse)</span>
+<span id="cb107-24"><a href="cross-validation.html#cb107-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb107-25"><a href="cross-validation.html#cb107-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb107-26"><a href="cross-validation.html#cb107-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Then, evaluate model2</span></span>
+<span id="cb107-27"><a href="cross-validation.html#cb107-27" aria-hidden="true" tabindex="-1"></a>cv_mse <span class="ot">&lt;-</span> <span class="cn">NULL</span> </span>
+<span id="cb107-28"><a href="cross-validation.html#cb107-28" aria-hidden="true" tabindex="-1"></a><span class="co"># cv_mse aims to make records of the mean squared error (MSE) </span></span>
+<span id="cb107-29"><a href="cross-validation.html#cb107-29" aria-hidden="true" tabindex="-1"></a><span class="co"># for each fold</span></span>
+<span id="cb107-30"><a href="cross-validation.html#cb107-30" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (k <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_folds) {</span>
+<span id="cb107-31"><a href="cross-validation.html#cb107-31" aria-hidden="true" tabindex="-1"></a>  test_i <span class="ot">&lt;-</span> <span class="fu">which</span>(folds_i <span class="sc">==</span> k) </span>
+<span id="cb107-32"><a href="cross-validation.html#cb107-32" aria-hidden="true" tabindex="-1"></a>  <span class="co"># In each iteration of the 10 iterations, remember, </span></span>
+<span id="cb107-33"><a href="cross-validation.html#cb107-33" aria-hidden="true" tabindex="-1"></a>  <span class="co"># we use one fold of data as the testing data</span></span>
+<span id="cb107-34"><a href="cross-validation.html#cb107-34" aria-hidden="true" tabindex="-1"></a>  data.train <span class="ot">&lt;-</span> data[<span class="sc">-</span>test_i, ] </span>
+<span id="cb107-35"><a href="cross-validation.html#cb107-35" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Then, the remaining 9 folds&#39; data form our training data</span></span>
+<span id="cb107-36"><a href="cross-validation.html#cb107-36" aria-hidden="true" tabindex="-1"></a>  data.test <span class="ot">&lt;-</span> data[test_i, ]   </span>
+<span id="cb107-37"><a href="cross-validation.html#cb107-37" aria-hidden="true" tabindex="-1"></a>  <span class="co"># This is the testing data, from the ith fold</span></span>
+<span id="cb107-38"><a href="cross-validation.html#cb107-38" aria-hidden="true" tabindex="-1"></a>  lm.AD <span class="ot">&lt;-</span> <span class="fu">lm</span>(model2, <span class="at">data =</span> data.train) </span>
+<span id="cb107-39"><a href="cross-validation.html#cb107-39" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Fit the linear model with the training data</span></span>
+<span id="cb107-40"><a href="cross-validation.html#cb107-40" aria-hidden="true" tabindex="-1"></a>  y_hat <span class="ot">&lt;-</span> <span class="fu">predict</span>(lm.AD, data.test)      </span>
+<span id="cb107-41"><a href="cross-validation.html#cb107-41" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Predict on the testing data using the trained model</span></span>
+<span id="cb107-42"><a href="cross-validation.html#cb107-42" aria-hidden="true" tabindex="-1"></a>  true_y <span class="ot">&lt;-</span> data.test<span class="sc">$</span>MMSCORE                  </span>
+<span id="cb107-43"><a href="cross-validation.html#cb107-43" aria-hidden="true" tabindex="-1"></a>  <span class="co"># get the true y values for the testing data</span></span>
+<span id="cb107-44"><a href="cross-validation.html#cb107-44" aria-hidden="true" tabindex="-1"></a>  cv_mse[k] <span class="ot">&lt;-</span> <span class="fu">mean</span>((true_y <span class="sc">-</span> y_hat)<span class="sc">^</span><span class="dv">2</span>)    </span>
+<span id="cb107-45"><a href="cross-validation.html#cb107-45" aria-hidden="true" tabindex="-1"></a>  <span class="co"># mean((true_y - y_hat)^2): mean squared error (MSE). </span></span>
+<span id="cb107-46"><a href="cross-validation.html#cb107-46" aria-hidden="true" tabindex="-1"></a>  <span class="co"># The smaller this error, the better your model is</span></span>
+<span id="cb107-47"><a href="cross-validation.html#cb107-47" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb107-48"><a href="cross-validation.html#cb107-48" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(cv_mse)</span>
+<span id="cb107-49"><a href="cross-validation.html#cb107-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb107-50"><a href="cross-validation.html#cb107-50" aria-hidden="true" tabindex="-1"></a><span class="co"># Then, evaluate model3 ...</span></span>
+<span id="cb107-51"><a href="cross-validation.html#cb107-51" aria-hidden="true" tabindex="-1"></a><span class="co"># Then, evaluate model4 ...</span></span></code></pre></div>
+<p></p>
+<p>The result is shown below.</p>
+<p></p>
+<div class="sourceCode" id="cb108"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb108-1"><a href="cross-validation.html#cb108-1" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 3.17607</span></span>
+<span id="cb108-2"><a href="cross-validation.html#cb108-2" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 3.12529</span></span>
+<span id="cb108-3"><a href="cross-validation.html#cb108-3" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 4.287637</span></span>
+<span id="cb108-4"><a href="cross-validation.html#cb108-4" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 3.337222</span></span></code></pre></div>
+<p></p>
+<p>We conclude that <code>model2</code> is the best one, as it achieves the minimum mean squared error (MSE) .</p>
+<p><em>Simulation Experiment.</em> How do we know the cross-validation could identify a good model, i.e., the one that neither overfits nor underfits the data? Let’s design a simulation experiment to study the performance of cross-validation<label for="tufte-sn-120" class="margin-toggle sidenote-number">120</label><input type="checkbox" id="tufte-sn-120" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">120</span> A large portion of the R script in this subsection was modified from <a href="malanor.net">malanor.net</a>, now no longer an active site.</span>.</p>
+<p>The purpose of the experiment is two-fold: (1) to show that the cross-validation can help us mitigate the model selection problem, and (2) to show that R is not just a tool for implementing data analysis methods, but also an experimental tool to gain first-hand experience of any method’s practical performance.</p>
+<p>Our experiment has a clearly defined metric to measure the complexity of the <em>signal</em>. We resort to the <strong>spline</strong> models<label for="tufte-sn-121" class="margin-toggle sidenote-number">121</label><input type="checkbox" id="tufte-sn-121" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">121</span> A good tutorial:
+Eilers, P. and Marx, B., <em>Splines, Knots, and Penalties</em>, Computational statistics, Volume 2, Issue 6, Pages 637-653, 2010.</span> that could be loosely put into the category of regression models, which have a precise mechanism to tune a model’s complexity, i.e., through the parameter of <strong>degree of freedom</strong> (<strong>df</strong>). For simplicity, we simulate a dataset with one predictor and one outcome variable. In R, we use the <code>ns()</code> function to simulate the spline model.</p>
+<p>The outcome is a nonlinear curve<label for="tufte-sn-122" class="margin-toggle sidenote-number">122</label><input type="checkbox" id="tufte-sn-122" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">122</span> Here, we use the B-spline basis matrix for natural cubic splines to create a nonlinear curve. This topic is beyond the scope of this book.</span>. We use the degree of freedom (<code>df</code>) parameter in the <code>ns()</code> function to control the complexity of the curve, i.e., the larger the <code>df</code>, the more “nonlinear” the curve. As this curve is the <em>signal</em> of the data, we also simulate noise through a Gaussian distribution using the <code>rnorm()</code> function.</p>
+<p></p>
+<div class="sourceCode" id="cb109"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb109-1"><a href="cross-validation.html#cb109-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Write a simulator to generate dataset with one predictor and </span></span>
+<span id="cb109-2"><a href="cross-validation.html#cb109-2" aria-hidden="true" tabindex="-1"></a><span class="co"># one outcome from a polynomial regression model</span></span>
+<span id="cb109-3"><a href="cross-validation.html#cb109-3" aria-hidden="true" tabindex="-1"></a>seed <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">1</span>)</span>
+<span id="cb109-4"><a href="cross-validation.html#cb109-4" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(seed)</span>
+<span id="cb109-5"><a href="cross-validation.html#cb109-5" aria-hidden="true" tabindex="-1"></a>gen_data <span class="ot">&lt;-</span> <span class="cf">function</span>(n, coef, v_noise) {</span>
+<span id="cb109-6"><a href="cross-validation.html#cb109-6" aria-hidden="true" tabindex="-1"></a>eps <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="dv">0</span>, v_noise)</span>
+<span id="cb109-7"><a href="cross-validation.html#cb109-7" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">sort</span>(<span class="fu">runif</span>(n, <span class="dv">0</span>, <span class="dv">100</span>))</span>
+<span id="cb109-8"><a href="cross-validation.html#cb109-8" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">cbind</span>(<span class="dv">1</span>,<span class="fu">ns</span>(x, <span class="at">df =</span> (<span class="fu">length</span>(coef) <span class="sc">-</span> <span class="dv">1</span>)))</span>
+<span id="cb109-9"><a href="cross-validation.html#cb109-9" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(X <span class="sc">%*%</span> coef <span class="sc">+</span> eps)</span>
+<span id="cb109-10"><a href="cross-validation.html#cb109-10" aria-hidden="true" tabindex="-1"></a><span class="fu">return</span>(<span class="fu">data.frame</span>(<span class="at">x =</span> x, <span class="at">y =</span> y))   }</span></code></pre></div>
+<p></p>
+<p>The following R codes generate the scattered grey data points and the true model as shown in Figure <a href="cross-validation.html#fig:f5-5">83</a>.</p>
+<p></p>
+<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb110-1"><a href="cross-validation.html#cb110-1" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages(&quot;splines&quot;)</span></span>
+<span id="cb110-2"><a href="cross-validation.html#cb110-2" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(splines)</span>
+<span id="cb110-3"><a href="cross-validation.html#cb110-3" aria-hidden="true" tabindex="-1"></a><span class="do">## Loading required package: splines</span></span>
+<span id="cb110-4"><a href="cross-validation.html#cb110-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulate one batch of data, and see how different model</span></span>
+<span id="cb110-5"><a href="cross-validation.html#cb110-5" aria-hidden="true" tabindex="-1"></a><span class="co"># fits with df from 1 to 50</span></span>
+<span id="cb110-6"><a href="cross-validation.html#cb110-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb110-7"><a href="cross-validation.html#cb110-7" aria-hidden="true" tabindex="-1"></a>n_train <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb110-8"><a href="cross-validation.html#cb110-8" aria-hidden="true" tabindex="-1"></a>coef <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.68</span>,<span class="fl">0.82</span>,<span class="sc">-</span><span class="fl">0.417</span>,<span class="fl">0.32</span>,<span class="sc">-</span><span class="fl">0.68</span>)</span>
+<span id="cb110-9"><a href="cross-validation.html#cb110-9" aria-hidden="true" tabindex="-1"></a>v_noise <span class="ot">&lt;-</span> <span class="fl">0.2</span></span>
+<span id="cb110-10"><a href="cross-validation.html#cb110-10" aria-hidden="true" tabindex="-1"></a>n_df <span class="ot">&lt;-</span> <span class="dv">20</span></span>
+<span id="cb110-11"><a href="cross-validation.html#cb110-11" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span>n_df</span>
+<span id="cb110-12"><a href="cross-validation.html#cb110-12" aria-hidden="true" tabindex="-1"></a>tempData <span class="ot">&lt;-</span> <span class="fu">gen_data</span>(n_train, coef, v_noise)</span>
+<span id="cb110-13"><a href="cross-validation.html#cb110-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb110-14"><a href="cross-validation.html#cb110-14" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> tempData[, <span class="st">&quot;x&quot;</span>]</span>
+<span id="cb110-15"><a href="cross-validation.html#cb110-15" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> tempData[, <span class="st">&quot;y&quot;</span>]</span>
+<span id="cb110-16"><a href="cross-validation.html#cb110-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the data</span></span>
+<span id="cb110-17"><a href="cross-validation.html#cb110-17" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> tempData<span class="sc">$</span>x</span>
+<span id="cb110-18"><a href="cross-validation.html#cb110-18" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">cbind</span>(<span class="dv">1</span>, <span class="fu">ns</span>(x, <span class="at">df =</span> (<span class="fu">length</span>(coef) <span class="sc">-</span> <span class="dv">1</span>)))</span>
+<span id="cb110-19"><a href="cross-validation.html#cb110-19" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> tempData<span class="sc">$</span>y</span>
+<span id="cb110-20"><a href="cross-validation.html#cb110-20" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(y <span class="sc">~</span> x, <span class="at">col =</span> <span class="st">&quot;gray&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb110-21"><a href="cross-validation.html#cb110-21" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(x, X <span class="sc">%*%</span> coef, <span class="at">lwd =</span> <span class="dv">3</span>, <span class="at">col =</span> <span class="st">&quot;black&quot;</span>)</span></code></pre></div>
+<p></p>
+<p></p>
+<div class="figure"><span id="fig:f5-5"></span>
+<p class="caption marginnote shownote">
+Figure 83: The simulated data from a nonlinear regression model with B-spline basis matrix (<code>df</code>=4), and various fitted models with different degrees of freedom
+</p>
+<img src="graphics/5_5.png" alt="The simulated data from a nonlinear regression model with B-spline basis matrix (`df`=4), and various fitted models with different degrees of freedom" width="100%"  />
+</div>
+<p></p>
+<p>We then fit the data with a variety of models, starting from <code>df=1</code><label for="tufte-sn-123" class="margin-toggle sidenote-number">123</label><input type="checkbox" id="tufte-sn-123" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">123</span> I.e., corresponds to the linear model.</span> to <code>df=20</code><label for="tufte-sn-124" class="margin-toggle sidenote-number">124</label><input type="checkbox" id="tufte-sn-124" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">124</span> I.e., a very complex model.</span>. The fitted curves are overlaid onto the scattered data points in Figure <a href="cross-validation.html#fig:f5-5">83</a>. It can be seen that the linear model obviously underfits the data, as it lacks the flexibility to characterize the complexity of the signal sufficiently. The model that has (<code>df=20</code>) overfits the data, evidenced by its complex shape. It tries too hard to fit the local patterns, i.e., by all the turns and twists of its curve, while the local patterns were mostly induced by noise<label for="tufte-sn-125" class="margin-toggle sidenote-number">125</label><input type="checkbox" id="tufte-sn-125" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">125</span> A model that tries too hard to fit the training data by absorbing its noise into its shape will not perform well on future unseen testing data, since the particular noise in the training data would not appear in the testing data—if a noise repeats itself, it is not noise anymore but signal.</span>.</p>
+<p></p>
+<div class="sourceCode" id="cb111"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb111-1"><a href="cross-validation.html#cb111-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit the data using different models with different</span></span>
+<span id="cb111-2"><a href="cross-validation.html#cb111-2" aria-hidden="true" tabindex="-1"></a><span class="co"># degrees of freedom (df)</span></span>
+<span id="cb111-3"><a href="cross-validation.html#cb111-3" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">apply</span>(<span class="fu">t</span>(df), <span class="dv">2</span>, <span class="cf">function</span>(degf) <span class="fu">lm</span>(y <span class="sc">~</span> <span class="fu">ns</span>(x, <span class="at">df =</span> degf)))</span>
+<span id="cb111-4"><a href="cross-validation.html#cb111-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the models</span></span>
+<span id="cb111-5"><a href="cross-validation.html#cb111-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(y <span class="sc">~</span> x, <span class="at">col =</span> <span class="st">&quot;gray&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb111-6"><a href="cross-validation.html#cb111-6" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(x, <span class="fu">fitted</span>(fit[[<span class="dv">1</span>]]), <span class="at">lwd =</span> <span class="dv">3</span>, <span class="at">col =</span> <span class="st">&quot;darkorange&quot;</span>)</span>
+<span id="cb111-7"><a href="cross-validation.html#cb111-7" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(x, <span class="fu">fitted</span>(fit[[<span class="dv">4</span>]]), <span class="at">lwd =</span> <span class="dv">3</span>, <span class="at">col =</span> <span class="st">&quot;dodgerblue4&quot;</span>)</span>
+<span id="cb111-8"><a href="cross-validation.html#cb111-8" aria-hidden="true" tabindex="-1"></a><span class="co"># lines(x, fitted(fit[[10]]), lwd = 3, col = &quot;darkorange&quot;)</span></span>
+<span id="cb111-9"><a href="cross-validation.html#cb111-9" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(x, <span class="fu">fitted</span>(fit[[<span class="dv">20</span>]]), <span class="at">lwd =</span> <span class="dv">3</span>, <span class="at">col =</span> <span class="st">&quot;forestgreen&quot;</span>)</span>
+<span id="cb111-10"><a href="cross-validation.html#cb111-10" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="at">x =</span> <span class="st">&quot;topright&quot;</span>, <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">&quot;True function&quot;</span>,</span>
+<span id="cb111-11"><a href="cross-validation.html#cb111-11" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Linear fit (df = 1)&quot;</span>, <span class="st">&quot;Best model (df = 4)&quot;</span>,</span>
+<span id="cb111-12"><a href="cross-validation.html#cb111-12" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Overfitted model (df = 15)&quot;</span>,<span class="st">&quot;Overfitted model (df = 20)&quot;</span>),</span>
+<span id="cb111-13"><a href="cross-validation.html#cb111-13" aria-hidden="true" tabindex="-1"></a>      <span class="at">lwd =</span> <span class="fu">rep</span>(<span class="dv">3</span>, <span class="dv">4</span>), <span class="at">col =</span> <span class="fu">c</span>(<span class="st">&quot;black&quot;</span>, <span class="st">&quot;darkorange&quot;</span>, <span class="st">&quot;dodgerblue4&quot;</span>,</span>
+<span id="cb111-14"><a href="cross-validation.html#cb111-14" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;forestgreen&quot;</span>), <span class="at">text.width =</span> <span class="dv">32</span>, <span class="at">cex =</span> <span class="fl">0.6</span>)</span></code></pre></div>
+<p></p>
+<p>Note that, in this example, we have known that the true model has <code>df=4</code>. In reality, we don’t have this knowledge. It is dangerous to keep increasing the model complexity to aggressively pursue better prediction performance <em>on the training data</em>. To see the danger, let’s do another experiment.</p>
+<p>First, we use the following R code to generate a testing data from the same distribution of the training data.</p>
+<p></p>
+<div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb112-1"><a href="cross-validation.html#cb112-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate test data from the same model</span></span>
+<span id="cb112-2"><a href="cross-validation.html#cb112-2" aria-hidden="true" tabindex="-1"></a>n_test <span class="ot">&lt;-</span> <span class="dv">50</span></span>
+<span id="cb112-3"><a href="cross-validation.html#cb112-3" aria-hidden="true" tabindex="-1"></a>xy_test <span class="ot">&lt;-</span> <span class="fu">gen_data</span>(n_test, coef, v_noise)</span></code></pre></div>
+<p></p>
+<p>Then, we fit a set of models from linear (<code>df=1</code>) to (<code>df=20</code>) using the training dataset. And we compute the prediction errors of these models using the training dataset and testing dataset separately. This is done by the following R script.</p>
+<p></p>
+<div class="sourceCode" id="cb113"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb113-1"><a href="cross-validation.html#cb113-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute the training and testing errors for each model</span></span>
+<span id="cb113-2"><a href="cross-validation.html#cb113-2" aria-hidden="true" tabindex="-1"></a>mse <span class="ot">&lt;-</span> <span class="fu">sapply</span>(fit, <span class="cf">function</span>(obj) <span class="fu">deviance</span>(obj)<span class="sc">/</span><span class="fu">nobs</span>(obj))</span>
+<span id="cb113-3"><a href="cross-validation.html#cb113-3" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">mapply</span>(<span class="cf">function</span>(obj, degf) <span class="fu">predict</span>(obj, <span class="fu">data.frame</span>(<span class="at">x =</span> </span>
+<span id="cb113-4"><a href="cross-validation.html#cb113-4" aria-hidden="true" tabindex="-1"></a>                        xy_test<span class="sc">$</span>x)),fit, df)</span>
+<span id="cb113-5"><a href="cross-validation.html#cb113-5" aria-hidden="true" tabindex="-1"></a>te <span class="ot">&lt;-</span> <span class="fu">sapply</span>(<span class="fu">as.list</span>(<span class="fu">data.frame</span>(pred)),</span>
+<span id="cb113-6"><a href="cross-validation.html#cb113-6" aria-hidden="true" tabindex="-1"></a>             <span class="cf">function</span>(y_hat) <span class="fu">mean</span>((xy_test<span class="sc">$</span>y <span class="sc">-</span> y_hat)<span class="sc">^</span><span class="dv">2</span>))</span></code></pre></div>
+<p></p>
+<p></p>
+<div class="figure"><span id="fig:f5-6"></span>
+<p class="caption marginnote shownote">
+Figure 84: Prediction errors of the models (from (<code>df</code><span class="math inline">\(=0\)</span>) to (<code>df</code><span class="math inline">\(=20\)</span>)) on the training dataset and testing data
+</p>
+<img src="graphics/5_6.png" alt="Prediction errors of the models (from (`df`$=0$) to (`df`$=20$)) on the training dataset and testing data" width="100%"  />
+</div>
+<p></p>
+<p>We further present the training and testing errors of the models in Figure <a href="cross-validation.html#fig:f5-6">84</a>, by running the R script below.</p>
+<div style="page-break-after: always;"></div>
+<p></p>
+<div class="sourceCode" id="cb114"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb114-1"><a href="cross-validation.html#cb114-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the errors</span></span>
+<span id="cb114-2"><a href="cross-validation.html#cb114-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(df, mse, <span class="at">type =</span> <span class="st">&quot;l&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="fu">gray</span>(<span class="fl">0.4</span>),</span>
+<span id="cb114-3"><a href="cross-validation.html#cb114-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">&quot;Prediction error&quot;</span>,</span>
+<span id="cb114-4"><a href="cross-validation.html#cb114-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;The degrees of freedom (logged) of the model&quot;</span>,</span>
+<span id="cb114-5"><a href="cross-validation.html#cb114-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylim =</span> <span class="fu">c</span>(<span class="fl">0.9</span><span class="sc">*</span><span class="fu">min</span>(mse), <span class="fl">1.1</span><span class="sc">*</span><span class="fu">max</span>(mse)), <span class="at">log =</span> <span class="st">&quot;x&quot;</span>)</span>
+<span id="cb114-6"><a href="cross-validation.html#cb114-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb114-7"><a href="cross-validation.html#cb114-7" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(df, te, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">&quot;orange3&quot;</span>)</span>
+<span id="cb114-8"><a href="cross-validation.html#cb114-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb114-9"><a href="cross-validation.html#cb114-9" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(df[<span class="dv">1</span>], mse[<span class="dv">1</span>], <span class="at">col =</span> <span class="st">&quot;palegreen3&quot;</span>, <span class="at">pch =</span> <span class="dv">17</span>, <span class="at">cex =</span> <span class="fl">1.5</span>)</span>
+<span id="cb114-10"><a href="cross-validation.html#cb114-10" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(df[<span class="dv">1</span>], te[<span class="dv">1</span>], <span class="at">col =</span> <span class="st">&quot;palegreen3&quot;</span>, <span class="at">pch =</span> <span class="dv">17</span>, <span class="at">cex =</span> <span class="fl">1.5</span>)</span>
+<span id="cb114-11"><a href="cross-validation.html#cb114-11" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(df[<span class="fu">which.min</span>(te)], mse[<span class="fu">which.min</span>(te)], <span class="at">col =</span> <span class="st">&quot;darkorange&quot;</span>,</span>
+<span id="cb114-12"><a href="cross-validation.html#cb114-12" aria-hidden="true" tabindex="-1"></a>       <span class="at">pch =</span> <span class="dv">16</span>, <span class="at">cex =</span> <span class="fl">1.5</span>)</span>
+<span id="cb114-13"><a href="cross-validation.html#cb114-13" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(df[<span class="fu">which.min</span>(te)], te[<span class="fu">which.min</span>(te)], <span class="at">col =</span> <span class="st">&quot;darkorange&quot;</span>,</span>
+<span id="cb114-14"><a href="cross-validation.html#cb114-14" aria-hidden="true" tabindex="-1"></a>       <span class="at">pch =</span> <span class="dv">16</span>,<span class="at">cex =</span> <span class="fl">1.5</span>)</span>
+<span id="cb114-15"><a href="cross-validation.html#cb114-15" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(df[<span class="dv">15</span>], mse[<span class="dv">15</span>], <span class="at">col =</span> <span class="st">&quot;steelblue&quot;</span>, <span class="at">pch =</span> <span class="dv">15</span>, <span class="at">cex =</span> <span class="fl">1.5</span>)</span>
+<span id="cb114-16"><a href="cross-validation.html#cb114-16" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(df[<span class="dv">15</span>], te[<span class="dv">15</span>], <span class="at">col =</span> <span class="st">&quot;steelblue&quot;</span>, <span class="at">pch =</span> <span class="dv">15</span>, <span class="at">cex =</span> <span class="fl">1.5</span>)</span>
+<span id="cb114-17"><a href="cross-validation.html#cb114-17" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="at">x =</span> <span class="st">&quot;top&quot;</span>, <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">&quot;Training error&quot;</span>, <span class="st">&quot;Test error&quot;</span>),</span>
+<span id="cb114-18"><a href="cross-validation.html#cb114-18" aria-hidden="true" tabindex="-1"></a><span class="at">lwd =</span> <span class="fu">rep</span>(<span class="dv">2</span>, <span class="dv">2</span>), <span class="at">col =</span> <span class="fu">c</span>(<span class="fu">gray</span>(<span class="fl">0.4</span>), <span class="st">&quot;orange3&quot;</span>), <span class="at">text.width =</span> <span class="fl">0.3</span>,</span>
+<span id="cb114-19"><a href="cross-validation.html#cb114-19" aria-hidden="true" tabindex="-1"></a>      <span class="at">cex =</span> <span class="fl">0.8</span>)</span></code></pre></div>
+<p></p>
+<p>Figure <a href="cross-validation.html#fig:f5-6">84</a> shows that the prediction error on the training dataset keeps decreasing with the increase of the <code>df</code>. This is consistent with our theory, and this only indicates a universal phenomenon that <em>a more complex model can fit the training data better</em>. On the other hand, we could observe that the testing error curve shows a <strong>U-shaped</strong> curve, indicating that an optimal model<label for="tufte-sn-126" class="margin-toggle sidenote-number">126</label><input type="checkbox" id="tufte-sn-126" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">126</span> I.e., the dip location on the U-shaped curve is where the optimal <code>df</code> could be found.</span> exists in this range of the model complexity.</p>
+<p>As this is an observation made on one dataset that was randomly generated, we should repeat this experiment multiple times to see if our observation is robust. The following R code repeats this experiment <span class="math inline">\(100\)</span> times and presents the results in Figure <a href="cross-validation.html#fig:f5-7">85</a>.</p>
+<p></p>
+<div class="sourceCode" id="cb115"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb115-1"><a href="cross-validation.html#cb115-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Repeat the above experiments in 100 times</span></span>
+<span id="cb115-2"><a href="cross-validation.html#cb115-2" aria-hidden="true" tabindex="-1"></a>n_rep <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb115-3"><a href="cross-validation.html#cb115-3" aria-hidden="true" tabindex="-1"></a>n_train <span class="ot">&lt;-</span> <span class="dv">50</span></span>
+<span id="cb115-4"><a href="cross-validation.html#cb115-4" aria-hidden="true" tabindex="-1"></a>coef <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.68</span>,<span class="fl">0.82</span>,<span class="sc">-</span><span class="fl">0.417</span>,<span class="fl">0.32</span>,<span class="sc">-</span><span class="fl">0.68</span>)</span>
+<span id="cb115-5"><a href="cross-validation.html#cb115-5" aria-hidden="true" tabindex="-1"></a>v_noise <span class="ot">&lt;-</span> <span class="fl">0.2</span></span>
+<span id="cb115-6"><a href="cross-validation.html#cb115-6" aria-hidden="true" tabindex="-1"></a>n_df <span class="ot">&lt;-</span> <span class="dv">20</span></span>
+<span id="cb115-7"><a href="cross-validation.html#cb115-7" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span>n_df</span>
+<span id="cb115-8"><a href="cross-validation.html#cb115-8" aria-hidden="true" tabindex="-1"></a>xy <span class="ot">&lt;-</span> res <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
+<span id="cb115-9"><a href="cross-validation.html#cb115-9" aria-hidden="true" tabindex="-1"></a>xy_test <span class="ot">&lt;-</span> <span class="fu">gen_data</span>(n_test, coef, v_noise)</span>
+<span id="cb115-10"><a href="cross-validation.html#cb115-10" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_rep) {</span>
+<span id="cb115-11"><a href="cross-validation.html#cb115-11" aria-hidden="true" tabindex="-1"></a>  xy[[i]] <span class="ot">&lt;-</span> <span class="fu">gen_data</span>(n_train, coef, v_noise)</span>
+<span id="cb115-12"><a href="cross-validation.html#cb115-12" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> xy[[i]][, <span class="st">&quot;x&quot;</span>]</span>
+<span id="cb115-13"><a href="cross-validation.html#cb115-13" aria-hidden="true" tabindex="-1"></a>  y <span class="ot">&lt;-</span> xy[[i]][, <span class="st">&quot;y&quot;</span>]</span>
+<span id="cb115-14"><a href="cross-validation.html#cb115-14" aria-hidden="true" tabindex="-1"></a>  res[[i]] <span class="ot">&lt;-</span> <span class="fu">apply</span>(<span class="fu">t</span>(df), <span class="dv">2</span>,</span>
+<span id="cb115-15"><a href="cross-validation.html#cb115-15" aria-hidden="true" tabindex="-1"></a>              <span class="cf">function</span>(degf) <span class="fu">lm</span>(y <span class="sc">~</span> <span class="fu">ns</span>(x, <span class="at">df =</span> degf)))</span>
+<span id="cb115-16"><a href="cross-validation.html#cb115-16" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb115-17"><a href="cross-validation.html#cb115-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb115-18"><a href="cross-validation.html#cb115-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb115-19"><a href="cross-validation.html#cb115-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute the training and test errors for each model</span></span>
+<span id="cb115-20"><a href="cross-validation.html#cb115-20" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
+<span id="cb115-21"><a href="cross-validation.html#cb115-21" aria-hidden="true" tabindex="-1"></a>mse <span class="ot">&lt;-</span> te <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="cn">NA</span>, <span class="at">nrow =</span> n_df, <span class="at">ncol =</span> n_rep)</span>
+<span id="cb115-22"><a href="cross-validation.html#cb115-22" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_rep) {</span>
+<span id="cb115-23"><a href="cross-validation.html#cb115-23" aria-hidden="true" tabindex="-1"></a>  mse[, i] <span class="ot">&lt;-</span> <span class="fu">sapply</span>(res[[i]],</span>
+<span id="cb115-24"><a href="cross-validation.html#cb115-24" aria-hidden="true" tabindex="-1"></a>             <span class="cf">function</span>(obj) <span class="fu">deviance</span>(obj)<span class="sc">/</span><span class="fu">nobs</span>(obj))</span>
+<span id="cb115-25"><a href="cross-validation.html#cb115-25" aria-hidden="true" tabindex="-1"></a>  pred[[i]] <span class="ot">&lt;-</span> <span class="fu">mapply</span>(<span class="cf">function</span>(obj, degf) <span class="fu">predict</span>(obj,</span>
+<span id="cb115-26"><a href="cross-validation.html#cb115-26" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">data.frame</span>(<span class="at">x =</span> xy_test<span class="sc">$</span>x)),res[[i]], df)</span>
+<span id="cb115-27"><a href="cross-validation.html#cb115-27" aria-hidden="true" tabindex="-1"></a>  te[, i] <span class="ot">&lt;-</span> <span class="fu">sapply</span>(<span class="fu">as.list</span>(<span class="fu">data.frame</span>(pred[[i]])),</span>
+<span id="cb115-28"><a href="cross-validation.html#cb115-28" aria-hidden="true" tabindex="-1"></a>              <span class="cf">function</span>(y_hat) <span class="fu">mean</span>((xy_test<span class="sc">$</span>y <span class="sc">-</span> y_hat)<span class="sc">^</span><span class="dv">2</span>))</span>
+<span id="cb115-29"><a href="cross-validation.html#cb115-29" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb115-30"><a href="cross-validation.html#cb115-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb115-31"><a href="cross-validation.html#cb115-31" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute the average training and test errors</span></span>
+<span id="cb115-32"><a href="cross-validation.html#cb115-32" aria-hidden="true" tabindex="-1"></a>av_mse <span class="ot">&lt;-</span> <span class="fu">rowMeans</span>(mse)</span>
+<span id="cb115-33"><a href="cross-validation.html#cb115-33" aria-hidden="true" tabindex="-1"></a>av_te <span class="ot">&lt;-</span> <span class="fu">rowMeans</span>(te)</span>
+<span id="cb115-34"><a href="cross-validation.html#cb115-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb115-35"><a href="cross-validation.html#cb115-35" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the errors</span></span>
+<span id="cb115-36"><a href="cross-validation.html#cb115-36" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(df, av_mse, <span class="at">type =</span> <span class="st">&quot;l&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="fu">gray</span>(<span class="fl">0.4</span>),</span>
+<span id="cb115-37"><a href="cross-validation.html#cb115-37" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">&quot;Prediction error&quot;</span>,</span>
+<span id="cb115-38"><a href="cross-validation.html#cb115-38" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;The degrees of freedom (logged) of the model&quot;</span>,</span>
+<span id="cb115-39"><a href="cross-validation.html#cb115-39" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylim =</span> <span class="fu">c</span>(<span class="fl">0.7</span><span class="sc">*</span><span class="fu">min</span>(mse), <span class="fl">1.4</span><span class="sc">*</span><span class="fu">max</span>(mse)), <span class="at">log =</span> <span class="st">&quot;x&quot;</span>)</span>
+<span id="cb115-40"><a href="cross-validation.html#cb115-40" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_rep) {</span>
+<span id="cb115-41"><a href="cross-validation.html#cb115-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lines</span>(df, te[, i], <span class="at">col =</span> <span class="st">&quot;lightyellow2&quot;</span>)</span>
+<span id="cb115-42"><a href="cross-validation.html#cb115-42" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb115-43"><a href="cross-validation.html#cb115-43" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_rep) {</span>
+<span id="cb115-44"><a href="cross-validation.html#cb115-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lines</span>(df, mse[, i], <span class="at">col =</span> <span class="fu">gray</span>(<span class="fl">0.8</span>))</span>
+<span id="cb115-45"><a href="cross-validation.html#cb115-45" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb115-46"><a href="cross-validation.html#cb115-46" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(df, av_mse, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="fu">gray</span>(<span class="fl">0.4</span>))</span>
+<span id="cb115-47"><a href="cross-validation.html#cb115-47" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(df, av_te, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">&quot;orange3&quot;</span>)</span>
+<span id="cb115-48"><a href="cross-validation.html#cb115-48" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(df[<span class="dv">1</span>], av_mse[<span class="dv">1</span>], <span class="at">col =</span> <span class="st">&quot;palegreen3&quot;</span>, <span class="at">pch =</span> <span class="dv">17</span>, <span class="at">cex =</span> <span class="fl">1.5</span>)</span>
+<span id="cb115-49"><a href="cross-validation.html#cb115-49" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(df[<span class="dv">1</span>], av_te[<span class="dv">1</span>], <span class="at">col =</span> <span class="st">&quot;palegreen3&quot;</span>, <span class="at">pch =</span> <span class="dv">17</span>, <span class="at">cex =</span> <span class="fl">1.5</span>)</span>
+<span id="cb115-50"><a href="cross-validation.html#cb115-50" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(df[<span class="fu">which.min</span>(av_te)], av_mse[<span class="fu">which.min</span>(av_te)],</span>
+<span id="cb115-51"><a href="cross-validation.html#cb115-51" aria-hidden="true" tabindex="-1"></a>       <span class="at">col =</span> <span class="st">&quot;darkorange&quot;</span>, <span class="at">pch =</span> <span class="dv">16</span>, <span class="at">cex =</span> <span class="fl">1.5</span>)</span>
+<span id="cb115-52"><a href="cross-validation.html#cb115-52" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(df[<span class="fu">which.min</span>(av_te)], av_te[<span class="fu">which.min</span>(av_te)],</span>
+<span id="cb115-53"><a href="cross-validation.html#cb115-53" aria-hidden="true" tabindex="-1"></a>       <span class="at">col =</span> <span class="st">&quot;darkorange&quot;</span>, <span class="at">pch =</span> <span class="dv">16</span>, <span class="at">cex =</span> <span class="fl">1.5</span>)</span>
+<span id="cb115-54"><a href="cross-validation.html#cb115-54" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(df[<span class="dv">20</span>], av_mse[<span class="dv">20</span>], <span class="at">col =</span> <span class="st">&quot;steelblue&quot;</span>, <span class="at">pch =</span> <span class="dv">15</span>, <span class="at">cex =</span> <span class="fl">1.5</span>)</span>
+<span id="cb115-55"><a href="cross-validation.html#cb115-55" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(df[<span class="dv">20</span>], av_te[<span class="dv">20</span>], <span class="at">col =</span> <span class="st">&quot;steelblue&quot;</span>, <span class="at">pch =</span> <span class="dv">15</span>, <span class="at">cex =</span> <span class="fl">1.5</span>)</span>
+<span id="cb115-56"><a href="cross-validation.html#cb115-56" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="at">x =</span> <span class="st">&quot;center&quot;</span>, <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">&quot;Training error&quot;</span>, <span class="st">&quot;Test error&quot;</span>),</span>
+<span id="cb115-57"><a href="cross-validation.html#cb115-57" aria-hidden="true" tabindex="-1"></a>       <span class="at">lwd =</span> <span class="fu">rep</span>(<span class="dv">2</span>, <span class="dv">2</span>), <span class="at">col =</span> <span class="fu">c</span>(<span class="fu">gray</span>(<span class="fl">0.4</span>), <span class="st">&quot;darkred&quot;</span>),</span>
+<span id="cb115-58"><a href="cross-validation.html#cb115-58" aria-hidden="true" tabindex="-1"></a>       <span class="at">text.width =</span> <span class="fl">0.3</span>, <span class="at">cex =</span> <span class="fl">0.85</span>)</span></code></pre></div>
+<p></p>
+<p></p>
+<p>
+<span class="marginnote shownote">
+<!--
+<div class="figure">--><span id="fig:f5-7"></span>
+<img src="graphics/5_7.png" alt="Prediction errors of the models (from `df`$=0$ to `df`$=20$) on the training dataset and testing dataset of $100$ replications. The two highlighted curves represent the mean curves of the $100$ replications of the training and testing error curves, respectively" width="250px"  />
+<!--
+<p class="caption marginnote">-->Figure 85: Prediction errors of the models (from <code>df</code><span class="math inline">\(=0\)</span> to <code>df</code><span class="math inline">\(=20\)</span>) on the training dataset and testing dataset of <span class="math inline">\(100\)</span> replications. The two highlighted curves represent the mean curves of the <span class="math inline">\(100\)</span> replications of the training and testing error curves, respectively<!--</p>-->
+<!--</div>--></span>
+</p>
+<p></p>
+<p>Again, we can see that the training error keeps decreasing when the model complexity increases, while the testing error curve has a U-shape. The key to identify the best model complexity is to locate the lowest point on the U-shaped error curve obtained from a testing dataset.</p>
+<p>These experiments show that we need a testing dataset to evaluate the model to guide the model selection . Suppose you don’t have a testing dataset. The essence of a testing dataset is that it is not used for training the model. So you create one. What the hold-out, random sampling, and cross-validation approaches really do is use the training dataset to generate an estimate of the error curve that is supposed to be obtained from a testing dataset<label for="tufte-sn-127" class="margin-toggle sidenote-number">127</label><input type="checkbox" id="tufte-sn-127" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">127</span> See Figure <a href="remarks-3.html#fig:f5-flowchart">92</a> and its associated text in the Remarks section for more discussion.</span>.</p>
+<p>To see that, let’s consider a scenario that there are <span class="math inline">\(200\)</span> samples, and a client has split them into two parts, i.e., a training dataset with <span class="math inline">\(100\)</span> samples and a testing dataset with another <span class="math inline">\(100\)</span> samples. The client only sent the training dataset to us. So we use the <span class="math inline">\(10\)</span>-fold cross-validation on the training dataset, using the following R code, to evaluate the models (<code>df</code> from <span class="math inline">\(0\)</span> to <span class="math inline">\(20\)</span>).</p>
+<p></p>
+<div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb116-1"><a href="cross-validation.html#cb116-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Cross-validation</span></span>
+<span id="cb116-2"><a href="cross-validation.html#cb116-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(seed)</span>
+<span id="cb116-3"><a href="cross-validation.html#cb116-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb116-4"><a href="cross-validation.html#cb116-4" aria-hidden="true" tabindex="-1"></a>n_train <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb116-5"><a href="cross-validation.html#cb116-5" aria-hidden="true" tabindex="-1"></a>xy <span class="ot">&lt;-</span> <span class="fu">gen_data</span>(n_train, coef, v_noise)</span>
+<span id="cb116-6"><a href="cross-validation.html#cb116-6" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> xy<span class="sc">$</span>x</span>
+<span id="cb116-7"><a href="cross-validation.html#cb116-7" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> xy<span class="sc">$</span>y</span>
+<span id="cb116-8"><a href="cross-validation.html#cb116-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb116-9"><a href="cross-validation.html#cb116-9" aria-hidden="true" tabindex="-1"></a>fitted_models <span class="ot">&lt;-</span> <span class="fu">apply</span>(<span class="fu">t</span>(df), <span class="dv">2</span>,</span>
+<span id="cb116-10"><a href="cross-validation.html#cb116-10" aria-hidden="true" tabindex="-1"></a>         <span class="cf">function</span>(degf) <span class="fu">lm</span>(y <span class="sc">~</span> <span class="fu">ns</span>(x, <span class="at">df =</span> degf)))</span>
+<span id="cb116-11"><a href="cross-validation.html#cb116-11" aria-hidden="true" tabindex="-1"></a>mse <span class="ot">&lt;-</span> <span class="fu">sapply</span>(fitted_models,</span>
+<span id="cb116-12"><a href="cross-validation.html#cb116-12" aria-hidden="true" tabindex="-1"></a>         <span class="cf">function</span>(obj) <span class="fu">deviance</span>(obj)<span class="sc">/</span><span class="fu">nobs</span>(obj))</span>
+<span id="cb116-13"><a href="cross-validation.html#cb116-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb116-14"><a href="cross-validation.html#cb116-14" aria-hidden="true" tabindex="-1"></a>n_test <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb116-15"><a href="cross-validation.html#cb116-15" aria-hidden="true" tabindex="-1"></a>xy_test <span class="ot">&lt;-</span> <span class="fu">gen_data</span>(n_test, coef, v_noise)</span>
+<span id="cb116-16"><a href="cross-validation.html#cb116-16" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">mapply</span>(<span class="cf">function</span>(obj, degf)</span>
+<span id="cb116-17"><a href="cross-validation.html#cb116-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">predict</span>(obj, <span class="fu">data.frame</span>(<span class="at">x =</span> xy_test<span class="sc">$</span>x)),</span>
+<span id="cb116-18"><a href="cross-validation.html#cb116-18" aria-hidden="true" tabindex="-1"></a>  fitted_models, df)</span>
+<span id="cb116-19"><a href="cross-validation.html#cb116-19" aria-hidden="true" tabindex="-1"></a>te <span class="ot">&lt;-</span> <span class="fu">sapply</span>(<span class="fu">as.list</span>(<span class="fu">data.frame</span>(pred)),</span>
+<span id="cb116-20"><a href="cross-validation.html#cb116-20" aria-hidden="true" tabindex="-1"></a>   <span class="cf">function</span>(y_hat) <span class="fu">mean</span>((xy_test<span class="sc">$</span>y <span class="sc">-</span> y_hat)<span class="sc">^</span><span class="dv">2</span>))</span>
+<span id="cb116-21"><a href="cross-validation.html#cb116-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb116-22"><a href="cross-validation.html#cb116-22" aria-hidden="true" tabindex="-1"></a>n_folds <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb116-23"><a href="cross-validation.html#cb116-23" aria-hidden="true" tabindex="-1"></a>folds_i <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span>n_folds, <span class="at">length.out =</span> n_train))</span>
+<span id="cb116-24"><a href="cross-validation.html#cb116-24" aria-hidden="true" tabindex="-1"></a>cv_tmp <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="cn">NA</span>, <span class="at">nrow =</span> n_folds, <span class="at">ncol =</span> <span class="fu">length</span>(df))</span>
+<span id="cb116-25"><a href="cross-validation.html#cb116-25" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (k <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_folds) {</span>
+<span id="cb116-26"><a href="cross-validation.html#cb116-26" aria-hidden="true" tabindex="-1"></a>  test_i <span class="ot">&lt;-</span> <span class="fu">which</span>(folds_i <span class="sc">==</span> k)</span>
+<span id="cb116-27"><a href="cross-validation.html#cb116-27" aria-hidden="true" tabindex="-1"></a>  train_xy <span class="ot">&lt;-</span> xy[<span class="sc">-</span>test_i, ]</span>
+<span id="cb116-28"><a href="cross-validation.html#cb116-28" aria-hidden="true" tabindex="-1"></a>  test_xy <span class="ot">&lt;-</span> xy[test_i, ]</span>
+<span id="cb116-29"><a href="cross-validation.html#cb116-29" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> train_xy<span class="sc">$</span>x</span>
+<span id="cb116-30"><a href="cross-validation.html#cb116-30" aria-hidden="true" tabindex="-1"></a>  y <span class="ot">&lt;-</span> train_xy<span class="sc">$</span>y</span>
+<span id="cb116-31"><a href="cross-validation.html#cb116-31" aria-hidden="true" tabindex="-1"></a>  fitted_models <span class="ot">&lt;-</span> <span class="fu">apply</span>(<span class="fu">t</span>(df), <span class="dv">2</span>, <span class="cf">function</span>(degf) <span class="fu">lm</span>(y <span class="sc">~</span></span>
+<span id="cb116-32"><a href="cross-validation.html#cb116-32" aria-hidden="true" tabindex="-1"></a>                                     <span class="fu">ns</span>(x, <span class="at">df =</span> degf)))</span>
+<span id="cb116-33"><a href="cross-validation.html#cb116-33" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> test_xy<span class="sc">$</span>x</span>
+<span id="cb116-34"><a href="cross-validation.html#cb116-34" aria-hidden="true" tabindex="-1"></a>  y <span class="ot">&lt;-</span> test_xy<span class="sc">$</span>y</span>
+<span id="cb116-35"><a href="cross-validation.html#cb116-35" aria-hidden="true" tabindex="-1"></a>  pred <span class="ot">&lt;-</span> <span class="fu">mapply</span>(<span class="cf">function</span>(obj, degf) <span class="fu">predict</span>(obj, </span>
+<span id="cb116-36"><a href="cross-validation.html#cb116-36" aria-hidden="true" tabindex="-1"></a>                <span class="fu">data.frame</span>(<span class="fu">ns</span>(x, <span class="at">df =</span> degf))),</span>
+<span id="cb116-37"><a href="cross-validation.html#cb116-37" aria-hidden="true" tabindex="-1"></a>                fitted_models, df)</span>
+<span id="cb116-38"><a href="cross-validation.html#cb116-38" aria-hidden="true" tabindex="-1"></a>  cv_tmp[k, ] <span class="ot">&lt;-</span> <span class="fu">sapply</span>(<span class="fu">as.list</span>(<span class="fu">data.frame</span>(pred)),</span>
+<span id="cb116-39"><a href="cross-validation.html#cb116-39" aria-hidden="true" tabindex="-1"></a>                <span class="cf">function</span>(y_hat) <span class="fu">mean</span>((y <span class="sc">-</span> y_hat)<span class="sc">^</span><span class="dv">2</span>))</span>
+<span id="cb116-40"><a href="cross-validation.html#cb116-40" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb116-41"><a href="cross-validation.html#cb116-41" aria-hidden="true" tabindex="-1"></a>cv <span class="ot">&lt;-</span> <span class="fu">colMeans</span>(cv_tmp)</span></code></pre></div>
+<p></p>
+<p>Then we can visualize the result in Figure <a href="cross-validation.html#fig:f5-8">86</a> (the R script is shown below). Note that, in Figure <a href="cross-validation.html#fig:f5-8">86</a>, we overlay the result of the <span class="math inline">\(10\)</span>-fold cross-validation (based on the <span class="math inline">\(100\)</span> training samples) with the prediction error on the testing dataset to get an idea about how closely the <span class="math inline">\(10\)</span>-fold cross-validation can approximate the testing error curve<label for="tufte-sn-128" class="margin-toggle sidenote-number">128</label><input type="checkbox" id="tufte-sn-128" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">128</span> Remember that, in practice, we will not have access to the testing data, but we want our model to succeed on the testing data, i.e., to obtain the lowest error on the testing error curve. Thus, using cross-validation to mimic this testing procedure based on our training data is a “rehearsal.”</span>.</p>
+<p></p>
+<div class="sourceCode" id="cb117"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb117-1"><a href="cross-validation.html#cb117-1" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages(&quot;Hmisc&quot;)</span></span>
+<span id="cb117-2"><a href="cross-validation.html#cb117-2" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(Hmisc)</span>
+<span id="cb117-3"><a href="cross-validation.html#cb117-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(df, mse, <span class="at">type =</span> <span class="st">&quot;l&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="fu">gray</span>(<span class="fl">0.4</span>),</span>
+<span id="cb117-4"><a href="cross-validation.html#cb117-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">&quot;Prediction error&quot;</span>, </span>
+<span id="cb117-5"><a href="cross-validation.html#cb117-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;The degrees of freedom (logged) of the model&quot;</span>,</span>
+<span id="cb117-6"><a href="cross-validation.html#cb117-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="fu">paste0</span>(n_folds,<span class="st">&quot;-fold Cross-Validation&quot;</span>),</span>
+<span id="cb117-7"><a href="cross-validation.html#cb117-7" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylim =</span> <span class="fu">c</span>(<span class="fl">0.8</span><span class="sc">*</span><span class="fu">min</span>(mse), <span class="fl">1.2</span><span class="sc">*</span><span class="fu">max</span>(mse)), <span class="at">log =</span> <span class="st">&quot;x&quot;</span>)</span>
+<span id="cb117-8"><a href="cross-validation.html#cb117-8" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(df, te, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">&quot;orange3&quot;</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span>
+<span id="cb117-9"><a href="cross-validation.html#cb117-9" aria-hidden="true" tabindex="-1"></a>cv_sd <span class="ot">&lt;-</span> <span class="fu">apply</span>(cv_tmp, <span class="dv">2</span>, sd)<span class="sc">/</span><span class="fu">sqrt</span>(n_folds)</span>
+<span id="cb117-10"><a href="cross-validation.html#cb117-10" aria-hidden="true" tabindex="-1"></a><span class="fu">errbar</span>(df, cv, cv <span class="sc">+</span> cv_sd, cv <span class="sc">-</span> cv_sd, <span class="at">add =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb117-11"><a href="cross-validation.html#cb117-11" aria-hidden="true" tabindex="-1"></a>       <span class="at">col =</span> <span class="st">&quot;steelblue2&quot;</span>, <span class="at">pch =</span> <span class="dv">19</span>, </span>
+<span id="cb117-12"><a href="cross-validation.html#cb117-12" aria-hidden="true" tabindex="-1"></a><span class="at">lwd =</span> <span class="fl">0.5</span>)</span>
+<span id="cb117-13"><a href="cross-validation.html#cb117-13" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(df, cv, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">&quot;steelblue2&quot;</span>)</span>
+<span id="cb117-14"><a href="cross-validation.html#cb117-14" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(df, cv, <span class="at">col =</span> <span class="st">&quot;steelblue2&quot;</span>, <span class="at">pch =</span> <span class="dv">19</span>)</span>
+<span id="cb117-15"><a href="cross-validation.html#cb117-15" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="at">x =</span> <span class="st">&quot;topright&quot;</span>,</span>
+<span id="cb117-16"><a href="cross-validation.html#cb117-16" aria-hidden="true" tabindex="-1"></a>       <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">&quot;Training error&quot;</span>, <span class="st">&quot;Test error&quot;</span>,</span>
+<span id="cb117-17"><a href="cross-validation.html#cb117-17" aria-hidden="true" tabindex="-1"></a>                  <span class="st">&quot;Cross-validation error&quot;</span>), </span>
+<span id="cb117-18"><a href="cross-validation.html#cb117-18" aria-hidden="true" tabindex="-1"></a>       <span class="at">lty =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">1</span>), <span class="at">lwd =</span> <span class="fu">rep</span>(<span class="dv">2</span>, <span class="dv">3</span>),</span>
+<span id="cb117-19"><a href="cross-validation.html#cb117-19" aria-hidden="true" tabindex="-1"></a>       <span class="at">col =</span> <span class="fu">c</span>(<span class="fu">gray</span>(<span class="fl">0.4</span>), <span class="st">&quot;darkred&quot;</span>, <span class="st">&quot;steelblue2&quot;</span>), </span>
+<span id="cb117-20"><a href="cross-validation.html#cb117-20" aria-hidden="true" tabindex="-1"></a>       <span class="at">text.width =</span> <span class="fl">0.4</span>, <span class="at">cex =</span> <span class="fl">0.85</span>)</span></code></pre></div>
+<p></p>
+<p></p>
+<p>
+<span class="marginnote shownote">
+<!--
+<div class="figure">--><span id="fig:f5-8"></span>
+<img src="graphics/5_8.png" alt="Prediction errors of the models (from `df`$=0$ to `df`$=20$) on the training dataset without cross-validation, on the training dataset using $10$-fold cross-validation, and testing data of $100$ samples, respectively" width="250px"  />
+<!--
+<p class="caption marginnote">-->Figure 86: Prediction errors of the models (from <code>df</code><span class="math inline">\(=0\)</span> to <code>df</code><span class="math inline">\(=20\)</span>) on the training dataset without cross-validation, on the training dataset using <span class="math inline">\(10\)</span>-fold cross-validation, and testing data of <span class="math inline">\(100\)</span> samples, respectively<!--</p>-->
+<!--</div>--></span>
+</p>
+<p></p>
+<p>Overall, Figure <a href="cross-validation.html#fig:f5-8">86</a> shows that the <span class="math inline">\(10\)</span>-fold cross-validation could generate fair evaluation of the models just like an independent and unseen testing dataset. Although its estimation of the error is smaller than the error estimation on the testing dataset, they both point towards the same range of model complexity that will neither overfit nor underfit the data.</p>
+</div>
+</div>
+<p style="text-align: center;">
+<a href="overview-3.html"><button class="btn btn-default">Previous</button></a>
+<a href="out-of-bag-error-in-random-forests.html"><button class="btn btn-default">Next</button></a>
+</p>
+</div>
+</div>
+
+<script src="js/jquery.js"></script>
+<script src="js/tablesaw-stackonly.js"></script>
+<script src="js/nudge.min.js"></script>
+
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+</body>
+</html>

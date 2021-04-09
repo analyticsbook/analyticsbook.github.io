@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta property="og:title" content="Remarks | Data Analytics" />
+<meta property="og:type" content="book" />
+
+
+
+
+
+<meta name="author" content="Shuai Huang &amp; Houtao Deng" />
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  TeX: { equationNumbers: { autoNumber: "AMS" } }
+});
+</script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<meta name="description" content="Remarks | Data Analytics">
+
+<title>Remarks | Data Analytics</title>
+
+<script src="libs/header-attrs-2.7/header-attrs.js"></script>
+<link href="libs/tufte-css-2015.12.29/tufte.css" rel="stylesheet" />
+<link href="libs/tufte-css-2015.12.29/envisioned.css" rel="stylesheet" />
+<script src="https://use.typekit.net/ajy6rnl.js"></script>
+<script>try{Typekit.load({ async: true });}catch(e){}</script>
+<!-- <link rel="stylesheet" href="css/normalize.css"> -->
+<!-- <link rel="stylesheet" href="css/envisioned.css"/> -->
+<link rel="stylesheet" href="css/tablesaw-stackonly.css"/>
+<link rel="stylesheet" href="css/nudge.css"/>
+<link rel="stylesheet" href="css/sourcesans.css"/>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+
+
+</head>
+
+<body>
+
+<!--bookdown:toc:start-->
+
+<nav class="pushy pushy-left" id="TOC">
+<ul>
+<li><a href="#preface">Preface</a></li>
+<li><a href="#acknowledgments">Acknowledgments</a></li>
+<li><a href="#chapter-1.-introduction">Chapter 1. Introduction</a></li>
+<li><a href="#chapter-2.-abstraction-regression-tree-models">Chapter 2. Abstraction: Regression &amp; Tree Models</a></li>
+<li><a href="#chapter-3.-recognition-logistic-regression-ranking">Chapter 3. Recognition: Logistic Regression &amp; Ranking</a></li>
+<li><a href="#chapter-4.-resonance-bootstrap-random-forests">Chapter 4. Resonance: Bootstrap &amp; Random Forests</a></li>
+<li><a href="#chapter-5.-learning-i-cross-validation-oob">Chapter 5. Learning (I): Cross-validation &amp; OOB</a></li>
+<li><a href="#chapter-6.-diagnosis-residuals-heterogeneity">Chapter 6. Diagnosis: Residuals &amp; Heterogeneity</a></li>
+<li><a href="#chapter-7.-learning-ii-svm-ensemble-learning">Chapter 7. Learning (II): SVM &amp; Ensemble Learning</a></li>
+<li><a href="#chapter-8.-scalability-lasso-pca">Chapter 8. Scalability: LASSO &amp; PCA</a></li>
+<li><a href="#chapter-9.-pragmatism-experience-experimental">Chapter 9. Pragmatism: Experience &amp; Experimental</a></li>
+<li><a href="#chapter-10.-synthesis-architecture-pipeline">Chapter 10. Synthesis: Architecture &amp; Pipeline</a></li>
+<li><a href="#conclusion">Conclusion</a></li>
+<li><a href="#appendix-a-brief-review-of-background-knowledge">Appendix: A Brief Review of Background Knowledge</a></li>
+</ul>
+</nav>
+
+<!--bookdown:toc:end-->
+
+<div class="menu-btn"><h3>☰ Menu</h3></div>
+
+<div class="site-overlay"></div>
+
+
+<div class="row">
+<div class="col-sm-12">
+
+<nav class="pushy pushy-left" id="TOC">
+<ul>
+<li><a href="index.html#preface">Preface</a></li>
+<li><a href="acknowledgments.html#acknowledgments">Acknowledgments</a></li>
+<li><a href="chapter-1-introduction.html#chapter-1.-introduction">Chapter 1. Introduction</a></li>
+<li><a href="chapter-2-abstraction-regression-tree-models.html#chapter-2.-abstraction-regression-tree-models">Chapter 2. Abstraction: Regression &amp; Tree Models</a></li>
+<li><a href="chapter-3-recognition-logistic-regression-ranking.html#chapter-3.-recognition-logistic-regression-ranking">Chapter 3. Recognition: Logistic Regression &amp; Ranking</a></li>
+<li><a href="chapter-4-resonance-bootstrap-random-forests.html#chapter-4.-resonance-bootstrap-random-forests">Chapter 4. Resonance: Bootstrap &amp; Random Forests</a></li>
+<li><a href="chapter-5-learning-i-cross-validation-oob.html#chapter-5.-learning-i-cross-validation-oob">Chapter 5. Learning (I): Cross-validation &amp; OOB</a></li>
+<li><a href="chapter-6-diagnosis-residuals-heterogeneity.html#chapter-6.-diagnosis-residuals-heterogeneity">Chapter 6. Diagnosis: Residuals &amp; Heterogeneity</a></li>
+<li><a href="chapter-7-learning-ii-svm-ensemble-learning.html#chapter-7.-learning-ii-svm-ensemble-learning">Chapter 7. Learning (II): SVM &amp; Ensemble Learning</a></li>
+<li><a href="chapter-8-scalability-lasso-pca.html#chapter-8.-scalability-lasso-pca">Chapter 8. Scalability: LASSO &amp; PCA</a></li>
+<li><a href="chapter-9-pragmatism-experience-experimental.html#chapter-9.-pragmatism-experience-experimental">Chapter 9. Pragmatism: Experience &amp; Experimental</a></li>
+<li><a href="chapter-10-synthesis-architecture-pipeline.html#chapter-10.-synthesis-architecture-pipeline">Chapter 10. Synthesis: Architecture &amp; Pipeline</a></li>
+<li><a href="conclusion.html#conclusion">Conclusion</a></li>
+<li><a href="appendix-a-brief-review-of-background-knowledge.html#appendix-a-brief-review-of-background-knowledge">Appendix: A Brief Review of Background Knowledge</a></li>
+</ul>
+</nav>
+
+</div>
+</div>
+<div class="row">
+<div class="col-sm-12">
+<div id="remarks-8" class="section level2 unnumbered">
+<h2>Remarks</h2>
+<div id="images-text-and-audio" class="section level3 unnumbered">
+<h3>Images, text, and audio</h3>
+<p>To learn more about deep learning we recommend readers to start with this book<label for="tufte-sn-274" class="margin-toggle sidenote-number">274</label><input type="checkbox" id="tufte-sn-274" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">274</span> Goodfellow, I., Bengio, Y., and Courville, A., <em>Deep Learning</em>. The MIT Press, 2016.</span>. There are many online lecture notes and tutorials that are informative. Here, it is worth mentioning that there has not been a unified theory about deep learning, and even the definition of what is a deep model is up to debate. This is good. If we look back at the developmental processes of many statistics and machine learning models, we may observe that some models were developed based on inspiration from theory and we often call these models too theoretical. These models usually wobble and stumble in their early years, gradually become mature and a proven approach, and eventually establish themselves as effective models in practice. Some other models, however, were developed ahead of theory, and theory only comes later to explain the model’s success. For deep learning, it is hard to say if it was theory that inspired the models, or it was the models that inspired theory. Many efforts are committed to give an overarching theory to explain the success of deep learning, at least in some special cases. Yet there has not been such an overarching theory about deep learning, only competing narratives<label for="tufte-sn-275" class="margin-toggle sidenote-number">275</label><input type="checkbox" id="tufte-sn-275" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">275</span> Interested readers may read this article by Colah, C., <em>Neural Networks, Types, and Functional Programming</em>, <a href="https://colah.github.io/posts/2015-09-NN-Types-FP/">https://colah.github.io/posts/2015-09-NN-Types-FP/</a>.</span>.</p>
+<p>It is natural to wonder why we use a deep model. Can’t we just use a nondeep model? Readers may have been using nondeep models and found those nondeep models sufficient to solve problems in practice. Certainly we can just use nondeep models. There have been plenty of examples in practice that nondeep models were the best<label for="tufte-sn-276" class="margin-toggle sidenote-number">276</label><input type="checkbox" id="tufte-sn-276" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">276</span> A recent example: The Math of March Madness, <em>New York Times</em>, <a href="https://www.nytimes.com/2015/03/22/opinion/sunday/making-march-madness-easy.html">https://www.nytimes.com/2015/03/22/opinion/sunday/making-march-madness-easy.html</a>.</span>, only if we have the best variables (e.g., the <span class="math inline">\(x_1\)</span>, <span class="math inline">\(x_2\)</span>, …, <span class="math inline">\(x_p\)</span>) that are sufficient to explain the “movement” of our target <span class="math inline">\(y\)</span>. The availability of high-quality and ready-to-use <span class="math inline">\(\boldsymbol{x}\)</span> is a precondition for the success of nondeep models. This precondition, however, is not always held in practice.</p>
+<p>This is one reason why deep models can make a difference. Most nondeep models deal with a data structure that is Excel-sheet-like, i.e., they are stored or could be stored in an Excel spreadsheet. In many applications, particularly in recent years, the raw data is in free-form (sometimes it is also called unstructured data) such as images, text, and audio data. That means, to use the nondeep models for these applications, there should be a preprocessing/translational step that could extract the variables <span class="math inline">\(\boldsymbol{x}\)</span> from the raw data. It is notable that the translational process itself takes up a larger portion of effort of a data scientist in practice, and since the process involves multiple steps and layers, it naturally adopts a deep form, and further includes the nondeep model as its last layer to be part of its architecture.</p>
+<p>It is no surpise then that mature practices of deep learning have been mainly found on unstructured data such as images, text, and audio data. From the raw data such as an X-ray image to the final outcome such as diagnosis of a disease, there are plenty of steps to transform the raw data into interpretable information. These steps put together creates a deep model. In other words, deep learning automates and optimizes this translational process.</p>
+</div>
+<div id="a-key-is-made-to-unlock-but-what-is-the-lock" class="section level3 unnumbered">
+<h3>A key is made to unlock, but what is the lock?</h3>
+<p>There is another magic dimension to deep learning. Researchers in different disciplines have created many basic forms of functions that could be used as building blocks to build larger functions. On the other hand, as model validation has been made automatic and data-driven<label for="tufte-sn-277" class="margin-toggle sidenote-number">277</label><input type="checkbox" id="tufte-sn-277" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">277</span> I.e., given a few candidate models, we no longer need to validate the models by their scientific implication but only check how well they fit the data. See Figure <a href="remarks-3.html#fig:f5-flowchart">92</a> in <strong>Chapter 5</strong>.</span>, a deep model doesn’t demand interpretability or validity to be useful. In practice, your task is empirical: put together the architecture of a deep model, and if it obtains superior performance on data, it is a superior model. Now, if a complex problem in the real world is a sophisticated lock, deep learning’s real appeal is that we only need to spend effort in guessing at the key (i.e., the architecture of the deep neural network), but not necessarily in understanding the lock. And what makes it more convenient is that we can try every key we made (i.e., by fitting it with data) until the lock is opened. Is this a rational practice? There have been discussions around this topic and readers may be interested to look into this<label for="tufte-sn-278" class="margin-toggle sidenote-number">278</label><input type="checkbox" id="tufte-sn-278" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">278</span> See, Hutson, M., Has artifical intelligence become alchemy?, <em>Science</em>, 2018.</span>.</p>
+</div>
+<div id="decay-and-relative-decay" class="section level3 unnumbered">
+<h3>Decay and relative decay</h3>
+<p>To prune a rule, <code>inTrees</code> uses <em>leave-one-out</em> pruning, i.e., at each round, it removes one variable and checks how much error this removal will induce. We have introduced the concept <em>decay</em>. For the <span class="math inline">\(i^{th}\)</span> variable in the condition of a rule, its decay is defined as</p>
+<p><span class="math display">\[decay_i = Err_{-i}-Err,\]</span></p>
+<p>where <span class="math inline">\(Err\)</span> is the error of the original rule, <span class="math inline">\(Err_{-i}\)</span> is the error of the rule with the <span class="math inline">\(i^{th}\)</span> variable removed.</p>
+<p>There is another definition of decay in <code>inTrees</code>, called <em>relative decay</em>, which is defined as</p>
+<p><span class="math display">\[decay_i = \frac{Err_{-i}-Err}{\max(Err,s)},\]</span></p>
+<p>where <span class="math inline">\(s\)</span> is a small positive constant (e.g., <span class="math inline">\(0.001\)</span>) that bounds the value of decay when <span class="math inline">\(Err\)</span> is zero or close to zero. An advantage of using relative decay is that one does not need to know the level of error of a dataset<label for="tufte-sn-279" class="margin-toggle sidenote-number">279</label><input type="checkbox" id="tufte-sn-279" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">279</span> For instance, for one dataset the error rate <span class="math inline">\(0.01\)</span> is probably insignificant, but for another <span class="math inline">\(0.01\)</span> is a big difference.</span>.</p>
+</div>
+</div>
+<p style="text-align: center;">
+<a href="intrees.html"><button class="btn btn-default">Previous</button></a>
+<a href="exercises-8.html"><button class="btn btn-default">Next</button></a>
+</p>
+</div>
+</div>
+
+<script src="js/jquery.js"></script>
+<script src="js/tablesaw-stackonly.js"></script>
+<script src="js/nudge.min.js"></script>
+
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+</body>
+</html>

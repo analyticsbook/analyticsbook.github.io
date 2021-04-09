@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta property="og:title" content="Random forests | Data Analytics" />
+<meta property="og:type" content="book" />
+
+
+
+
+
+<meta name="author" content="Shuai Huang &amp; Houtao Deng" />
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  TeX: { equationNumbers: { autoNumber: "AMS" } }
+});
+</script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<meta name="description" content="Random forests | Data Analytics">
+
+<title>Random forests | Data Analytics</title>
+
+<script src="libs/header-attrs-2.7/header-attrs.js"></script>
+<link href="libs/tufte-css-2015.12.29/tufte.css" rel="stylesheet" />
+<link href="libs/tufte-css-2015.12.29/envisioned.css" rel="stylesheet" />
+<script src="https://use.typekit.net/ajy6rnl.js"></script>
+<script>try{Typekit.load({ async: true });}catch(e){}</script>
+<!-- <link rel="stylesheet" href="css/normalize.css"> -->
+<!-- <link rel="stylesheet" href="css/envisioned.css"/> -->
+<link rel="stylesheet" href="css/tablesaw-stackonly.css"/>
+<link rel="stylesheet" href="css/nudge.css"/>
+<link rel="stylesheet" href="css/sourcesans.css"/>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+
+
+</head>
+
+<body>
+
+<!--bookdown:toc:start-->
+
+<nav class="pushy pushy-left" id="TOC">
+<ul>
+<li><a href="#preface">Preface</a></li>
+<li><a href="#acknowledgments">Acknowledgments</a></li>
+<li><a href="#chapter-1.-introduction">Chapter 1. Introduction</a></li>
+<li><a href="#chapter-2.-abstraction-regression-tree-models">Chapter 2. Abstraction: Regression &amp; Tree Models</a></li>
+<li><a href="#chapter-3.-recognition-logistic-regression-ranking">Chapter 3. Recognition: Logistic Regression &amp; Ranking</a></li>
+<li><a href="#chapter-4.-resonance-bootstrap-random-forests">Chapter 4. Resonance: Bootstrap &amp; Random Forests</a></li>
+<li><a href="#chapter-5.-learning-i-cross-validation-oob">Chapter 5. Learning (I): Cross-validation &amp; OOB</a></li>
+<li><a href="#chapter-6.-diagnosis-residuals-heterogeneity">Chapter 6. Diagnosis: Residuals &amp; Heterogeneity</a></li>
+<li><a href="#chapter-7.-learning-ii-svm-ensemble-learning">Chapter 7. Learning (II): SVM &amp; Ensemble Learning</a></li>
+<li><a href="#chapter-8.-scalability-lasso-pca">Chapter 8. Scalability: LASSO &amp; PCA</a></li>
+<li><a href="#chapter-9.-pragmatism-experience-experimental">Chapter 9. Pragmatism: Experience &amp; Experimental</a></li>
+<li><a href="#chapter-10.-synthesis-architecture-pipeline">Chapter 10. Synthesis: Architecture &amp; Pipeline</a></li>
+<li><a href="#conclusion">Conclusion</a></li>
+<li><a href="#appendix-a-brief-review-of-background-knowledge">Appendix: A Brief Review of Background Knowledge</a></li>
+</ul>
+</nav>
+
+<!--bookdown:toc:end-->
+
+<div class="menu-btn"><h3>☰ Menu</h3></div>
+
+<div class="site-overlay"></div>
+
+
+<div class="row">
+<div class="col-sm-12">
+
+<nav class="pushy pushy-left" id="TOC">
+<ul>
+<li><a href="index.html#preface">Preface</a></li>
+<li><a href="acknowledgments.html#acknowledgments">Acknowledgments</a></li>
+<li><a href="chapter-1-introduction.html#chapter-1.-introduction">Chapter 1. Introduction</a></li>
+<li><a href="chapter-2-abstraction-regression-tree-models.html#chapter-2.-abstraction-regression-tree-models">Chapter 2. Abstraction: Regression &amp; Tree Models</a></li>
+<li><a href="chapter-3-recognition-logistic-regression-ranking.html#chapter-3.-recognition-logistic-regression-ranking">Chapter 3. Recognition: Logistic Regression &amp; Ranking</a></li>
+<li><a href="chapter-4-resonance-bootstrap-random-forests.html#chapter-4.-resonance-bootstrap-random-forests">Chapter 4. Resonance: Bootstrap &amp; Random Forests</a></li>
+<li><a href="chapter-5-learning-i-cross-validation-oob.html#chapter-5.-learning-i-cross-validation-oob">Chapter 5. Learning (I): Cross-validation &amp; OOB</a></li>
+<li><a href="chapter-6-diagnosis-residuals-heterogeneity.html#chapter-6.-diagnosis-residuals-heterogeneity">Chapter 6. Diagnosis: Residuals &amp; Heterogeneity</a></li>
+<li><a href="chapter-7-learning-ii-svm-ensemble-learning.html#chapter-7.-learning-ii-svm-ensemble-learning">Chapter 7. Learning (II): SVM &amp; Ensemble Learning</a></li>
+<li><a href="chapter-8-scalability-lasso-pca.html#chapter-8.-scalability-lasso-pca">Chapter 8. Scalability: LASSO &amp; PCA</a></li>
+<li><a href="chapter-9-pragmatism-experience-experimental.html#chapter-9.-pragmatism-experience-experimental">Chapter 9. Pragmatism: Experience &amp; Experimental</a></li>
+<li><a href="chapter-10-synthesis-architecture-pipeline.html#chapter-10.-synthesis-architecture-pipeline">Chapter 10. Synthesis: Architecture &amp; Pipeline</a></li>
+<li><a href="conclusion.html#conclusion">Conclusion</a></li>
+<li><a href="appendix-a-brief-review-of-background-knowledge.html#appendix-a-brief-review-of-background-knowledge">Appendix: A Brief Review of Background Knowledge</a></li>
+</ul>
+</nav>
+
+</div>
+</div>
+<div class="row">
+<div class="col-sm-12">
+<div id="random-forests" class="section level2 unnumbered">
+<h2>Random forests</h2>
+<div id="rationale-and-formulation-6" class="section level3 unnumbered">
+<h3>Rationale and formulation</h3>
+<p>Randomness has a productive dimension, depending on how you use it. For example, a <strong>random forest</strong> (<strong>RF</strong>) model consists of multiple tree models that are generated by a creative use of two types of randomness. One, each tree is built on a <em>randomly selected</em> set of samples by applying Bootstrap on the original dataset. Two, in building each tree, a <em>randomly selected</em> subset of features is used to choose the best split. Figure <a href="random-forests.html#fig:f4-10">62</a> shows this scheme of random forest.</p>
+<p></p>
+<p>
+<span class="marginnote shownote">
+<!--
+<div class="figure">--><span id="fig:f4-10"></span>
+<img src="graphics/4_10.png" alt="How random forest uses Bootstrap to grow decision trees" width="250px"  />
+<!--
+<p class="caption marginnote">-->Figure 62: How random forest uses Bootstrap to grow decision trees<!--</p>-->
+<!--</div>--></span>
+</p>
+<p></p>
+<p>Random forest has gained superior performances in many applications, and it (together with its variants) has been a winning approach in some data competitions over the past years. While it is not necessary that an aggregation of many models would lead to better performance than its constituting parts, random forest works because of a number of reasons. Here we use an example to show when the random forest, as a sum, is better than its parts (i.e., the decision trees).</p>
+<p>The following R code generates a dataset with two predictors and an outcome variable that has two classes. As shown in Figure <a href="random-forests.html#fig:f4-11">63</a> (left), the two classes are separable by a linear boundary.</p>
+<p></p>
+<div class="sourceCode" id="cb87"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb87-1"><a href="random-forests.html#cb87-1" aria-hidden="true" tabindex="-1"></a><span class="co"># This is a script for simulation study</span></span>
+<span id="cb87-2"><a href="random-forests.html#cb87-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(<span class="at">list =</span> <span class="fu">ls</span>(<span class="at">all =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb87-3"><a href="random-forests.html#cb87-3" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(rpart)</span>
+<span id="cb87-4"><a href="random-forests.html#cb87-4" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(dplyr)</span>
+<span id="cb87-5"><a href="random-forests.html#cb87-5" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(ggplot2)</span>
+<span id="cb87-6"><a href="random-forests.html#cb87-6" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(randomForest)</span>
+<span id="cb87-7"><a href="random-forests.html#cb87-7" aria-hidden="true" tabindex="-1"></a>ndata <span class="ot">&lt;-</span> <span class="dv">2000</span></span>
+<span id="cb87-8"><a href="random-forests.html#cb87-8" aria-hidden="true" tabindex="-1"></a>X1 <span class="ot">&lt;-</span> <span class="fu">runif</span>(ndata, <span class="at">min =</span> <span class="dv">0</span>, <span class="at">max =</span> <span class="dv">1</span>)</span>
+<span id="cb87-9"><a href="random-forests.html#cb87-9" aria-hidden="true" tabindex="-1"></a>X2 <span class="ot">&lt;-</span> <span class="fu">runif</span>(ndata, <span class="at">min =</span> <span class="dv">0</span>, <span class="at">max =</span> <span class="dv">1</span>)</span>
+<span id="cb87-10"><a href="random-forests.html#cb87-10" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(X1, X2)</span>
+<span id="cb87-11"><a href="random-forests.html#cb87-11" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">X12 =</span> <span class="fl">0.5</span> <span class="sc">*</span> (X1 <span class="sc">-</span> X2),</span>
+<span id="cb87-12"><a href="random-forests.html#cb87-12" aria-hidden="true" tabindex="-1"></a>                        <span class="at">Y =</span> <span class="fu">ifelse</span>(X12 <span class="sc">&gt;=</span> <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>))</span>
+<span id="cb87-13"><a href="random-forests.html#cb87-13" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>X12) <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">Y =</span></span>
+<span id="cb87-14"><a href="random-forests.html#cb87-14" aria-hidden="true" tabindex="-1"></a>                           <span class="fu">as.factor</span>(<span class="fu">as.character</span>(Y)))</span>
+<span id="cb87-15"><a href="random-forests.html#cb87-15" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">x =</span> X1, <span class="at">y =</span> X2, <span class="at">color =</span> Y)) <span class="sc">+</span> <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb87-16"><a href="random-forests.html#cb87-16" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Data points&quot;</span>)</span></code></pre></div>
+<p></p>
+<p></p>
+<div class="figure"><span id="fig:f4-11"></span>
+<p class="caption marginnote shownote">
+Figure 63: (Left) A linearly separable dataset with two predictors; (middle) the decision boundary of a decision tree model; (right) the decision boundary of a random forest model
+</p>
+<img src="graphics/4_11.png" alt="(Left) A linearly separable dataset with two predictors; (middle) the decision boundary of a decision tree model; (right) the decision boundary of a random forest model" width="30%"  /><img src="graphics/4_12.png" alt="(Left) A linearly separable dataset with two predictors; (middle) the decision boundary of a decision tree model; (right) the decision boundary of a random forest model" width="30%"  /><img src="graphics/4_13.png" alt="(Left) A linearly separable dataset with two predictors; (middle) the decision boundary of a decision tree model; (right) the decision boundary of a random forest model" width="30%"  />
+</div>
+<p></p>
+<p>Both random forest and decision tree models are applied to the dataset. The classification boundaries of both decision tree and random forest models are shown in Figures <a href="random-forests.html#fig:f4-11">63</a> (middle) and (right), respectively.</p>
+<p></p>
+<div class="sourceCode" id="cb88"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb88-1"><a href="random-forests.html#cb88-1" aria-hidden="true" tabindex="-1"></a>rf_model <span class="ot">&lt;-</span> <span class="fu">randomForest</span>(Y <span class="sc">~</span> ., <span class="at">data =</span> data)</span>
+<span id="cb88-2"><a href="random-forests.html#cb88-2" aria-hidden="true" tabindex="-1"></a>tree_model <span class="ot">&lt;-</span> <span class="fu">rpart</span>(Y <span class="sc">~</span> ., <span class="at">data =</span> data)</span>
+<span id="cb88-3"><a href="random-forests.html#cb88-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb88-4"><a href="random-forests.html#cb88-4" aria-hidden="true" tabindex="-1"></a>pred_rf <span class="ot">&lt;-</span> <span class="fu">predict</span>(rf_model, data, <span class="at">type =</span> <span class="st">&quot;prob&quot;</span>)[, <span class="dv">1</span>]</span>
+<span id="cb88-5"><a href="random-forests.html#cb88-5" aria-hidden="true" tabindex="-1"></a>pred_tree <span class="ot">&lt;-</span> <span class="fu">predict</span>(tree_model, data, <span class="at">type =</span> <span class="st">&quot;prob&quot;</span>)[, <span class="dv">1</span>]</span>
+<span id="cb88-6"><a href="random-forests.html#cb88-6" aria-hidden="true" tabindex="-1"></a>data_pred <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">pred_rf_class =</span> <span class="fu">ifelse</span>(pred_rf <span class="sc">&lt;</span></span>
+<span id="cb88-7"><a href="random-forests.html#cb88-7" aria-hidden="true" tabindex="-1"></a>  <span class="fl">0.5</span>, <span class="dv">0</span>, <span class="dv">1</span>)) <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">pred_rf_class =</span></span>
+<span id="cb88-8"><a href="random-forests.html#cb88-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.factor</span>(<span class="fu">as.character</span>(pred_rf_class))) <span class="sc">%&gt;%</span></span>
+<span id="cb88-9"><a href="random-forests.html#cb88-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">pred_tree_class =</span> <span class="fu">ifelse</span>(pred_tree <span class="sc">&lt;</span> </span>
+<span id="cb88-10"><a href="random-forests.html#cb88-10" aria-hidden="true" tabindex="-1"></a>  <span class="fl">0.5</span>, <span class="dv">0</span>, <span class="dv">1</span>)) <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">pred_tree_class =</span></span>
+<span id="cb88-11"><a href="random-forests.html#cb88-11" aria-hidden="true" tabindex="-1"></a>                     <span class="fu">as.factor</span>(<span class="fu">as.character</span>(pred_tree_class)))</span>
+<span id="cb88-12"><a href="random-forests.html#cb88-12" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data_pred, <span class="fu">aes</span>(<span class="at">x =</span> X1, <span class="at">y =</span> X2, </span>
+<span id="cb88-13"><a href="random-forests.html#cb88-13" aria-hidden="true" tabindex="-1"></a>                      <span class="at">color =</span> pred_tree_class)) <span class="sc">+</span></span>
+<span id="cb88-14"><a href="random-forests.html#cb88-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Classification boundary from</span></span>
+<span id="cb88-15"><a href="random-forests.html#cb88-15" aria-hidden="true" tabindex="-1"></a><span class="st">                      a single decision tree&quot;</span>) </span>
+<span id="cb88-16"><a href="random-forests.html#cb88-16" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data_pred, <span class="fu">aes</span>(<span class="at">x =</span> X1, <span class="at">y =</span> X2, </span>
+<span id="cb88-17"><a href="random-forests.html#cb88-17" aria-hidden="true" tabindex="-1"></a>                      <span class="at">color =</span> pred_rf_class)) <span class="sc">+</span></span>
+<span id="cb88-18"><a href="random-forests.html#cb88-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Classification bounday from</span></span>
+<span id="cb88-19"><a href="random-forests.html#cb88-19" aria-hidden="true" tabindex="-1"></a><span class="st">                      random forests&quot;</span>)</span></code></pre></div>
+<p></p>
+<p>We can see from Figure <a href="random-forests.html#fig:f4-11">63</a> (middle) that the classification boundary generated by the decision tree model has a difficult to approximate linear boundary. There is an inherent limitation of a tree model to fit smooth boundaries due to its box-shaped nature resulting from its use of rules to segment the data space for making predictions. In contrast, the classification boundary of the random forest model is smoother than the one of the decision tree, and it can provide better approximation of complex and nonlinear classification boundaries.</p>
+<p>Having said that, this is not the only reason <em>why</em> the random forest model is remarkable. After all, many models can model linear boundary, and it is actually not the random forests’ strength. The remarkable thing about a random forest is its capacity, as a tree-based model, to actually model linear boundary. It shows its flexibility, adaptability, and learning capacity to characterize complex patterns in a dataset. Let’s see more details to understand how it works.</p>
+</div>
+<div id="theory-and-method-4" class="section level3 unnumbered">
+<h3>Theory and method</h3>
+<p>Like a decision tree, the learning process of random forests follows the algorithmic modeling framework. It uses an organized set of heuristics, rather than a mathematical characterization. We present the process of building random forest models using a simple example with a small dataset shown in Table <a href="random-forests.html#tab:t4-1">10</a> that has two predictors, <span class="math inline">\(x_1\)</span> and <span class="math inline">\(x_2\)</span>, and an outcome variable with two classes.</p>
+<p></p>
+<p><!--
+<caption>--><span class="marginnote shownote"><span id="tab:t4-1">Table 10: </span>Example of a dataset</span><!--</caption>--></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">ID</th>
+<th align="left"><span class="math inline">\(x_1\)</span></th>
+<th align="left"><span class="math inline">\(x_2\)</span></th>
+<th align="left">Class</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><span class="math inline">\(1\)</span></td>
+<td align="left"><span class="math inline">\(1\)</span></td>
+<td align="left"><span class="math inline">\(1\)</span></td>
+<td align="left"><span class="math inline">\(C0\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(2\)</span></td>
+<td align="left"><span class="math inline">\(1\)</span></td>
+<td align="left"><span class="math inline">\(0\)</span></td>
+<td align="left"><span class="math inline">\(C1\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(3\)</span></td>
+<td align="left"><span class="math inline">\(0\)</span></td>
+<td align="left"><span class="math inline">\(1\)</span></td>
+<td align="left"><span class="math inline">\(C1\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(4\)</span></td>
+<td align="left"><span class="math inline">\(0\)</span></td>
+<td align="left"><span class="math inline">\(0\)</span></td>
+<td align="left"><span class="math inline">\(C0\)</span></td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<p>As shown in Figure <a href="random-forests.html#fig:f4-10">62</a>, each tree is built on a resampled dataset that consists of data instances randomly selected from the original data set<label for="tufte-sn-94" class="margin-toggle sidenote-number">94</label><input type="checkbox" id="tufte-sn-94" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">94</span> I.e., often with the same sample size as the original dataset and is called <strong>sampling with replacement</strong> .</span>. As shown in Figure <a href="random-forests.html#fig:f4-14">64</a>, the first resampled dataset includes data instances (represented by their IDs) <span class="math inline">\(\{1,1,3,4\}\)</span> and is used for building the first tree. The second resampled dataset includes data instances <span class="math inline">\(\{2,3,4,4\}\)</span> and is used for building the second tree. This process repeats until a specific number of trees is built.</p>
+<p></p>
+<p>
+<span class="marginnote shownote">
+<!--
+<div class="figure">--><span id="fig:f4-14"></span>
+<img src="graphics/4_14.png" alt="Examples of bootstrapped datasets from the dataset shown in Table \@ref(tab:t4-1)" width="250px"  />
+<!--
+<p class="caption marginnote">-->Figure 64: Examples of bootstrapped datasets from the dataset shown in Table <a href="random-forests.html#tab:t4-1">10</a><!--</p>-->
+<!--</div>--></span>
+</p>
+<p></p>
+<p>The first tree begins with the root node that contains data instances <span class="math inline">\(\{1,1,3,4\}\)</span>. As introduced in <strong>Chapter 2</strong>, we recursively split a node into two child nodes to reduce impurity (i.e., measured by entropy). This greedy recursive splitting process is also used to build each decision tree in a random forest model. A slight variation is that, in the R package <code>randomForest</code>, the <strong>Gini index</strong> is used to measure impurity instead of entropy.</p>
+<p>The Gini index for a data set is defined as<label for="tufte-sn-95" class="margin-toggle sidenote-number">95</label><input type="checkbox" id="tufte-sn-95" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">95</span> <span class="math inline">\(C\)</span> is the number of classes of the outcome variable, and <span class="math inline">\(p_{c}\)</span> is the proportion of data instances that come from the class <span class="math inline">\(c\)</span>.</span></p>
+<p><span class="math display">\[ 
+\operatorname{Gini} =\sum_{c=1}^{C} p_{c}\left(1-p_{c}\right).  
+\]</span></p>
+<p>The Gini index plays the same role as the entropy (more details could be found in the Remarks section). Similar as the information gain (IG), the <strong>Gini gain</strong> can be defined as</p>
+<p><span class="math display">\[\nabla \operatorname{Gini} = \operatorname{Gini}_s - \sum\nolimits_{i=1,\cdots,n} w_i \operatorname{Gini}_i.\]</span></p>
+<p>Here, <span class="math inline">\(\operatorname{Gini}_s\)</span> is the Gini index at the node to be split; <span class="math inline">\(w_{i}\)</span> and <span class="math inline">\(\operatorname{Gini}_{i}\)</span>, are the proportion of samples and the Gini index at the <span class="math inline">\(i^{th}\)</span> children node, respectively.</p>
+<p></p>
+<p>
+<span class="marginnote shownote">
+<!--
+<div class="figure">--><span id="fig:f4-16-left"></span>
+<img src="graphics/4_16_v3.png" alt="root node split using $x_{1}=0$" width="250px"  />
+<!--
+<p class="caption marginnote">-->Figure 65: root node split using <span class="math inline">\(x_{1}=0\)</span><!--</p>-->
+<!--</div>--></span>
+</p>
+<p></p>
+<p>Let’s go back to the first tree that begins with the root node containing data instances <span class="math inline">\(\{1,1,3,4\}\)</span>. There are three instances that are associated with the class <span class="math inline">\(C0\)</span> (thus, <span class="math inline">\(p_0 = \frac{3}{4}\)</span>), one instance with <span class="math inline">\(C1\)</span> (thus, <span class="math inline">\(p_1 = \frac{1}{4}\)</span>). The Gini index of the root node is calculated as</p>
+<p><span class="math display">\[ 
+\frac{3}{4} \times \frac{1}{4}+\frac{1}{4} \times \frac{3}{4}=0.375. 
+\]</span></p>
+<p>To split the root node, candidates of splitting rules are:</p>
+<p><!-- begin{enumerate} --></p>
+<ul>
+<li><p> [Rule 1:] <span class="math inline">\(x_{1}=0 \text { versus } x_{1} \neq 0\)</span>.</p></li>
+<li><p> [Rule 2:] <span class="math inline">\(x_{2}=0 \text { versus } x_{2} \neq 0\)</span>.</p></li>
+</ul>
+<p><!-- end{enumerate} --></p>
+<p>The decision tree model introduced in <strong>Chapter 2</strong> would evaluate each of the possible splitting rules, and select the one that yields the maximum Gini gain to split the node. However, for random forests, it randomly selects the variables for splitting a node<label for="tufte-sn-96" class="margin-toggle sidenote-number">96</label><input type="checkbox" id="tufte-sn-96" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">96</span> In general, for a dataset with <span class="math inline">\(p\)</span> variables, <span class="math inline">\(\sqrt{p}\)</span> variables are randomly selected for splitting.</span>. In our example, as there are two variables, we assume that <span class="math inline">\(x_{1}\)</span> is randomly selected for splitting the root node. Thus, <span class="math inline">\(x_{1}=0\)</span> is used for splitting the root node which generates the decision tree model as shown in Figure <a href="random-forests.html#fig:f4-16-left">65</a>.</p>
+<!-- \begin{figure*}-->
+<!--    \centering-->
+<!--    \checkoddpage \ifoddpage \forcerectofloat \else \forceversofloat \fi-->
+<!--    \subfloat{-->
+<!--        \includegraphics{graphics/4_16_v3.png}}-->
+<!--    \subfloat{-->
+<!--        \includegraphics{graphics/4_17_v5.png}}-->
+<!--    \subfloat{-->
+<!--        \includegraphics{graphics/4_18_v5.png}}-->
+<!--    \caption{(Left) root node split using $x_{1}=0$; (middle) second split using $x_{2}=0$; (right) tree model trained}-->
+<!--    \label{fig:4-16}-->
+<!-- \end{figure*} -->
+<p></p>
+<p>
+<span class="marginnote shownote">
+<!--
+<div class="figure">--><span id="fig:f4-16-middle"></span>
+<img src="graphics/4_17_v5.png" alt="second split using $x_{2}=0$" width="250px"  />
+<!--
+<p class="caption marginnote">-->Figure 66: second split using <span class="math inline">\(x_{2}=0\)</span><!--</p>-->
+<!--</div>--></span>
+</p>
+<p></p>
+<p>The Gini gain for the split shown in Figure <a href="random-forests.html#fig:f4-16-left">65</a> can be calculated as</p>
+<p><span class="math display">\[ 
+0.375-0.5 \times 0-0.5 \times 0.5=0.125. 
+\]</span></p>
+<p>The right node in the tree shown in Figure <a href="random-forests.html#fig:f4-16-left">65</a> has reached a perfect state of homogeneity<label for="tufte-sn-97" class="margin-toggle sidenote-number">97</label><input type="checkbox" id="tufte-sn-97" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">97</span> Which is, in practice, a rare phenomenon.</span>. The left node, however, contains two instances <span class="math inline">\(\{3,4\}\)</span> that are associated with two classes. We further split the left node. Assume that this time <span class="math inline">\(x_{2}\)</span> is randomly selected. The left node can be further split as shown in Figure <a href="random-forests.html#fig:f4-16-middle">66</a>.</p>
+<p>All nodes cannot be split further. The final tree model is shown in Figure <a href="random-forests.html#fig:f4-16-right">67</a>, while each leaf node is labeled with the majority class of the instances in the node, such that they become decision nodes.</p>
+<p></p>
+<p>
+<span class="marginnote shownote">
+<!--
+<div class="figure">--><span id="fig:f4-16-right"></span>
+<img src="graphics/4_18_v5.png" alt="tree model trained" width="250px"  />
+<!--
+<p class="caption marginnote">-->Figure 67: tree model trained<!--</p>-->
+<!--</div>--></span>
+</p>
+<p></p>
+<p>Applying the decision tree in Figure <a href="random-forests.html#fig:f4-16-right">67</a> to the <span class="math inline">\(4\)</span> data points as shown in Table <a href="random-forests.html#tab:t4-1">10</a>, we can get the predictions as shown in Table <a href="random-forests.html#tab:t4-1pred">11</a>. The error rate is <span class="math inline">\(25\%\)</span>.</p>
+<p></p>
+<p><!--
+<caption>--><span class="marginnote shownote"><span id="tab:t4-1pred">Table 11: </span>Example of a dataset</span><!--</caption>--></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">ID</th>
+<th align="left"><span class="math inline">\(x_1\)</span></th>
+<th align="left"><span class="math inline">\(x_2\)</span></th>
+<th align="left">Class</th>
+<th align="left">Prediction</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><span class="math inline">\(1\)</span></td>
+<td align="left"><span class="math inline">\(1\)</span></td>
+<td align="left"><span class="math inline">\(1\)</span></td>
+<td align="left"><span class="math inline">\(C0\)</span></td>
+<td align="left"><span class="math inline">\(C0\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(2\)</span></td>
+<td align="left"><span class="math inline">\(1\)</span></td>
+<td align="left"><span class="math inline">\(0\)</span></td>
+<td align="left"><span class="math inline">\(C1\)</span></td>
+<td align="left"><span class="math inline">\(C0\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(3\)</span></td>
+<td align="left"><span class="math inline">\(0\)</span></td>
+<td align="left"><span class="math inline">\(1\)</span></td>
+<td align="left"><span class="math inline">\(C1\)</span></td>
+<td align="left"><span class="math inline">\(C1\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(4\)</span></td>
+<td align="left"><span class="math inline">\(0\)</span></td>
+<td align="left"><span class="math inline">\(0\)</span></td>
+<td align="left"><span class="math inline">\(C0\)</span></td>
+<td align="left"><span class="math inline">\(C1\)</span></td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<p>Similarly, the second, third, …, and the <span class="math inline">\(m^{th}\)</span> trees can be built. Usually, in random forest models, tree pruning is not needed. Rather, we use a parameter to control the depth of the tree models to be created (i.e., use the parameter <code>nodesize</code> in <code>randomForest</code>).</p>
+<p>When a random forest model is built, to make a prediction for a data point, each tree makes a prediction, then all the predictions are combined; e.g., for continuous outcome variable, the average of the predictions is used as the final prediction; for classification outcome variable, the class that wins majority among all trees is the final prediction.</p>
+</div>
+<div id="r-lab-5" class="section level3 unnumbered">
+<h3>R Lab</h3>
+<p><em>The 5-Step R Pipeline.</em> <strong>Step 1</strong> and <strong>Step 2</strong> get data into your R work environment and make appropriate preprocessing.</p>
+<p></p>
+<div class="sourceCode" id="cb89"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb89-1"><a href="random-forests.html#cb89-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1 -&gt; Read data into R workstation</span></span>
+<span id="cb89-2"><a href="random-forests.html#cb89-2" aria-hidden="true" tabindex="-1"></a><span class="co"># RCurl is the R package to read csv file using a link</span></span>
+<span id="cb89-3"><a href="random-forests.html#cb89-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(RCurl)</span>
+<span id="cb89-4"><a href="random-forests.html#cb89-4" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;https://raw.githubusercontent.com&quot;</span>,</span>
+<span id="cb89-5"><a href="random-forests.html#cb89-5" aria-hidden="true" tabindex="-1"></a>              <span class="st">&quot;/analyticsbook/book/main/data/AD.csv&quot;</span>)</span>
+<span id="cb89-6"><a href="random-forests.html#cb89-6" aria-hidden="true" tabindex="-1"></a>AD <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="at">text=</span><span class="fu">getURL</span>(url))</span>
+<span id="cb89-7"><a href="random-forests.html#cb89-7" aria-hidden="true" tabindex="-1"></a><span class="co"># str(AD)</span></span></code></pre></div>
+<p></p>
+<p></p>
+<div class="sourceCode" id="cb90"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb90-1"><a href="random-forests.html#cb90-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2 -&gt; Data preprocessing</span></span>
+<span id="cb90-2"><a href="random-forests.html#cb90-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Create your X matrix (predictors) and Y vector </span></span>
+<span id="cb90-3"><a href="random-forests.html#cb90-3" aria-hidden="true" tabindex="-1"></a><span class="co"># (outcome variable)</span></span>
+<span id="cb90-4"><a href="random-forests.html#cb90-4" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> AD[,<span class="dv">2</span><span class="sc">:</span><span class="dv">16</span>]</span>
+<span id="cb90-5"><a href="random-forests.html#cb90-5" aria-hidden="true" tabindex="-1"></a>Y <span class="ot">&lt;-</span> AD<span class="sc">$</span>DX_bl</span>
+<span id="cb90-6"><a href="random-forests.html#cb90-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb90-7"><a href="random-forests.html#cb90-7" aria-hidden="true" tabindex="-1"></a>Y <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;c&quot;</span>, Y) </span>
+<span id="cb90-8"><a href="random-forests.html#cb90-8" aria-hidden="true" tabindex="-1"></a>Y <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(Y)  </span>
+<span id="cb90-9"><a href="random-forests.html#cb90-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb90-10"><a href="random-forests.html#cb90-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Then, we integrate everything into a data frame</span></span>
+<span id="cb90-11"><a href="random-forests.html#cb90-11" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(X,Y)</span>
+<span id="cb90-12"><a href="random-forests.html#cb90-12" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(data)[<span class="dv">16</span>] <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;DX_bl&quot;</span>)</span>
+<span id="cb90-13"><a href="random-forests.html#cb90-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb90-14"><a href="random-forests.html#cb90-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a training data (half the original data size)</span></span>
+<span id="cb90-15"><a href="random-forests.html#cb90-15" aria-hidden="true" tabindex="-1"></a>train.ix <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">nrow</span>(data),<span class="fu">floor</span>( <span class="fu">nrow</span>(data)<span class="sc">/</span><span class="dv">2</span>) )</span>
+<span id="cb90-16"><a href="random-forests.html#cb90-16" aria-hidden="true" tabindex="-1"></a>data.train <span class="ot">&lt;-</span> data[train.ix,]</span>
+<span id="cb90-17"><a href="random-forests.html#cb90-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a testing data (half the original data size)</span></span>
+<span id="cb90-18"><a href="random-forests.html#cb90-18" aria-hidden="true" tabindex="-1"></a>data.test <span class="ot">&lt;-</span> data[<span class="sc">-</span>train.ix,]</span></code></pre></div>
+<p></p>
+<p><strong>Step 3</strong> uses the R package <code>randomForest</code> to build your random forest model.</p>
+<p></p>
+<div class="sourceCode" id="cb91"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb91-1"><a href="random-forests.html#cb91-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 3 -&gt; Use randomForest() function to build a </span></span>
+<span id="cb91-2"><a href="random-forests.html#cb91-2" aria-hidden="true" tabindex="-1"></a><span class="co"># RF model </span></span>
+<span id="cb91-3"><a href="random-forests.html#cb91-3" aria-hidden="true" tabindex="-1"></a><span class="co"># with all predictors</span></span>
+<span id="cb91-4"><a href="random-forests.html#cb91-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(randomForest)</span>
+<span id="cb91-5"><a href="random-forests.html#cb91-5" aria-hidden="true" tabindex="-1"></a>rf.AD <span class="ot">&lt;-</span> <span class="fu">randomForest</span>( DX_bl <span class="sc">~</span> ., <span class="at">data =</span> data.train, </span>
+<span id="cb91-6"><a href="random-forests.html#cb91-6" aria-hidden="true" tabindex="-1"></a>                    <span class="at">ntree =</span> <span class="dv">100</span>, <span class="at">nodesize =</span> <span class="dv">20</span>, <span class="at">mtry =</span> <span class="dv">5</span>) </span>
+<span id="cb91-7"><a href="random-forests.html#cb91-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Three main arguments to control the complexity </span></span>
+<span id="cb91-8"><a href="random-forests.html#cb91-8" aria-hidden="true" tabindex="-1"></a><span class="co"># of a random forest model</span></span></code></pre></div>
+<p></p>
+<p>Details for the three arguments in <code>randomForest</code>: The <code>ntree</code> is the number of trees<label for="tufte-sn-98" class="margin-toggle sidenote-number">98</label><input type="checkbox" id="tufte-sn-98" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">98</span> The more trees, the more complex the random forest model is.</span>. The <code>nodesize</code> is the minimum sample size of leaf nodes<label for="tufte-sn-99" class="margin-toggle sidenote-number">99</label><input type="checkbox" id="tufte-sn-99" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">99</span> The larger the sample size in leaf nodes, the less depth of the trees; therefore, the less complex the random forest model is.</span>. The <code>mtry</code> is a parameter to control the degree of randomness when your RF model selects variables to split nodes<label for="tufte-sn-100" class="margin-toggle sidenote-number">100</label><input type="checkbox" id="tufte-sn-100" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">100</span> For classification, the default value of <code>mtry</code> is <span class="math inline">\(\sqrt{p}\)</span>, where <span class="math inline">\(p\)</span> is the number of variables; for regression, the default value of <code>mtry</code> is <span class="math inline">\(p/3\)</span>.</span>.</p>
+<p><strong>Step 4</strong> is prediction. We use the <code>predict()</code> function</p>
+<p></p>
+<div class="sourceCode" id="cb92"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb92-1"><a href="random-forests.html#cb92-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 4 -&gt; Predict using your RF model</span></span>
+<span id="cb92-2"><a href="random-forests.html#cb92-2" aria-hidden="true" tabindex="-1"></a>y_hat <span class="ot">&lt;-</span> <span class="fu">predict</span>(rf.AD, data.test,<span class="at">type=</span><span class="st">&quot;class&quot;</span>)</span></code></pre></div>
+<p></p>
+<p><strong>Step 5</strong> evaluates the prediction performance of your model on the testing data.</p>
+<p></p>
+<div class="sourceCode" id="cb93"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb93-1"><a href="random-forests.html#cb93-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 5 -&gt; Evaluate the prediction performance of your RF model</span></span>
+<span id="cb93-2"><a href="random-forests.html#cb93-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Three main metrics for classification: Accuracy, </span></span>
+<span id="cb93-3"><a href="random-forests.html#cb93-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Sensitivity (1- False Positive), Specificity (1 - False Negative)</span></span>
+<span id="cb93-4"><a href="random-forests.html#cb93-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(caret) </span>
+<span id="cb93-5"><a href="random-forests.html#cb93-5" aria-hidden="true" tabindex="-1"></a><span class="fu">confusionMatrix</span>(y_hat, data.test<span class="sc">$</span>DX_bl)</span></code></pre></div>
+<p></p>
+<p>The result is shown below. It is an information-rich object<label for="tufte-sn-101" class="margin-toggle sidenote-number">101</label><input type="checkbox" id="tufte-sn-101" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">101</span> To learn more about an R object, function, and package, please check out the online documentation that is usually available for an R package that has been released to the public. For example, for the <code>confusionMatrix</code> in the R package <code>caret</code>, check out this link: <a href="https://www.rdocumentation.org/packages/caret/versions/6.0-84/topics/confusionMatrix">https://www.rdocumentation.org/packages/caret/versions/6.0-84/topics/confusionMatrix</a>. Some R packages also come with a journal article published in the <em>Journal of Statistical Software</em>. E.g., for <code>caret</code>, see Kuhn, M., <em>Building predictive models in R using the caret package</em>, Journal of Statistical Software, Volume 28, Issue 5, 2018, <a href="http://www.jstatsoft.org/article/view/v028i05/v28i05.pdf">http://www.jstatsoft.org/article/view/v028i05/v28i05.pdf</a>.</span>.</p>
+<p></p>
+<div class="sourceCode" id="cb94"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb94-1"><a href="random-forests.html#cb94-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Confusion Matrix and Statistics</span></span>
+<span id="cb94-2"><a href="random-forests.html#cb94-2" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb94-3"><a href="random-forests.html#cb94-3" aria-hidden="true" tabindex="-1"></a><span class="do">##           Reference</span></span>
+<span id="cb94-4"><a href="random-forests.html#cb94-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Prediction  c0  c1</span></span>
+<span id="cb94-5"><a href="random-forests.html#cb94-5" aria-hidden="true" tabindex="-1"></a><span class="do">##         c0 136  31</span></span>
+<span id="cb94-6"><a href="random-forests.html#cb94-6" aria-hidden="true" tabindex="-1"></a><span class="do">##         c1   4  88</span></span>
+<span id="cb94-7"><a href="random-forests.html#cb94-7" aria-hidden="true" tabindex="-1"></a><span class="do">##                                          </span></span>
+<span id="cb94-8"><a href="random-forests.html#cb94-8" aria-hidden="true" tabindex="-1"></a><span class="do">##                Accuracy : 0.8649         </span></span>
+<span id="cb94-9"><a href="random-forests.html#cb94-9" aria-hidden="true" tabindex="-1"></a><span class="do">##                  95% CI : (0.8171, 0.904)</span></span>
+<span id="cb94-10"><a href="random-forests.html#cb94-10" aria-hidden="true" tabindex="-1"></a><span class="do">##     No Information Rate : 0.5405         </span></span>
+<span id="cb94-11"><a href="random-forests.html#cb94-11" aria-hidden="true" tabindex="-1"></a><span class="do">##     P-Value [Acc &gt; NIR] : &lt; 2.2e-16      </span></span>
+<span id="cb94-12"><a href="random-forests.html#cb94-12" aria-hidden="true" tabindex="-1"></a><span class="do">##                                          </span></span>
+<span id="cb94-13"><a href="random-forests.html#cb94-13" aria-hidden="true" tabindex="-1"></a><span class="do">##                   Kappa : 0.7232         </span></span>
+<span id="cb94-14"><a href="random-forests.html#cb94-14" aria-hidden="true" tabindex="-1"></a><span class="do">##                                          </span></span>
+<span id="cb94-15"><a href="random-forests.html#cb94-15" aria-hidden="true" tabindex="-1"></a><span class="do">##  Mcnemar&#39;s Test P-Value : 1.109e-05      </span></span>
+<span id="cb94-16"><a href="random-forests.html#cb94-16" aria-hidden="true" tabindex="-1"></a><span class="do">##                                          </span></span>
+<span id="cb94-17"><a href="random-forests.html#cb94-17" aria-hidden="true" tabindex="-1"></a><span class="do">##             Sensitivity : 0.9714         </span></span>
+<span id="cb94-18"><a href="random-forests.html#cb94-18" aria-hidden="true" tabindex="-1"></a><span class="do">##             Specificity : 0.7395         </span></span>
+<span id="cb94-19"><a href="random-forests.html#cb94-19" aria-hidden="true" tabindex="-1"></a><span class="do">##          Pos Pred Value : 0.8144         </span></span>
+<span id="cb94-20"><a href="random-forests.html#cb94-20" aria-hidden="true" tabindex="-1"></a><span class="do">##          Neg Pred Value : 0.9565         </span></span>
+<span id="cb94-21"><a href="random-forests.html#cb94-21" aria-hidden="true" tabindex="-1"></a><span class="do">##              Prevalence : 0.5405         </span></span>
+<span id="cb94-22"><a href="random-forests.html#cb94-22" aria-hidden="true" tabindex="-1"></a><span class="do">##          Detection Rate : 0.5251         </span></span>
+<span id="cb94-23"><a href="random-forests.html#cb94-23" aria-hidden="true" tabindex="-1"></a><span class="do">##    Detection Prevalence : 0.6448         </span></span>
+<span id="cb94-24"><a href="random-forests.html#cb94-24" aria-hidden="true" tabindex="-1"></a><span class="do">##       Balanced Accuracy : 0.8555         </span></span>
+<span id="cb94-25"><a href="random-forests.html#cb94-25" aria-hidden="true" tabindex="-1"></a><span class="do">##                                          </span></span>
+<span id="cb94-26"><a href="random-forests.html#cb94-26" aria-hidden="true" tabindex="-1"></a><span class="do">##        &#39;Positive&#39; Class : c0 </span></span></code></pre></div>
+<p></p>
+<p>We can also draw the ROC curve</p>
+<p></p>
+<div class="sourceCode" id="cb95"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb95-1"><a href="random-forests.html#cb95-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ROC curve is another commonly reported metric </span></span>
+<span id="cb95-2"><a href="random-forests.html#cb95-2" aria-hidden="true" tabindex="-1"></a><span class="co"># for classification models</span></span>
+<span id="cb95-3"><a href="random-forests.html#cb95-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(pROC) </span>
+<span id="cb95-4"><a href="random-forests.html#cb95-4" aria-hidden="true" tabindex="-1"></a><span class="co"># pROC has the roc() function that is very useful here</span></span>
+<span id="cb95-5"><a href="random-forests.html#cb95-5" aria-hidden="true" tabindex="-1"></a>y_hat <span class="ot">&lt;-</span> <span class="fu">predict</span>(rf.AD, data.test,<span class="at">type=</span><span class="st">&quot;vote&quot;</span>) </span>
+<span id="cb95-6"><a href="random-forests.html#cb95-6" aria-hidden="true" tabindex="-1"></a><span class="co"># In order to draw ROC, we need the intermediate prediction </span></span>
+<span id="cb95-7"><a href="random-forests.html#cb95-7" aria-hidden="true" tabindex="-1"></a><span class="co"># (before RF model binarize it into binary classification). </span></span>
+<span id="cb95-8"><a href="random-forests.html#cb95-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Thus, by specifying the argument type=&quot;vote&quot;, we can </span></span>
+<span id="cb95-9"><a href="random-forests.html#cb95-9" aria-hidden="true" tabindex="-1"></a><span class="co"># generate this intermediate prediction. y_hat now has </span></span>
+<span id="cb95-10"><a href="random-forests.html#cb95-10" aria-hidden="true" tabindex="-1"></a><span class="co"># two columns, one corresponds to the ratio of votes the </span></span>
+<span id="cb95-11"><a href="random-forests.html#cb95-11" aria-hidden="true" tabindex="-1"></a><span class="co"># trees assign to one class, and the other column is the </span></span>
+<span id="cb95-12"><a href="random-forests.html#cb95-12" aria-hidden="true" tabindex="-1"></a><span class="co"># ratio of votes the trees assign to another class.</span></span>
+<span id="cb95-13"><a href="random-forests.html#cb95-13" aria-hidden="true" tabindex="-1"></a>main <span class="ot">=</span> <span class="st">&quot;ROC Curve&quot;</span></span>
+<span id="cb95-14"><a href="random-forests.html#cb95-14" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">roc</span>(data.test<span class="sc">$</span>DX_bl, y_hat[,<span class="dv">1</span>]),</span>
+<span id="cb95-15"><a href="random-forests.html#cb95-15" aria-hidden="true" tabindex="-1"></a>     <span class="at">col=</span><span class="st">&quot;blue&quot;</span>, <span class="at">main=</span>main)</span></code></pre></div>
+<p></p>
+<p>And we can have the ROC curve as shown in Figure <a href="random-forests.html#fig:f4-RF-ROC">68</a>.</p>
+<p></p>
+<p>
+<span class="marginnote shownote">
+<!--
+<div class="figure">--><span id="fig:f4-RF-ROC"></span>
+<img src="graphics/4_RF_ROC.png" alt="ROC curve of the RF model" width="250px"  />
+<!--
+<p class="caption marginnote">-->Figure 68: ROC curve of the RF model<!--</p>-->
+<!--</div>--></span>
+</p>
+<p></p>
+<p><em>Beyond the 5-Step R Pipeline.</em> Random forests are complex models that have many parameters to be tuned. In <strong>Chapter 2</strong> and <strong>Chapter 3</strong> we have used the <code>step()</code> function for automatic model selection for regression models. Part of the reason this is possible for regression models is that model selection for regression models largely concerns variable selection only. For decision tree and random forest models, the model selection concerns not only variable selection, but also many other aspects, such as the depth of the tree, the number of trees, and the degree of randomness that would be used in model training. This makes the model selection for tree models a craft. An individual’s experience and insights make a difference, and some may find a better model, even the same package is used on the same dataset to build models<label for="tufte-sn-102" class="margin-toggle sidenote-number">102</label><input type="checkbox" id="tufte-sn-102" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">102</span> There is often an impression that a good model is built by a good pipeline, like this 5-step pipeline. This impression is a reductive view, since it only looks at the final stage of data analytics. Like manufacturing, when the process is mature and we are able to see the rationale behind every detail of the manufacturing process, we may lose sight of those alternatives that had been considered, experimented, then discarded (or withheld) for various reasons.</span>.</p>
+<p>To see how these parameters impact the models, we conduct some experiments. The number of trees is one of the most important parameters of random forests that we’d like to be tuned well. We can build different random forest models by tuning the parameter <code>ntree</code> in <code>randomForest</code>. For each selection of the number of trees, we first randomly split the dataset into training and testing datasets, then train the model on the training dataset, and evaluate its performance on the testing dataset. This process of data splitting, model training, and testing is repeated <span class="math inline">\(100\)</span> times. We can use boxplots to show the overall performance of the models. Results are shown in Figure <a href="random-forests.html#fig:f4-21">69</a>.</p>
+<p></p>
+<p>
+<span class="marginnote shownote">
+<!--
+<div class="figure">--><span id="fig:f4-21"></span>
+<img src="graphics/4_21.png" alt="Error v.s. number of trees in a random forest model" width="250px"  />
+<!--
+<p class="caption marginnote">-->Figure 69: Error v.s. number of trees in a random forest model<!--</p>-->
+<!--</div>--></span>
+</p>
+<p></p>
+<p></p>
+<div class="sourceCode" id="cb96"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb96-1"><a href="random-forests.html#cb96-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rpart)</span>
+<span id="cb96-2"><a href="random-forests.html#cb96-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb96-3"><a href="random-forests.html#cb96-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
+<span id="cb96-4"><a href="random-forests.html#cb96-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb96-5"><a href="random-forests.html#cb96-5" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(randomForest)</span>
+<span id="cb96-6"><a href="random-forests.html#cb96-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(RCurl)</span>
+<span id="cb96-7"><a href="random-forests.html#cb96-7" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb96-8"><a href="random-forests.html#cb96-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-9"><a href="random-forests.html#cb96-9" aria-hidden="true" tabindex="-1"></a><span class="fu">theme_set</span>(<span class="fu">theme_gray</span>(<span class="at">base_size =</span> <span class="dv">15</span>))</span>
+<span id="cb96-10"><a href="random-forests.html#cb96-10" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;https://raw.githubusercontent.com&quot;</span>,</span>
+<span id="cb96-11"><a href="random-forests.html#cb96-11" aria-hidden="true" tabindex="-1"></a>              <span class="st">&quot;/analyticsbook/book/main/data/AD.csv&quot;</span>)</span>
+<span id="cb96-12"><a href="random-forests.html#cb96-12" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="at">text=</span><span class="fu">getURL</span>(url))</span>
+<span id="cb96-13"><a href="random-forests.html#cb96-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-14"><a href="random-forests.html#cb96-14" aria-hidden="true" tabindex="-1"></a>target_indx <span class="ot">&lt;-</span> <span class="fu">which</span>(<span class="fu">colnames</span>(data) <span class="sc">==</span> <span class="st">&quot;DX_bl&quot;</span>)</span>
+<span id="cb96-15"><a href="random-forests.html#cb96-15" aria-hidden="true" tabindex="-1"></a>data[, target_indx] <span class="ot">&lt;-</span> </span>
+<span id="cb96-16"><a href="random-forests.html#cb96-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.factor</span>(<span class="fu">paste0</span>(<span class="st">&quot;c&quot;</span>, data[, target_indx]))</span>
+<span id="cb96-17"><a href="random-forests.html#cb96-17" aria-hidden="true" tabindex="-1"></a>rm_indx <span class="ot">&lt;-</span> <span class="fu">which</span>(<span class="fu">colnames</span>(data) <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;ID&quot;</span>, <span class="st">&quot;TOTAL13&quot;</span>,</span>
+<span id="cb96-18"><a href="random-forests.html#cb96-18" aria-hidden="true" tabindex="-1"></a>                                       <span class="st">&quot;MMSCORE&quot;</span>))</span>
+<span id="cb96-19"><a href="random-forests.html#cb96-19" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> data[, <span class="sc">-</span>rm_indx]</span>
+<span id="cb96-20"><a href="random-forests.html#cb96-20" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb96-21"><a href="random-forests.html#cb96-21" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (itree <span class="cf">in</span> <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">9</span>, <span class="dv">10</span>, <span class="dv">20</span>, <span class="dv">50</span>, <span class="dv">100</span>, <span class="dv">200</span>, <span class="dv">300</span>, <span class="dv">400</span>, <span class="dv">500</span>,</span>
+<span id="cb96-22"><a href="random-forests.html#cb96-22" aria-hidden="true" tabindex="-1"></a>    <span class="dv">600</span>, <span class="dv">700</span>)) {</span>
+<span id="cb96-23"><a href="random-forests.html#cb96-23" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>) {</span>
+<span id="cb96-24"><a href="random-forests.html#cb96-24" aria-hidden="true" tabindex="-1"></a>train.ix <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">nrow</span>(data), <span class="fu">floor</span>(<span class="fu">nrow</span>(data)<span class="sc">/</span><span class="dv">2</span>))</span>
+<span id="cb96-25"><a href="random-forests.html#cb96-25" aria-hidden="true" tabindex="-1"></a>rf <span class="ot">&lt;-</span> <span class="fu">randomForest</span>(DX_bl <span class="sc">~</span> ., <span class="at">ntree =</span> itree, <span class="at">data =</span></span>
+<span id="cb96-26"><a href="random-forests.html#cb96-26" aria-hidden="true" tabindex="-1"></a>                                        data[train.ix, ])</span>
+<span id="cb96-27"><a href="random-forests.html#cb96-27" aria-hidden="true" tabindex="-1"></a>pred.test <span class="ot">&lt;-</span> <span class="fu">predict</span>(rf, data[<span class="sc">-</span>train.ix, ], <span class="at">type =</span> <span class="st">&quot;class&quot;</span>)</span>
+<span id="cb96-28"><a href="random-forests.html#cb96-28" aria-hidden="true" tabindex="-1"></a>this.err <span class="ot">&lt;-</span> <span class="fu">length</span>(<span class="fu">which</span>(pred.test <span class="sc">!=</span></span>
+<span id="cb96-29"><a href="random-forests.html#cb96-29" aria-hidden="true" tabindex="-1"></a>                data[<span class="sc">-</span>train.ix, ]<span class="sc">$</span>DX_bl))<span class="sc">/</span><span class="fu">length</span>(pred.test)</span>
+<span id="cb96-30"><a href="random-forests.html#cb96-30" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span> <span class="fu">rbind</span>(results, <span class="fu">c</span>(itree, this.err))</span>
+<span id="cb96-31"><a href="random-forests.html#cb96-31" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb96-32"><a href="random-forests.html#cb96-32" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb96-33"><a href="random-forests.html#cb96-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-34"><a href="random-forests.html#cb96-34" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(results) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;num_trees&quot;</span>, <span class="st">&quot;error&quot;</span>)</span>
+<span id="cb96-35"><a href="random-forests.html#cb96-35" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(results) <span class="sc">%&gt;%</span></span>
+<span id="cb96-36"><a href="random-forests.html#cb96-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">num_trees =</span> <span class="fu">as.character</span>(num_trees))</span>
+<span id="cb96-37"><a href="random-forests.html#cb96-37" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(results<span class="sc">$</span>num_trees) <span class="ot">&lt;-</span> <span class="fu">unique</span>(results<span class="sc">$</span>num_trees)</span>
+<span id="cb96-38"><a href="random-forests.html#cb96-38" aria-hidden="true" tabindex="-1"></a>results<span class="sc">$</span>num_trees <span class="ot">&lt;-</span> <span class="fu">factor</span>(results<span class="sc">$</span>num_trees,</span>
+<span id="cb96-39"><a href="random-forests.html#cb96-39" aria-hidden="true" tabindex="-1"></a>                            <span class="fu">unique</span>(results<span class="sc">$</span>num_trees))</span>
+<span id="cb96-40"><a href="random-forests.html#cb96-40" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">geom_boxplot</span>(<span class="at">data =</span> results, <span class="fu">aes</span>(<span class="at">y =</span> error,</span>
+<span id="cb96-41"><a href="random-forests.html#cb96-41" aria-hidden="true" tabindex="-1"></a>                <span class="at">x =</span> num_trees)) <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>)</span></code></pre></div>
+<p></p>
+<p>It can be seen in Figure <a href="random-forests.html#fig:f4-21">69</a> that when the number of trees is small, particularly, less than <span class="math inline">\(10\)</span>, the improvement on prediction performance of random forest is substantial with trees added. However, the error rates become stable after the number of trees reaches <span class="math inline">\(100\)</span>.</p>
+<p>Next, let’s consider the number of features (i.e., use the parameter <code>mtry</code> in the function <code>randomForest</code>). Here, <span class="math inline">\(100\)</span> trees are used. For each number of features, again, following the process we have used in the experiment with the number of trees, we draw the boxplots in Figure <a href="random-forests.html#fig:f4-22">70</a>.</p>
+<p></p>
+<p>
+<span class="marginnote shownote">
+<!--
+<div class="figure">--><span id="fig:f4-22"></span>
+<img src="graphics/4_22.png" alt="Error v.s. number of features in a random forest model" width="250px"  />
+<!--
+<p class="caption marginnote">-->Figure 70: Error v.s. number of features in a random forest model<!--</p>-->
+<!--</div>--></span>
+</p>
+<p></p>
+<p>It can be seen that the error rates are not significantly different when the number of features changes.</p>
+<p></p>
+<div class="sourceCode" id="cb97"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb97-1"><a href="random-forests.html#cb97-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rpart)</span>
+<span id="cb97-2"><a href="random-forests.html#cb97-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb97-3"><a href="random-forests.html#cb97-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
+<span id="cb97-4"><a href="random-forests.html#cb97-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb97-5"><a href="random-forests.html#cb97-5" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(randomForest)</span>
+<span id="cb97-6"><a href="random-forests.html#cb97-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(RCurl)</span>
+<span id="cb97-7"><a href="random-forests.html#cb97-7" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb97-8"><a href="random-forests.html#cb97-8" aria-hidden="true" tabindex="-1"></a><span class="fu">theme_set</span>(<span class="fu">theme_gray</span>(<span class="at">base_size =</span> <span class="dv">15</span>))</span>
+<span id="cb97-9"><a href="random-forests.html#cb97-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb97-10"><a href="random-forests.html#cb97-10" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;https://raw.githubusercontent.com&quot;</span>,</span>
+<span id="cb97-11"><a href="random-forests.html#cb97-11" aria-hidden="true" tabindex="-1"></a>              <span class="st">&quot;/analyticsbook/book/main/data/AD.csv&quot;</span>)</span>
+<span id="cb97-12"><a href="random-forests.html#cb97-12" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="at">text=</span><span class="fu">getURL</span>(url))</span>
+<span id="cb97-13"><a href="random-forests.html#cb97-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb97-14"><a href="random-forests.html#cb97-14" aria-hidden="true" tabindex="-1"></a>target_indx <span class="ot">&lt;-</span> <span class="fu">which</span>(<span class="fu">colnames</span>(data) <span class="sc">==</span> <span class="st">&quot;DX_bl&quot;</span>)</span>
+<span id="cb97-15"><a href="random-forests.html#cb97-15" aria-hidden="true" tabindex="-1"></a>data[, target_indx] <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(</span>
+<span id="cb97-16"><a href="random-forests.html#cb97-16" aria-hidden="true" tabindex="-1"></a>        <span class="fu">paste0</span>(<span class="st">&quot;c&quot;</span>, data[, target_indx]))</span>
+<span id="cb97-17"><a href="random-forests.html#cb97-17" aria-hidden="true" tabindex="-1"></a>rm_indx <span class="ot">&lt;-</span> <span class="fu">which</span>(<span class="fu">colnames</span>(data) <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;ID&quot;</span>, <span class="st">&quot;TOTAL13&quot;</span>,</span>
+<span id="cb97-18"><a href="random-forests.html#cb97-18" aria-hidden="true" tabindex="-1"></a>                                       <span class="st">&quot;MMSCORE&quot;</span>))</span>
+<span id="cb97-19"><a href="random-forests.html#cb97-19" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> data[, <span class="sc">-</span>rm_indx]</span>
+<span id="cb97-20"><a href="random-forests.html#cb97-20" aria-hidden="true" tabindex="-1"></a>nFea <span class="ot">&lt;-</span> <span class="fu">ncol</span>(data) <span class="sc">-</span> <span class="dv">1</span></span>
+<span id="cb97-21"><a href="random-forests.html#cb97-21" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb97-22"><a href="random-forests.html#cb97-22" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (iFeatures <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>nFea) {</span>
+<span id="cb97-23"><a href="random-forests.html#cb97-23" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>) {</span>
+<span id="cb97-24"><a href="random-forests.html#cb97-24" aria-hidden="true" tabindex="-1"></a>train.ix <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">nrow</span>(data), <span class="fu">floor</span>(<span class="fu">nrow</span>(data)<span class="sc">/</span><span class="dv">2</span>))</span>
+<span id="cb97-25"><a href="random-forests.html#cb97-25" aria-hidden="true" tabindex="-1"></a>rf <span class="ot">&lt;-</span> <span class="fu">randomForest</span>(DX_bl <span class="sc">~</span> ., <span class="at">mtry =</span> iFeatures, <span class="at">ntree =</span> <span class="dv">100</span>,</span>
+<span id="cb97-26"><a href="random-forests.html#cb97-26" aria-hidden="true" tabindex="-1"></a>                   <span class="at">data =</span> data[train.ix,])</span>
+<span id="cb97-27"><a href="random-forests.html#cb97-27" aria-hidden="true" tabindex="-1"></a>pred.test <span class="ot">&lt;-</span> <span class="fu">predict</span>(rf, data[<span class="sc">-</span>train.ix, ], <span class="at">type =</span> <span class="st">&quot;class&quot;</span>)</span>
+<span id="cb97-28"><a href="random-forests.html#cb97-28" aria-hidden="true" tabindex="-1"></a>this.err <span class="ot">&lt;-</span> <span class="fu">length</span>(<span class="fu">which</span>(pred.test <span class="sc">!=</span></span>
+<span id="cb97-29"><a href="random-forests.html#cb97-29" aria-hidden="true" tabindex="-1"></a>                 data[<span class="sc">-</span>train.ix, ]<span class="sc">$</span>DX_bl))<span class="sc">/</span><span class="fu">length</span>(pred.test)</span>
+<span id="cb97-30"><a href="random-forests.html#cb97-30" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span> <span class="fu">rbind</span>(results, <span class="fu">c</span>(iFeatures, this.err))</span>
+<span id="cb97-31"><a href="random-forests.html#cb97-31" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb97-32"><a href="random-forests.html#cb97-32" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb97-33"><a href="random-forests.html#cb97-33" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(results) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;num_features&quot;</span>, <span class="st">&quot;error&quot;</span>)</span>
+<span id="cb97-34"><a href="random-forests.html#cb97-34" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(results) <span class="sc">%&gt;%</span></span>
+<span id="cb97-35"><a href="random-forests.html#cb97-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">num_features =</span> <span class="fu">as.character</span>(num_features))</span>
+<span id="cb97-36"><a href="random-forests.html#cb97-36" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(results<span class="sc">$</span>num_features) <span class="ot">&lt;-</span> <span class="fu">unique</span>(results<span class="sc">$</span>num_features)</span>
+<span id="cb97-37"><a href="random-forests.html#cb97-37" aria-hidden="true" tabindex="-1"></a>results<span class="sc">$</span>num_features <span class="ot">&lt;-</span> <span class="fu">factor</span>(results<span class="sc">$</span>num_features,</span>
+<span id="cb97-38"><a href="random-forests.html#cb97-38" aria-hidden="true" tabindex="-1"></a>                              <span class="fu">unique</span>(results<span class="sc">$</span>num_features))</span>
+<span id="cb97-39"><a href="random-forests.html#cb97-39" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">geom_boxplot</span>(<span class="at">data =</span> results, <span class="fu">aes</span>(<span class="at">y =</span> error,</span>
+<span id="cb97-40"><a href="random-forests.html#cb97-40" aria-hidden="true" tabindex="-1"></a>                  <span class="at">x =</span> num_features)) <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>)</span></code></pre></div>
+<p></p>
+<p></p>
+<p>
+<span class="marginnote shownote">
+<!--
+<div class="figure">--><span id="fig:f4-23"></span>
+<img src="graphics/4_23.png" alt="Error v.s. node size in a random forest model" width="250px"  />
+<!--
+<p class="caption marginnote">-->Figure 71: Error v.s. node size in a random forest model<!--</p>-->
+<!--</div>--></span>
+</p>
+<p></p>
+<p>Further, we experiment with the minimum node size (i.e., use the parameter <code>nodesize</code> in the function <code>randomForest</code>), that is, the minimum number of instances at a node. Boxplots of their performances are shown in Figure <a href="random-forests.html#fig:f4-23">71</a>.</p>
+<p></p>
+<div class="sourceCode" id="cb98"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb98-1"><a href="random-forests.html#cb98-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb98-2"><a href="random-forests.html#cb98-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
+<span id="cb98-3"><a href="random-forests.html#cb98-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb98-4"><a href="random-forests.html#cb98-4" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(randomForest)</span>
+<span id="cb98-5"><a href="random-forests.html#cb98-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(RCurl)</span>
+<span id="cb98-6"><a href="random-forests.html#cb98-6" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb98-7"><a href="random-forests.html#cb98-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb98-8"><a href="random-forests.html#cb98-8" aria-hidden="true" tabindex="-1"></a><span class="fu">theme_set</span>(<span class="fu">theme_gray</span>(<span class="at">base_size =</span> <span class="dv">15</span>))</span>
+<span id="cb98-9"><a href="random-forests.html#cb98-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb98-10"><a href="random-forests.html#cb98-10" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;https://raw.githubusercontent.com&quot;</span>,</span>
+<span id="cb98-11"><a href="random-forests.html#cb98-11" aria-hidden="true" tabindex="-1"></a>              <span class="st">&quot;/analyticsbook/book/main/data/AD.csv&quot;</span>)</span>
+<span id="cb98-12"><a href="random-forests.html#cb98-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb98-13"><a href="random-forests.html#cb98-13" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="at">text=</span><span class="fu">getURL</span>(url))</span>
+<span id="cb98-14"><a href="random-forests.html#cb98-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb98-15"><a href="random-forests.html#cb98-15" aria-hidden="true" tabindex="-1"></a>target_indx <span class="ot">&lt;-</span> <span class="fu">which</span>(<span class="fu">colnames</span>(data) <span class="sc">==</span> <span class="st">&quot;DX_bl&quot;</span>)</span>
+<span id="cb98-16"><a href="random-forests.html#cb98-16" aria-hidden="true" tabindex="-1"></a>data[, target_indx] <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(<span class="fu">paste0</span>(<span class="st">&quot;c&quot;</span>, data[, target_indx]))</span>
+<span id="cb98-17"><a href="random-forests.html#cb98-17" aria-hidden="true" tabindex="-1"></a>rm_indx <span class="ot">&lt;-</span> <span class="fu">which</span>(<span class="fu">colnames</span>(data) <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;ID&quot;</span>, <span class="st">&quot;TOTAL13&quot;</span>,</span>
+<span id="cb98-18"><a href="random-forests.html#cb98-18" aria-hidden="true" tabindex="-1"></a>                                       <span class="st">&quot;MMSCORE&quot;</span>))</span>
+<span id="cb98-19"><a href="random-forests.html#cb98-19" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> data[, <span class="sc">-</span>rm_indx]</span>
+<span id="cb98-20"><a href="random-forests.html#cb98-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb98-21"><a href="random-forests.html#cb98-21" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb98-22"><a href="random-forests.html#cb98-22" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (inodesize <span class="cf">in</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>, <span class="dv">7</span>, <span class="dv">8</span>, <span class="dv">9</span>, <span class="dv">10</span>, <span class="dv">20</span>, <span class="dv">30</span>,</span>
+<span id="cb98-23"><a href="random-forests.html#cb98-23" aria-hidden="true" tabindex="-1"></a>    <span class="dv">40</span>, <span class="dv">50</span>, <span class="dv">60</span>, <span class="dv">70</span>, <span class="dv">80</span>,<span class="dv">90</span>, <span class="dv">100</span>)) {</span>
+<span id="cb98-24"><a href="random-forests.html#cb98-24" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>) {</span>
+<span id="cb98-25"><a href="random-forests.html#cb98-25" aria-hidden="true" tabindex="-1"></a>    train.ix <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">nrow</span>(data), <span class="fu">floor</span>(<span class="fu">nrow</span>(data)<span class="sc">/</span><span class="dv">2</span>))</span>
+<span id="cb98-26"><a href="random-forests.html#cb98-26" aria-hidden="true" tabindex="-1"></a>    rf <span class="ot">&lt;-</span> <span class="fu">randomForest</span>(DX_bl <span class="sc">~</span> ., <span class="at">ntree =</span> <span class="dv">100</span>, <span class="at">nodesize =</span></span>
+<span id="cb98-27"><a href="random-forests.html#cb98-27" aria-hidden="true" tabindex="-1"></a>                     inodesize, <span class="at">data =</span> data[train.ix,])</span>
+<span id="cb98-28"><a href="random-forests.html#cb98-28" aria-hidden="true" tabindex="-1"></a>    pred.test <span class="ot">&lt;-</span> <span class="fu">predict</span>(rf, data[<span class="sc">-</span>train.ix, ], <span class="at">type =</span> <span class="st">&quot;class&quot;</span>)</span>
+<span id="cb98-29"><a href="random-forests.html#cb98-29" aria-hidden="true" tabindex="-1"></a>    this.err <span class="ot">&lt;-</span> <span class="fu">length</span>(<span class="fu">which</span>(pred.test <span class="sc">!=</span></span>
+<span id="cb98-30"><a href="random-forests.html#cb98-30" aria-hidden="true" tabindex="-1"></a>                    data[<span class="sc">-</span>train.ix, ]<span class="sc">$</span>DX_bl))<span class="sc">/</span><span class="fu">length</span>(pred.test)</span>
+<span id="cb98-31"><a href="random-forests.html#cb98-31" aria-hidden="true" tabindex="-1"></a>    results <span class="ot">&lt;-</span> <span class="fu">rbind</span>(results, <span class="fu">c</span>(inodesize, this.err))</span>
+<span id="cb98-32"><a href="random-forests.html#cb98-32" aria-hidden="true" tabindex="-1"></a>    <span class="co"># err.rf &lt;- c(err.rf, length(which(pred.test !=</span></span>
+<span id="cb98-33"><a href="random-forests.html#cb98-33" aria-hidden="true" tabindex="-1"></a>    <span class="co"># data[-train.ix,]$DX_bl))/length(pred.test) )</span></span>
+<span id="cb98-34"><a href="random-forests.html#cb98-34" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb98-35"><a href="random-forests.html#cb98-35" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb98-36"><a href="random-forests.html#cb98-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb98-37"><a href="random-forests.html#cb98-37" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(results) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;min_node_size&quot;</span>, <span class="st">&quot;error&quot;</span>)</span>
+<span id="cb98-38"><a href="random-forests.html#cb98-38" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(results) <span class="sc">%&gt;%</span></span>
+<span id="cb98-39"><a href="random-forests.html#cb98-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">min_node_size =</span> <span class="fu">as.character</span>(min_node_size))</span>
+<span id="cb98-40"><a href="random-forests.html#cb98-40" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(results<span class="sc">$</span>min_node_size) <span class="ot">&lt;-</span> <span class="fu">unique</span>(results<span class="sc">$</span>min_node_size)</span>
+<span id="cb98-41"><a href="random-forests.html#cb98-41" aria-hidden="true" tabindex="-1"></a>results<span class="sc">$</span>min_node_size <span class="ot">&lt;-</span> <span class="fu">factor</span>(results<span class="sc">$</span>min_node_size,</span>
+<span id="cb98-42"><a href="random-forests.html#cb98-42" aria-hidden="true" tabindex="-1"></a>                                <span class="fu">unique</span>(results<span class="sc">$</span>min_node_size))</span>
+<span id="cb98-43"><a href="random-forests.html#cb98-43" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">geom_boxplot</span>(<span class="at">data =</span> results, <span class="fu">aes</span>(<span class="at">y =</span> error,</span>
+<span id="cb98-44"><a href="random-forests.html#cb98-44" aria-hidden="true" tabindex="-1"></a>                  <span class="at">x =</span> min_node_size)) <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>)</span></code></pre></div>
+<p></p>
+<div style="page-break-after: always;"></div>
+<p>Figure <a href="random-forests.html#fig:f4-23">71</a> shows that the error rates start to rise when the minimum node size equals 40. And the error rates are not substantially different when the minimum node size is less than 40. All together, these results provide information for us to select models.</p>
+<p></p>
+<p>
+<span class="marginnote shownote">
+<!--
+<div class="figure">--><span id="fig:f4-20"></span>
+<img src="graphics/4_20.png" alt="Performance of random forest v.s. tree model on the Alzheimer's disease data" width="250px"  />
+<!--
+<p class="caption marginnote">-->Figure 72: Performance of random forest v.s. tree model on the Alzheimer’s disease data<!--</p>-->
+<!--</div>--></span>
+</p>
+<p></p>
+<p>To compare random forest with decision tree, we can also follow a similar process, i.e., half of the dataset is used for training and the other half for testing. This process of splitting data, training the model on training data, and testing the model on testing data is repeated <span class="math inline">\(100\)</span> times, and boxplots of the errors from decision trees and random forests are plotted in Figure <a href="random-forests.html#fig:f4-20">72</a> using the following R code.</p>
+<p></p>
+<div class="sourceCode" id="cb99"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb99-1"><a href="random-forests.html#cb99-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rpart)</span>
+<span id="cb99-2"><a href="random-forests.html#cb99-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb99-3"><a href="random-forests.html#cb99-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
+<span id="cb99-4"><a href="random-forests.html#cb99-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb99-5"><a href="random-forests.html#cb99-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(RCurl)</span>
+<span id="cb99-6"><a href="random-forests.html#cb99-6" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(randomForest)</span>
+<span id="cb99-7"><a href="random-forests.html#cb99-7" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb99-8"><a href="random-forests.html#cb99-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb99-9"><a href="random-forests.html#cb99-9" aria-hidden="true" tabindex="-1"></a><span class="fu">theme_set</span>(<span class="fu">theme_gray</span>(<span class="at">base_size =</span> <span class="dv">15</span>))</span>
+<span id="cb99-10"><a href="random-forests.html#cb99-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb99-11"><a href="random-forests.html#cb99-11" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;https://raw.githubusercontent.com&quot;</span>,</span>
+<span id="cb99-12"><a href="random-forests.html#cb99-12" aria-hidden="true" tabindex="-1"></a>              <span class="st">&quot;/analyticsbook/book/main/data/AD.csv&quot;</span>)</span>
+<span id="cb99-13"><a href="random-forests.html#cb99-13" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="at">text=</span><span class="fu">getURL</span>(url))</span>
+<span id="cb99-14"><a href="random-forests.html#cb99-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb99-15"><a href="random-forests.html#cb99-15" aria-hidden="true" tabindex="-1"></a>target_indx <span class="ot">&lt;-</span> <span class="fu">which</span>(<span class="fu">colnames</span>(data) <span class="sc">==</span> <span class="st">&quot;DX_bl&quot;</span>)</span>
+<span id="cb99-16"><a href="random-forests.html#cb99-16" aria-hidden="true" tabindex="-1"></a>data[, target_indx] <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(<span class="fu">paste0</span>(<span class="st">&quot;c&quot;</span>, data[, target_indx]))</span>
+<span id="cb99-17"><a href="random-forests.html#cb99-17" aria-hidden="true" tabindex="-1"></a>rm_indx <span class="ot">&lt;-</span> <span class="fu">which</span>(<span class="fu">colnames</span>(data) <span class="sc">%in%</span> </span>
+<span id="cb99-18"><a href="random-forests.html#cb99-18" aria-hidden="true" tabindex="-1"></a>                   <span class="fu">c</span>(<span class="st">&quot;ID&quot;</span>, <span class="st">&quot;TOTAL13&quot;</span>, <span class="st">&quot;MMSCORE&quot;</span>))</span>
+<span id="cb99-19"><a href="random-forests.html#cb99-19" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> data[, <span class="sc">-</span>rm_indx]</span>
+<span id="cb99-20"><a href="random-forests.html#cb99-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb99-21"><a href="random-forests.html#cb99-21" aria-hidden="true" tabindex="-1"></a>err.tree <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb99-22"><a href="random-forests.html#cb99-22" aria-hidden="true" tabindex="-1"></a>err.rf <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb99-23"><a href="random-forests.html#cb99-23" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>) {</span>
+<span id="cb99-24"><a href="random-forests.html#cb99-24" aria-hidden="true" tabindex="-1"></a>train.ix <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">nrow</span>(data), <span class="fu">floor</span>(<span class="fu">nrow</span>(data)<span class="sc">/</span><span class="dv">2</span>))</span>
+<span id="cb99-25"><a href="random-forests.html#cb99-25" aria-hidden="true" tabindex="-1"></a>tree <span class="ot">&lt;-</span> <span class="fu">rpart</span>(DX_bl <span class="sc">~</span> ., <span class="at">data =</span> data[train.ix, ])</span>
+<span id="cb99-26"><a href="random-forests.html#cb99-26" aria-hidden="true" tabindex="-1"></a>pred.test <span class="ot">&lt;-</span> <span class="fu">predict</span>(tree, data[<span class="sc">-</span>train.ix, ], <span class="at">type =</span> <span class="st">&quot;class&quot;</span>)</span>
+<span id="cb99-27"><a href="random-forests.html#cb99-27" aria-hidden="true" tabindex="-1"></a>err.tree <span class="ot">&lt;-</span> <span class="fu">c</span>(err.tree, <span class="fu">length</span>(</span>
+<span id="cb99-28"><a href="random-forests.html#cb99-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">which</span>(pred.test <span class="sc">!=</span> data[<span class="sc">-</span>train.ix, ]<span class="sc">$</span>DX_bl))<span class="sc">/</span><span class="fu">length</span>(pred.test))</span>
+<span id="cb99-29"><a href="random-forests.html#cb99-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb99-30"><a href="random-forests.html#cb99-30" aria-hidden="true" tabindex="-1"></a>rf <span class="ot">&lt;-</span> <span class="fu">randomForest</span>(DX_bl <span class="sc">~</span> ., <span class="at">data =</span> data[train.ix, ])</span>
+<span id="cb99-31"><a href="random-forests.html#cb99-31" aria-hidden="true" tabindex="-1"></a>pred.test <span class="ot">&lt;-</span> <span class="fu">predict</span>(rf, data[<span class="sc">-</span>train.ix, ], <span class="at">type =</span> <span class="st">&quot;class&quot;</span>)</span>
+<span id="cb99-32"><a href="random-forests.html#cb99-32" aria-hidden="true" tabindex="-1"></a>err.rf <span class="ot">&lt;-</span> <span class="fu">c</span>(err.rf, <span class="fu">length</span>(</span>
+<span id="cb99-33"><a href="random-forests.html#cb99-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">which</span>(pred.test <span class="sc">!=</span> data[<span class="sc">-</span>train.ix, ]<span class="sc">$</span>DX_bl))<span class="sc">/</span><span class="fu">length</span>(pred.test))</span>
+<span id="cb99-34"><a href="random-forests.html#cb99-34" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb99-35"><a href="random-forests.html#cb99-35" aria-hidden="true" tabindex="-1"></a>err.tree <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">err =</span> err.tree, <span class="at">method =</span> <span class="st">&quot;tree&quot;</span>)</span>
+<span id="cb99-36"><a href="random-forests.html#cb99-36" aria-hidden="true" tabindex="-1"></a>err.rf <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">err =</span> err.rf, <span class="at">method =</span> <span class="st">&quot;random_forests&quot;</span>)</span>
+<span id="cb99-37"><a href="random-forests.html#cb99-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb99-38"><a href="random-forests.html#cb99-38" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">geom_boxplot</span>(</span>
+<span id="cb99-39"><a href="random-forests.html#cb99-39" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> <span class="fu">rbind</span>(err.tree, err.rf), <span class="fu">aes</span>(<span class="at">y =</span> err, <span class="at">x =</span> method)) <span class="sc">+</span> </span>
+<span id="cb99-40"><a href="random-forests.html#cb99-40" aria-hidden="true" tabindex="-1"></a><span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>)</span></code></pre></div>
+<p></p>
+<p>Figure <a href="random-forests.html#fig:f4-20">72</a> shows that the error rates of decision trees are higher than those for random forests, indicating that random forest is a better model here.</p>
+</div>
+</div>
+<p style="text-align: center;">
+<a href="how-bootstrap-works.html"><button class="btn btn-default">Previous</button></a>
+<a href="remarks-2.html"><button class="btn btn-default">Next</button></a>
+</p>
+</div>
+</div>
+
+<script src="js/jquery.js"></script>
+<script src="js/tablesaw-stackonly.js"></script>
+<script src="js/nudge.min.js"></script>
+
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+</body>
+</html>

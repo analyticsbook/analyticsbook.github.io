@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta property="og:title" content="How bootstrap works | Data Analytics" />
+<meta property="og:type" content="book" />
+
+
+
+
+
+<meta name="author" content="Shuai Huang &amp; Houtao Deng" />
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  TeX: { equationNumbers: { autoNumber: "AMS" } }
+});
+</script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<meta name="description" content="How bootstrap works | Data Analytics">
+
+<title>How bootstrap works | Data Analytics</title>
+
+<script src="libs/header-attrs-2.7/header-attrs.js"></script>
+<link href="libs/tufte-css-2015.12.29/tufte.css" rel="stylesheet" />
+<link href="libs/tufte-css-2015.12.29/envisioned.css" rel="stylesheet" />
+<script src="https://use.typekit.net/ajy6rnl.js"></script>
+<script>try{Typekit.load({ async: true });}catch(e){}</script>
+<!-- <link rel="stylesheet" href="css/normalize.css"> -->
+<!-- <link rel="stylesheet" href="css/envisioned.css"/> -->
+<link rel="stylesheet" href="css/tablesaw-stackonly.css"/>
+<link rel="stylesheet" href="css/nudge.css"/>
+<link rel="stylesheet" href="css/sourcesans.css"/>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+
+
+</head>
+
+<body>
+
+<!--bookdown:toc:start-->
+
+<nav class="pushy pushy-left" id="TOC">
+<ul>
+<li><a href="#preface">Preface</a></li>
+<li><a href="#acknowledgments">Acknowledgments</a></li>
+<li><a href="#chapter-1.-introduction">Chapter 1. Introduction</a></li>
+<li><a href="#chapter-2.-abstraction-regression-tree-models">Chapter 2. Abstraction: Regression &amp; Tree Models</a></li>
+<li><a href="#chapter-3.-recognition-logistic-regression-ranking">Chapter 3. Recognition: Logistic Regression &amp; Ranking</a></li>
+<li><a href="#chapter-4.-resonance-bootstrap-random-forests">Chapter 4. Resonance: Bootstrap &amp; Random Forests</a></li>
+<li><a href="#chapter-5.-learning-i-cross-validation-oob">Chapter 5. Learning (I): Cross-validation &amp; OOB</a></li>
+<li><a href="#chapter-6.-diagnosis-residuals-heterogeneity">Chapter 6. Diagnosis: Residuals &amp; Heterogeneity</a></li>
+<li><a href="#chapter-7.-learning-ii-svm-ensemble-learning">Chapter 7. Learning (II): SVM &amp; Ensemble Learning</a></li>
+<li><a href="#chapter-8.-scalability-lasso-pca">Chapter 8. Scalability: LASSO &amp; PCA</a></li>
+<li><a href="#chapter-9.-pragmatism-experience-experimental">Chapter 9. Pragmatism: Experience &amp; Experimental</a></li>
+<li><a href="#chapter-10.-synthesis-architecture-pipeline">Chapter 10. Synthesis: Architecture &amp; Pipeline</a></li>
+<li><a href="#conclusion">Conclusion</a></li>
+<li><a href="#appendix-a-brief-review-of-background-knowledge">Appendix: A Brief Review of Background Knowledge</a></li>
+</ul>
+</nav>
+
+<!--bookdown:toc:end-->
+
+<div class="menu-btn"><h3>☰ Menu</h3></div>
+
+<div class="site-overlay"></div>
+
+
+<div class="row">
+<div class="col-sm-12">
+
+<nav class="pushy pushy-left" id="TOC">
+<ul>
+<li><a href="index.html#preface">Preface</a></li>
+<li><a href="acknowledgments.html#acknowledgments">Acknowledgments</a></li>
+<li><a href="chapter-1-introduction.html#chapter-1.-introduction">Chapter 1. Introduction</a></li>
+<li><a href="chapter-2-abstraction-regression-tree-models.html#chapter-2.-abstraction-regression-tree-models">Chapter 2. Abstraction: Regression &amp; Tree Models</a></li>
+<li><a href="chapter-3-recognition-logistic-regression-ranking.html#chapter-3.-recognition-logistic-regression-ranking">Chapter 3. Recognition: Logistic Regression &amp; Ranking</a></li>
+<li><a href="chapter-4-resonance-bootstrap-random-forests.html#chapter-4.-resonance-bootstrap-random-forests">Chapter 4. Resonance: Bootstrap &amp; Random Forests</a></li>
+<li><a href="chapter-5-learning-i-cross-validation-oob.html#chapter-5.-learning-i-cross-validation-oob">Chapter 5. Learning (I): Cross-validation &amp; OOB</a></li>
+<li><a href="chapter-6-diagnosis-residuals-heterogeneity.html#chapter-6.-diagnosis-residuals-heterogeneity">Chapter 6. Diagnosis: Residuals &amp; Heterogeneity</a></li>
+<li><a href="chapter-7-learning-ii-svm-ensemble-learning.html#chapter-7.-learning-ii-svm-ensemble-learning">Chapter 7. Learning (II): SVM &amp; Ensemble Learning</a></li>
+<li><a href="chapter-8-scalability-lasso-pca.html#chapter-8.-scalability-lasso-pca">Chapter 8. Scalability: LASSO &amp; PCA</a></li>
+<li><a href="chapter-9-pragmatism-experience-experimental.html#chapter-9.-pragmatism-experience-experimental">Chapter 9. Pragmatism: Experience &amp; Experimental</a></li>
+<li><a href="chapter-10-synthesis-architecture-pipeline.html#chapter-10.-synthesis-architecture-pipeline">Chapter 10. Synthesis: Architecture &amp; Pipeline</a></li>
+<li><a href="conclusion.html#conclusion">Conclusion</a></li>
+<li><a href="appendix-a-brief-review-of-background-knowledge.html#appendix-a-brief-review-of-background-knowledge">Appendix: A Brief Review of Background Knowledge</a></li>
+</ul>
+</nav>
+
+</div>
+</div>
+<div class="row">
+<div class="col-sm-12">
+<div id="how-bootstrap-works" class="section level2 unnumbered">
+<h2>How bootstrap works</h2>
+<div id="rationale-and-formulation-5" class="section level3 unnumbered">
+<h3>Rationale and formulation</h3>
+<p>There are multiple perspectives to look at Bootstrap. One perspective that has been well studied in the seminar book<label for="tufte-sn-79" class="margin-toggle sidenote-number">79</label><input type="checkbox" id="tufte-sn-79" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">79</span> Efron, B. and Tibshirani, R.J., * An Introduction to the Bootstrap.* Chapman &amp; Hall/CRC, 1993.</span> is to treat Bootstrap as a simulation of the <em>sampling process</em> . As we know, sampling refers to the idea that we could draw samples again and again from the same population. Many statistical techniques make sense only when we put them in the framework of sampling<label for="tufte-sn-80" class="margin-toggle sidenote-number">80</label><input type="checkbox" id="tufte-sn-80" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">80</span> When statistics gained its scientific foundation and a modern appeal, there was also the rise of <em>mass production</em> that introduced human beings into a mechanical world populated with endless repetitive movements of machines and processes, as dramatized in Charlie Chaplin’s movies.</span>. For example, in hypothesis testing, when the Type 1 Error (a.k.a., the <span class="math inline">\(\alpha\)</span>) is set to be <span class="math inline">\(0.05\)</span>, it means that if we are able to repeat for multiple times the data collection, computation of statistics, and hypothesis testing, on average we will reject the null hypothesis <span class="math inline">\(5\%\)</span> of the times even when the null hypothesis is true.</p>
+<p>For many statistical models, the analytic <em>tractability</em> of the sampling process lays the foundation to study their behavior and performance. When there were no computers, analytical tractability had been (and still is) one main factor that determines the “fate” of a statistical model—i.e., if we haven’t found an analytical tractable formulation to study the model considering its sampling process, it is hard to convince statisticians that the model is valid<label for="tufte-sn-81" class="margin-toggle sidenote-number">81</label><input type="checkbox" id="tufte-sn-81" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">81</span> E.g., without the possibility (even the possibility is probably only <em>theoretical</em>) of infinite repetition of the same process, the concept <span class="math inline">\(\alpha\)</span> in hypothesis testing will lose its ground of being something tangible.</span>. Nonetheless, there have been good statistical models that have no rigorous mathematical formulations, yet they are effective in applications. It may take years for us to find a mathematical framework to establish these models as rigorous approaches.</p>
+<p>As a remedy, Bootstrap exploits the power of computers to simulate the sampling process. Figure <a href="how-bootstrap-works.html#fig:f4-1">52</a> provides a simple illustration of its idea. The input of a Bootstrap algorithm is a dataset, which provides a <em>representation</em> of the underlying population. As the dataset is considered to be an representational <em>equivalent</em> of the underlying population, <em>sampling from the underlying population</em> could be approximated by <em>resampling from the dataset</em>. As shown in Figure <a href="how-bootstrap-works.html#fig:f4-1">52</a>, we could generate any number of Bootstrapped datasets by randomly drawing samples (with or without replacement, both have been useful) from the dataset. The idea is simple and effective.</p>
+<p></p>
+<div class="figure"><span id="fig:f4-1"></span>
+<p class="caption marginnote shownote">
+Figure 52: A demonstration of the Bootstrap process
+</p>
+<img src="graphics/4_1.png" alt="A demonstration of the Bootstrap process" width="100%"  />
+</div>
+<p></p>
+<p><em>The conceptual power of Bootstrap.</em> A good model has a concrete procedure of operations. That is <em>what it does</em>. There is also a conceptual-level perspective that concerns a model regarding <em>what it is</em>.</p>
+<p></p>
+<p>
+<span class="marginnote shownote">
+<!--
+<div class="figure">--><span id="fig:f4-samplingprocess"></span>
+<img src="graphics/4_samplingprocess.png" alt="A demonstration of the sampling process" width="250px"  />
+<!--
+<p class="caption marginnote">-->Figure 53: A demonstration of the sampling process<!--</p>-->
+<!--</div>--></span>
+</p>
+<p></p>
+<p>A sampling process is conventionally—or conveniently—conceived as a static snapshot, as shown in Figure <a href="how-bootstrap-works.html#fig:f4-samplingprocess">53</a>. The data points are pictured as silhouettes of apples, to highlight the psychological tendency we all share that we too often focus on the samples (the fruit) rather than the sampling process (the tree). This view is not entirely wrong, but it is a reduced view and it is easy for this fact to slip below the level of consciousness. We often take the apples as an absolute fact and forget that they are only historic coincidence: they are a <em>representation</em> of the apple tree (here, corresponds to the concept <em>population</em>); they themselves are not the apple tree.</p>
+<p></p>
+<div class="figure"><span id="fig:f4-samplingprocess2"></span>
+<p class="caption marginnote shownote">
+Figure 54: A demonstration of the dynamic view of Bootstrap. The tree is drawn using <a href="http://mwskirpan.com/FractalTree/">http://mwskirpan.com/FractalTree/</a>.
+</p>
+<img src="graphics/4_samplingprocess_tree.png" alt="A demonstration of the dynamic view of Bootstrap. The tree is drawn using [http://mwskirpan.com/FractalTree/](http://mwskirpan.com/FractalTree/)." width="100%"  />
+</div>
+<p></p>
+<p>The Bootstrap starts from what we have forgotten. Not to study an apple as an apple, it studies the process of how an apple is created, the process of apple<em>-ing</em>. Bearing this objective in mind, an apple is no longer empirical, now it is a <em>general</em> apple. It bears the genetics of apple that is shared by all apples and conceives the possibility of an apple tree. This is the power of the Bootstrap on the conceptual level. As illustrated in Figure <a href="how-bootstrap-works.html#fig:f4-samplingprocess2">54</a>, it now animates the static snapshot shown in Figure <a href="how-bootstrap-works.html#fig:f4-samplingprocess">53</a> and recovers the dynamic process. It creates resonance among the snapshots, and the resonance completes the big picture and enlarges our conceptual view of the problem.</p>
+</div>
+<div id="theory-and-method-3" class="section level3 unnumbered">
+<h3>Theory and method</h3>
+<p>Let’s consider the estimator of the mean of a normal population. A random variable <span class="math inline">\(X\)</span> follows a normal distribution, i.e., <span class="math inline">\(X \sim N\left(\mu, \sigma^{2}\right)\)</span>. For simplicity, let’s assume that we have known the variance <span class="math inline">\(\sigma^{2}\)</span>. We want to estimate the mean <span class="math inline">\(\mu\)</span>. What we need to do is to randomly draw a few samples from the distribution. Denote these samples as <span class="math inline">\(x_{1}, x_{2}, \ldots, x_{N}\)</span>. To estimate <span class="math inline">\(\mu\)</span> , it seems natural to use the average of the samples, denoted as <span class="math inline">\(\overline{x}=\frac{1}{N} \sum_{n=1}^{N} x_{i}\)</span>. We use <span class="math inline">\(\overline{x}\)</span> as an estimator of <span class="math inline">\(\mu\)</span>, i.e., <span class="math inline">\(\hat{\mu}=\overline{x}\)</span>.</p>
+<p></p>
+<p>
+<span class="marginnote shownote">
+<!--
+<div class="figure">--><span id="fig:f4-two-sampling-process"></span>
+<img src="graphics/4_two_sampling_process.png" alt="A sampling process that concerns $x$ (upper) and an enlarged view of the sampling process that concerns both $x$ and $\hat{\mu}$ (bottom)" width="250px"  />
+<!--
+<p class="caption marginnote">-->Figure 55: A sampling process that concerns <span class="math inline">\(x\)</span> (upper) and an enlarged view of the sampling process that concerns both <span class="math inline">\(x\)</span> and <span class="math inline">\(\hat{\mu}\)</span> (bottom)<!--</p>-->
+<!--</div>--></span>
+</p>
+<p></p>
+<p>A question arises, how good is <span class="math inline">\(\overline{x}\)</span> to be an estimator of <span class="math inline">\(\mu\)</span>?</p>
+<p>Obviously, if <span class="math inline">\(\overline{x}\)</span> is numerically close to <span class="math inline">\(\mu\)</span>, it is a good estimator. The problem is, for a particular dataset, we don’t know what is <span class="math inline">\(\mu\)</span>. And even if we know <span class="math inline">\(\mu\)</span>, we need to have criteria to tell us how close is close enough. On top of all these considerations, common sense tells us that <span class="math inline">\(\overline{x}\)</span> itself is a random variable that is subject to uncertainty. To evaluate this uncertainty and get a general sense of how closely <span class="math inline">\(\overline{x}\)</span> estimates <span class="math inline">\(\mu\)</span>, a brute-force approach is to repeat the physical experiment many times. But this is not necessary. In this particular problem, where <span class="math inline">\(X\)</span> follows a normal distribution, we could circumvent the physical burden (i.e., of repeating the experiments) via mathematical derivation. Since <span class="math inline">\(X\)</span> follows a normal distribution, we could derive that <span class="math inline">\(\overline{x}\)</span> is another normal distribution, i.e., <span class="math inline">\(\overline{x} \sim N\left(\mu, \sigma^{2} / N\right)\)</span>. Then we know that <span class="math inline">\(\overline{x}\)</span> is an unbiased estimator, since <span class="math inline">\(E(\overline{x})=\mu\)</span>. Also, we know that the larger the sample size, the better the estimation of <span class="math inline">\(\mu\)</span> by <span class="math inline">\(\overline{x}\)</span>, since the variance of the estimator is <span class="math inline">\(\sigma^{2} / N\)</span>.<label for="tufte-sn-82" class="margin-toggle sidenote-number">82</label><input type="checkbox" id="tufte-sn-82" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">82</span> In this case, the sampling process includes (1) drawing samples from the distribution; and (2) estimating <span class="math inline">\(\mu\)</span> using <span class="math inline">\(\overline{x}\)</span>. Illustration is shown in Figure <a href="how-bootstrap-works.html#fig:f4-two-sampling-process">55</a>. The <em>sampling process</em> is a flexible concept, depending on what variables are under study.</span></p>
+<p></p>
+<div class="figure"><span id="fig:f4-2"></span>
+<p class="caption marginnote shownote">
+Figure 56: The (nonparametric) Bootstrap scheme to computationally evaluate the sampling distribution of <span class="math inline">\(\overline{x}\)</span>
+</p>
+<img src="graphics/4_2.png" alt="The (nonparametric) Bootstrap scheme to computationally evaluate the sampling distribution of $\overline{x}$" width="100%"  />
+</div>
+<p></p>
+<p><em>When Bootstrap is needed.</em> Apparently, knowing the analytic form of <span class="math inline">\(\overline{x}\)</span> is the key in the example shown above to circumvent the physical need of sampling. And the analytic tractability originates from the condition that <span class="math inline">\(X\)</span> follows normal distribution. For many other estimators that we found analytically intractable, Bootstrap provides a computational remedy that enables us to investigate their properties, because it <em>computationally</em> mimics the physical sampling process.</p>
+<p>For example, while the distribution of <span class="math inline">\(X\)</span> is unknown, we could follow the Bootstrap scheme illustrated in Figure <a href="how-bootstrap-works.html#fig:f4-2">56</a> to evaluate the sampling distribution of <span class="math inline">\(\overline{x}\)</span>. For any bootstrapped dataset, we can calculate the <span class="math inline">\(\overline{x}\)</span> and obtain a “sample” of <span class="math inline">\(\overline{x}\)</span>, denoted as <span class="math inline">\(\overline{x}_i\)</span>. Figure <a href="how-bootstrap-works.html#fig:f4-2">56</a> only illustrates three cases, while in practice usually thousands of bootstrapped datasets are drawn. After we have the “samples” of <span class="math inline">\(\overline{x}\)</span>, we can draw the distribution of <span class="math inline">\(\overline{x}\)</span> and present it as shown in Figure <a href="how-bootstrap-works.html#fig:f4-2">56</a>. Although we don’t know the distribution’s analytic form, we have its numerical representation stored in a computer.</p>
+<p>The Bootstrap scheme illustrated in Figure <a href="how-bootstrap-works.html#fig:f4-2">56</a> is called <em>nonparametric</em> Bootstrap, since no <em>parametric</em> model is used to mediate the process<label for="tufte-sn-83" class="margin-toggle sidenote-number">83</label><input type="checkbox" id="tufte-sn-83" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">83</span> Put simply, a parametric model is a model with an explicit mathematical form that is calibrated by parameters.</span>. This is not the only way through which we can conduct Bootstrap. For example, a parametric Bootstrap scheme is illustrated in Figure <a href="how-bootstrap-works.html#fig:f4-3">57</a> to perform the same task, i.e., to study the sampling distribution of <span class="math inline">\(\overline{x}\)</span>. The difference between the nonparametric Bootstrap scheme in Figure <a href="how-bootstrap-works.html#fig:f4-2">56</a> and the parametric Bootstrap scheme in Figure <a href="how-bootstrap-works.html#fig:f4-3">57</a> is that, when generating new samples, the nonparametric Bootstrap uses the original dataset as the representation of the underlying population, while the parametric Bootstrap uses a fitted distribution model.</p>
+<p></p>
+<div class="figure"><span id="fig:f4-3"></span>
+<p class="caption marginnote shownote">
+Figure 57:  The (parametric) Bootstrap scheme to computationally evaluate the sampling distribution of <span class="math inline">\(\overline{x}\)</span>
+</p>
+<img src="graphics/4_3.png" alt=" The (parametric) Bootstrap scheme to computationally evaluate the sampling distribution of $\overline{x}$" width="100%"  />
+</div>
+<p></p>
+<p><em>Bootstrap for regression model.</em> We show another example about how Bootstrap could be used. In <strong>Chapter 2</strong>, we showed that we can derive the explicit distribution of the estimated regression parameters<label for="tufte-sn-84" class="margin-toggle sidenote-number">84</label><input type="checkbox" id="tufte-sn-84" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">84</span> Recall that, to derive this distribution, a few assumptions are needed: the Gaussian assumption of the error term, and the linear assumptions between predictors and outcome variable.</span>. Here, we introduce another approach, based on the idea of Bootstrap, to <em>compute</em> an empirical distribution of the estimated regression parameters.</p>
+<p>The first challenge we encounter is the ambiguity of “population” here. Unlike in the parameter estimation examples shown in Figure <a href="how-bootstrap-works.html#fig:f4-2">56</a>, here, a regression model involves three entities, the predictors <span class="math inline">\(\boldsymbol{x}\)</span>, the outcome variable <span class="math inline">\(y\)</span>, and the error term <span class="math inline">\(\epsilon\)</span>. It depends on how we define the “population” to decide how Bootstrap could be used<label for="tufte-sn-85" class="margin-toggle sidenote-number">85</label><input type="checkbox" id="tufte-sn-85" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">85</span> Remember that, Bootstrap is a computational procedure to mimic the sampling process from a <em>population</em>. So, when you deal with a problem, you need to determine first what is the population.</span>.</p>
+<p>A variety of options could be obtained. Below are some examples.</p>
+<p><!-- begin{enumerate} --></p>
+<ul>
+<li><p> [Option 1.] We could simply resample the data points (i.e., the (<span class="math inline">\(\boldsymbol{x}_n\)</span>,<span class="math inline">\(y_n\)</span>) pairs) following the nonparametric Bootstrap scheme shown in Figure <a href="how-bootstrap-works.html#fig:f4-2">56</a>. For each sampled dataset, we fit a regression model and obtain the fitted regression parameters.</p></li>
+<li><p> [Option 2.] We could fix the <span class="math inline">\(\boldsymbol{x}\)</span>, and only sample for <span class="math inline">\(y\)</span>.<label for="tufte-sn-86" class="margin-toggle sidenote-number">86</label><input type="checkbox" id="tufte-sn-86" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">86</span> In this way we implicitly assume that the uncertainty of the dataset mainly comes from <span class="math inline">\(y\)</span>.</span> To sample <span class="math inline">\(y\)</span>, we draw samples using a fitted conditional distribution model <span class="math inline">\(P(y|\boldsymbol{x})\)</span>.<label for="tufte-sn-87" class="margin-toggle sidenote-number">87</label><input type="checkbox" id="tufte-sn-87" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">87</span> We could use kernel density estimation approaches, which are not introduced in this book. Interested readers could explore the R package <code>kdensity</code> and read the monograph by Silverman, B.W., <em>Density Estimation for Statistics and Data Analysis</em>, Chapman &amp; Hall/CRC, 1986. A related method, called <em>Kernel regression</em> model, can be found in <strong>Chapter 9</strong>.</span> Then, for each sampled dataset, we fit a regression model and obtain the fitted parameters.</p></li>
+<li><p> [Option 3.] We could simulate new samples of <span class="math inline">\(\boldsymbol{x}\)</span> using the nonparametric Bootstrap method on the samples of <span class="math inline">\(\boldsymbol{x}\)</span> only. Then, for the new samples of <span class="math inline">\(\boldsymbol{x}\)</span>, we draw samples of <span class="math inline">\(y\)</span> using the fitted conditional distribution model <span class="math inline">\(P(y|\boldsymbol{x})\)</span>. This is a combination of the nonparametric and parametric Bootstrap methods. Then, for each sampled dataset, we can fit a regression model and obtain the fitted regression parameters.</p></li>
+</ul>
+<p><!-- end{enumerate} --></p>
+<p>Via either option, we could obtain an empirical distribution of the estimated regression parameter and compute a curve like the one shown in Figure <a href="how-bootstrap-works.html#fig:f4-2">56</a>. For instance, suppose we repeat this process <span class="math inline">\(10,000\)</span> times. We can obtain <span class="math inline">\(10,000\)</span> sets of estimated regression parameters, then we can use these samples to evaluate the sampling distribution of the regression parameters. We can also see if the parameters are significantly different from <span class="math inline">\(0\)</span>, and derive their <span class="math inline">\(95\%\)</span> confidence intervals.</p>
+<p>The three options above are just some examples<label for="tufte-sn-88" class="margin-toggle sidenote-number">88</label><input type="checkbox" id="tufte-sn-88" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">88</span> Options 1 and 3 both define the population as the joint distribution of <span class="math inline">\(\boldsymbol{x}\)</span> and <span class="math inline">\(y\)</span>, but differ in the ways to draw samples. Option 2 defines the population as <span class="math inline">\(P(y|\boldsymbol{x})\)</span> only.</span>. As a more complicated model than simple parametric estimation in distribution fitting, how to conduct Bootstrap on regression models (and other complex models such as time series models or decision tree models) is a challenging problem.</p>
+</div>
+<div id="r-lab-4" class="section level3 unnumbered">
+<h3>R Lab</h3>
+<p><em>4-Step R Pipeline.</em> <strong>Step 1</strong> is to load the dataset into the R workspace.</p>
+<p></p>
+<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb69-1"><a href="how-bootstrap-works.html#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1 -&gt; Read data into R workstation</span></span>
+<span id="cb69-2"><a href="how-bootstrap-works.html#cb69-2" aria-hidden="true" tabindex="-1"></a><span class="co"># RCurl is the R package to read csv file using a link</span></span>
+<span id="cb69-3"><a href="how-bootstrap-works.html#cb69-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(RCurl)</span>
+<span id="cb69-4"><a href="how-bootstrap-works.html#cb69-4" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;https://raw.githubusercontent.com&quot;</span>,</span>
+<span id="cb69-5"><a href="how-bootstrap-works.html#cb69-5" aria-hidden="true" tabindex="-1"></a>              <span class="st">&quot;/analyticsbook/book/main/data/AD.csv&quot;</span>)</span>
+<span id="cb69-6"><a href="how-bootstrap-works.html#cb69-6" aria-hidden="true" tabindex="-1"></a>AD <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="at">text=</span><span class="fu">getURL</span>(url))</span></code></pre></div>
+<p></p>
+<p><strong>Step 2</strong> is to implement Bootstrap on a model. Here, let’s implement Bootstrap on the parameter estimation problem for normal distribution fitting. We obtain results using both the analytic approach and the Bootstrapped approach, so we could evaluate how well the Bootstrap works.</p>
+<p>Specifically, let’s pick up the variable <code>HippoNV</code>, and estimate its mean for the normal subjects<label for="tufte-sn-89" class="margin-toggle sidenote-number">89</label><input type="checkbox" id="tufte-sn-89" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">89</span> Recall that we have both <em>normal</em> and <em>diseased</em> populations in our dataset.</span>. Assuming that the variable <code>HippoNV</code> is distributed as a normal distribution, we could use the <code>fitdistr()</code> function from the R package <code>MASS</code> to estimate the mean and standard derivation, as shown below.</p>
+<p></p>
+<div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb70-1"><a href="how-bootstrap-works.html#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2 -&gt; Decide on the statistical operation </span></span>
+<span id="cb70-2"><a href="how-bootstrap-works.html#cb70-2" aria-hidden="true" tabindex="-1"></a><span class="co"># that you want to &quot;Bootstrap&quot; with</span></span>
+<span id="cb70-3"><a href="how-bootstrap-works.html#cb70-3" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(MASS)</span>
+<span id="cb70-4"><a href="how-bootstrap-works.html#cb70-4" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">fitdistr</span>(AD<span class="sc">$</span>HippoNV, <span class="at">densfun=</span><span class="st">&quot;normal&quot;</span>)  </span>
+<span id="cb70-5"><a href="how-bootstrap-works.html#cb70-5" aria-hidden="true" tabindex="-1"></a><span class="co"># fitdistr() is a function from the package &quot;MASS&quot;. </span></span>
+<span id="cb70-6"><a href="how-bootstrap-works.html#cb70-6" aria-hidden="true" tabindex="-1"></a><span class="co"># It can fit a range of distributions, e.g., by using the argument, </span></span>
+<span id="cb70-7"><a href="how-bootstrap-works.html#cb70-7" aria-hidden="true" tabindex="-1"></a><span class="co"># densfun=&quot;normal&quot;, we fit a normal distribution.</span></span></code></pre></div>
+<p></p>
+<p>The <code>fitdistr()</code> function returns the estimated parameters together with their standard derivation<label for="tufte-sn-90" class="margin-toggle sidenote-number">90</label><input type="checkbox" id="tufte-sn-90" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">90</span> Here, the standard derivation of the estimated parameters is derived based on the assumption of normality of <code>HippoNV</code>. This is a theoretical result, in contrast with the computational result by Bootstrap shown later.</span>, and the <span class="math inline">\(95\%\)</span> CI of the estimated mean.</p>
+<p></p>
+<div class="sourceCode" id="cb71"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb71-1"><a href="how-bootstrap-works.html#cb71-1" aria-hidden="true" tabindex="-1"></a>fit</span>
+<span id="cb71-2"><a href="how-bootstrap-works.html#cb71-2" aria-hidden="true" tabindex="-1"></a><span class="do">##       mean           sd     </span></span>
+<span id="cb71-3"><a href="how-bootstrap-works.html#cb71-3" aria-hidden="true" tabindex="-1"></a><span class="do">##   0.471662891   0.076455789 </span></span>
+<span id="cb71-4"><a href="how-bootstrap-works.html#cb71-4" aria-hidden="true" tabindex="-1"></a><span class="do">##  (0.003362522) (0.002377662)</span></span>
+<span id="cb71-5"><a href="how-bootstrap-works.html#cb71-5" aria-hidden="true" tabindex="-1"></a>lower.bound <span class="ot">=</span> fit<span class="sc">$</span>estimate[<span class="dv">1</span>] <span class="sc">-</span> <span class="fl">1.96</span> <span class="sc">*</span> fit<span class="sc">$</span>sd[<span class="dv">2</span>]</span>
+<span id="cb71-6"><a href="how-bootstrap-works.html#cb71-6" aria-hidden="true" tabindex="-1"></a>upper.bound <span class="ot">=</span> fit<span class="sc">$</span>estimate[<span class="dv">1</span>] <span class="sc">+</span> <span class="fl">1.96</span> <span class="sc">*</span> fit<span class="sc">$</span>sd[<span class="dv">2</span>]</span>
+<span id="cb71-7"><a href="how-bootstrap-works.html#cb71-7" aria-hidden="true" tabindex="-1"></a><span class="do">##   lower.bound   upper.bound     </span></span>
+<span id="cb71-8"><a href="how-bootstrap-works.html#cb71-8" aria-hidden="true" tabindex="-1"></a><span class="do">##    0.4670027     0.4763231 </span></span></code></pre></div>
+<p></p>
+<p><strong>Step 3</strong> implements the nonparametric Bootstrap scheme<label for="tufte-sn-91" class="margin-toggle sidenote-number">91</label><input type="checkbox" id="tufte-sn-91" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">91</span> The one shown in Figure <a href="how-bootstrap-works.html#fig:f4-2">56</a>.</span>, as an alternative approach, to obtain the <span class="math inline">\(95\%\)</span> CI of the estimated mean.</p>
+<p></p>
+<div class="sourceCode" id="cb72"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb72-1"><a href="how-bootstrap-works.html#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 3 -&gt; draw R bootstrap replicates to </span></span>
+<span id="cb72-2"><a href="how-bootstrap-works.html#cb72-2" aria-hidden="true" tabindex="-1"></a><span class="co"># conduct the selected statistical operation</span></span>
+<span id="cb72-3"><a href="how-bootstrap-works.html#cb72-3" aria-hidden="true" tabindex="-1"></a>R <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
+<span id="cb72-4"><a href="how-bootstrap-works.html#cb72-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Initialize the vector to store the bootstrapped estimates</span></span>
+<span id="cb72-5"><a href="how-bootstrap-works.html#cb72-5" aria-hidden="true" tabindex="-1"></a>bs_mean <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA</span>, R)</span>
+<span id="cb72-6"><a href="how-bootstrap-works.html#cb72-6" aria-hidden="true" tabindex="-1"></a><span class="co"># draw R bootstrap resamples and obtain the estimates</span></span>
+<span id="cb72-7"><a href="how-bootstrap-works.html#cb72-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>R) {</span>
+<span id="cb72-8"><a href="how-bootstrap-works.html#cb72-8" aria-hidden="true" tabindex="-1"></a>  resam1 <span class="ot">&lt;-</span> <span class="fu">sample</span>(AD<span class="sc">$</span>HippoNV, <span class="fu">length</span>(AD<span class="sc">$</span>HippoNV), </span>
+<span id="cb72-9"><a href="how-bootstrap-works.html#cb72-9" aria-hidden="true" tabindex="-1"></a>                   <span class="at">replace =</span> <span class="cn">TRUE</span>) </span>
+<span id="cb72-10"><a href="how-bootstrap-works.html#cb72-10" aria-hidden="true" tabindex="-1"></a>  <span class="co"># resam1 is a bootstrapped dataset. </span></span>
+<span id="cb72-11"><a href="how-bootstrap-works.html#cb72-11" aria-hidden="true" tabindex="-1"></a>  fit <span class="ot">&lt;-</span> <span class="fu">fitdistr</span>(resam1 , <span class="at">densfun=</span><span class="st">&quot;normal&quot;</span>)  </span>
+<span id="cb72-12"><a href="how-bootstrap-works.html#cb72-12" aria-hidden="true" tabindex="-1"></a>  <span class="co"># store the bootstrapped estimates of the mean</span></span>
+<span id="cb72-13"><a href="how-bootstrap-works.html#cb72-13" aria-hidden="true" tabindex="-1"></a>  bs_mean[i] <span class="ot">&lt;-</span> fit<span class="sc">$</span>estimate[<span class="dv">1</span>] </span>
+<span id="cb72-14"><a href="how-bootstrap-works.html#cb72-14" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p></p>
+<p>Here, <span class="math inline">\(10,000\)</span> replications are simulated by the Bootstrap method. The <code>bs_mean</code> is a vector of <span class="math inline">\(10,000\)</span> elements to record all the estimated mean parameter in these replications. These <span class="math inline">\(10,000\)</span> estimated parameters could be taken as a set of samples.</p>
+<p><strong>Step 4</strong> is to summarize the Bootstrapped samples, i.e., to compute the <span class="math inline">\(95\%\)</span> CI of the estimated mean, as shown below.</p>
+<p></p>
+<div class="sourceCode" id="cb73"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb73-1"><a href="how-bootstrap-works.html#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 4 -&gt; Summarize the results and derive the</span></span>
+<span id="cb73-2"><a href="how-bootstrap-works.html#cb73-2" aria-hidden="true" tabindex="-1"></a><span class="co"># bootstrap confidence interval (CI) of the parameter</span></span>
+<span id="cb73-3"><a href="how-bootstrap-works.html#cb73-3" aria-hidden="true" tabindex="-1"></a><span class="co"># sort the mean estimates to obtain quantiles needed</span></span>
+<span id="cb73-4"><a href="how-bootstrap-works.html#cb73-4" aria-hidden="true" tabindex="-1"></a><span class="co"># to construct the CIs</span></span>
+<span id="cb73-5"><a href="how-bootstrap-works.html#cb73-5" aria-hidden="true" tabindex="-1"></a>bs_mean.sorted <span class="ot">&lt;-</span> <span class="fu">sort</span>(bs_mean) </span>
+<span id="cb73-6"><a href="how-bootstrap-works.html#cb73-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 0.025th and 0.975th quantile gives equal-tail bootstrap CI</span></span>
+<span id="cb73-7"><a href="how-bootstrap-works.html#cb73-7" aria-hidden="true" tabindex="-1"></a>CI.bs <span class="ot">&lt;-</span> <span class="fu">c</span>(bs_mean.sorted[<span class="fu">round</span>(<span class="fl">0.025</span><span class="sc">*</span>R)],</span>
+<span id="cb73-8"><a href="how-bootstrap-works.html#cb73-8" aria-hidden="true" tabindex="-1"></a>                        bs_mean.sorted[<span class="fu">round</span>(<span class="fl">0.975</span><span class="sc">*</span>R<span class="sc">+</span><span class="dv">1</span>)])</span>
+<span id="cb73-9"><a href="how-bootstrap-works.html#cb73-9" aria-hidden="true" tabindex="-1"></a>CI.bs</span>
+<span id="cb73-10"><a href="how-bootstrap-works.html#cb73-10" aria-hidden="true" tabindex="-1"></a><span class="do">##   lower.bound   upper.bound     </span></span>
+<span id="cb73-11"><a href="how-bootstrap-works.html#cb73-11" aria-hidden="true" tabindex="-1"></a><span class="do">##    0.4656406     0.4778276 </span></span></code></pre></div>
+<p></p>
+<p>It is seen that the <span class="math inline">\(95\%\)</span> CI by Bootstrap is close to the <span class="math inline">\(95\%\)</span> CI in the theoretical result. This shows the validity and efficacy of the Bootstrap method to evaluate the uncertainty of a statistical operation<label for="tufte-sn-92" class="margin-toggle sidenote-number">92</label><input type="checkbox" id="tufte-sn-92" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">92</span> Bootstrap is as good as the theoretical method, but it doesn’t require to know the variable’s distribution. The cost it pays for this robustness is its computational overhead. In this example, the computation is light. For some other cases, the computation could be burdensome, i.e., when the dataset becomes big, or the statistical model itself has been computationally demanding.</span>.</p>
+<p><em>Beyond the 4-step Pipeline.</em> While the estimation of the mean of <code>HippoNV</code> is a relatively simple operation, in what follows, we consider a more complex statistical operation, the comparison of the mean parameters of <code>HippoNV</code> across the two classes, <em>normal</em> and <em>diseased</em>.</p>
+<p>To do so, the following R code creates a temporary dataset for this purpose.</p>
+<p></p>
+<div class="sourceCode" id="cb74"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb74-1"><a href="how-bootstrap-works.html#cb74-1" aria-hidden="true" tabindex="-1"></a>tempData <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(AD<span class="sc">$</span>HippoNV,AD<span class="sc">$</span>DX_bl)</span>
+<span id="cb74-2"><a href="how-bootstrap-works.html#cb74-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(tempData) <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;HippoNV&quot;</span>,<span class="st">&quot;DX_bl&quot;</span>)</span>
+<span id="cb74-3"><a href="how-bootstrap-works.html#cb74-3" aria-hidden="true" tabindex="-1"></a>tempData<span class="sc">$</span>DX_bl[<span class="fu">which</span>(tempData<span class="sc">$</span>DX_bl<span class="sc">==</span><span class="dv">0</span>)] <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Normal&quot;</span>)</span>
+<span id="cb74-4"><a href="how-bootstrap-works.html#cb74-4" aria-hidden="true" tabindex="-1"></a>tempData<span class="sc">$</span>DX_bl[<span class="fu">which</span>(tempData<span class="sc">$</span>DX_bl<span class="sc">==</span><span class="dv">1</span>)] <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Diseased&quot;</span>)</span></code></pre></div>
+<p></p>
+<p>We then use <code>ggplot()</code> to visualize the two distributions by comparing their histograms.</p>
+<p></p>
+<div class="sourceCode" id="cb75"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb75-1"><a href="how-bootstrap-works.html#cb75-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(tempData,<span class="fu">aes</span>(<span class="at">x =</span> HippoNV, <span class="at">colour=</span>DX_bl))</span>
+<span id="cb75-2"><a href="how-bootstrap-works.html#cb75-2" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> p <span class="sc">+</span>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">y =</span> ..count.., <span class="at">fill=</span>DX_bl),</span>
+<span id="cb75-3"><a href="how-bootstrap-works.html#cb75-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">alpha=</span><span class="fl">0.5</span>,<span class="at">position=</span><span class="st">&quot;identity&quot;</span>) </span>
+<span id="cb75-4"><a href="how-bootstrap-works.html#cb75-4" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(p)</span></code></pre></div>
+<p></p>
+<p>The result is shown in Figure <a href="how-bootstrap-works.html#fig:f4-6">58</a>. It could be seen that the two distributions differ from each other. To have a formal evaluation of this impression, the following R code shows how the nonparametric Bootstrap method can be implemented here.</p>
+<p></p>
+<p>
+<span class="marginnote shownote">
+<!--
+<div class="figure">--><span id="fig:f4-6"></span>
+<img src="graphics/4_6.png" alt=" Histograms of `HippoNV` in the *normal* and *diseased* groups" width="250px"  />
+<!--
+<p class="caption marginnote">-->Figure 58:  Histograms of <code>HippoNV</code> in the <em>normal</em> and <em>diseased</em> groups<!--</p>-->
+<!--</div>--></span>
+</p>
+<p></p>
+<p></p>
+<div class="sourceCode" id="cb76"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb76-1"><a href="how-bootstrap-works.html#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="co"># draw R bootstrap replicates</span></span>
+<span id="cb76-2"><a href="how-bootstrap-works.html#cb76-2" aria-hidden="true" tabindex="-1"></a>R <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
+<span id="cb76-3"><a href="how-bootstrap-works.html#cb76-3" aria-hidden="true" tabindex="-1"></a><span class="co"># init location for bootstrap samples</span></span>
+<span id="cb76-4"><a href="how-bootstrap-works.html#cb76-4" aria-hidden="true" tabindex="-1"></a>bs0_mean <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA</span>, R)</span>
+<span id="cb76-5"><a href="how-bootstrap-works.html#cb76-5" aria-hidden="true" tabindex="-1"></a>bs1_mean <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA</span>, R)</span>
+<span id="cb76-6"><a href="how-bootstrap-works.html#cb76-6" aria-hidden="true" tabindex="-1"></a><span class="co"># draw R bootstrap resamples and obtain the estimates</span></span>
+<span id="cb76-7"><a href="how-bootstrap-works.html#cb76-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>R) {</span>
+<span id="cb76-8"><a href="how-bootstrap-works.html#cb76-8" aria-hidden="true" tabindex="-1"></a>resam0 <span class="ot">&lt;-</span> <span class="fu">sample</span>(tempData<span class="sc">$</span>HippoNV[<span class="fu">which</span>(tempData<span class="sc">$</span>DX_bl<span class="sc">==</span></span>
+<span id="cb76-9"><a href="how-bootstrap-works.html#cb76-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;Normal&quot;</span>)],<span class="fu">length</span>(tempData<span class="sc">$</span>HippoNV[<span class="fu">which</span>(tempData<span class="sc">$</span>DX_bl<span class="sc">==</span></span>
+<span id="cb76-10"><a href="how-bootstrap-works.html#cb76-10" aria-hidden="true" tabindex="-1"></a>                             <span class="st">&quot;Normal&quot;</span>)]),<span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb76-11"><a href="how-bootstrap-works.html#cb76-11" aria-hidden="true" tabindex="-1"></a>fit0 <span class="ot">&lt;-</span> <span class="fu">fitdistr</span>(resam0 , <span class="at">densfun=</span><span class="st">&quot;normal&quot;</span>)  </span>
+<span id="cb76-12"><a href="how-bootstrap-works.html#cb76-12" aria-hidden="true" tabindex="-1"></a>bs0_mean[i] <span class="ot">&lt;-</span> fit0<span class="sc">$</span>estimate[<span class="dv">1</span>]</span>
+<span id="cb76-13"><a href="how-bootstrap-works.html#cb76-13" aria-hidden="true" tabindex="-1"></a>resam1 <span class="ot">&lt;-</span> <span class="fu">sample</span>(tempData<span class="sc">$</span>HippoNV[<span class="fu">which</span>(tempData<span class="sc">$</span>DX_bl<span class="sc">==</span></span>
+<span id="cb76-14"><a href="how-bootstrap-works.html#cb76-14" aria-hidden="true" tabindex="-1"></a>             <span class="st">&quot;Diseased&quot;</span>)],</span>
+<span id="cb76-15"><a href="how-bootstrap-works.html#cb76-15" aria-hidden="true" tabindex="-1"></a>         <span class="fu">length</span>(tempData<span class="sc">$</span>HippoNV[<span class="fu">which</span>(tempData<span class="sc">$</span>DX_bl<span class="sc">==</span></span>
+<span id="cb76-16"><a href="how-bootstrap-works.html#cb76-16" aria-hidden="true" tabindex="-1"></a>             <span class="st">&quot;Diseased&quot;</span>)]),<span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb76-17"><a href="how-bootstrap-works.html#cb76-17" aria-hidden="true" tabindex="-1"></a>fit1 <span class="ot">&lt;-</span> <span class="fu">fitdistr</span>(resam1 , <span class="at">densfun=</span><span class="st">&quot;normal&quot;</span>) </span>
+<span id="cb76-18"><a href="how-bootstrap-works.html#cb76-18" aria-hidden="true" tabindex="-1"></a>bs1_mean[i] <span class="ot">&lt;-</span> fit1<span class="sc">$</span>estimate[<span class="dv">1</span>]</span>
+<span id="cb76-19"><a href="how-bootstrap-works.html#cb76-19" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb76-20"><a href="how-bootstrap-works.html#cb76-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb76-21"><a href="how-bootstrap-works.html#cb76-21" aria-hidden="true" tabindex="-1"></a>bs_meanDiff <span class="ot">&lt;-</span> bs0_mean <span class="sc">-</span> bs1_mean</span>
+<span id="cb76-22"><a href="how-bootstrap-works.html#cb76-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb76-23"><a href="how-bootstrap-works.html#cb76-23" aria-hidden="true" tabindex="-1"></a><span class="co"># sort the mean estimates to obtain bootstrap CI</span></span>
+<span id="cb76-24"><a href="how-bootstrap-works.html#cb76-24" aria-hidden="true" tabindex="-1"></a>bs_meanDiff.sorted <span class="ot">&lt;-</span> <span class="fu">sort</span>(bs_meanDiff)</span>
+<span id="cb76-25"><a href="how-bootstrap-works.html#cb76-25" aria-hidden="true" tabindex="-1"></a><span class="co"># 0.025th and 0.975th quantile gives equal-tail bootstrap CI</span></span>
+<span id="cb76-26"><a href="how-bootstrap-works.html#cb76-26" aria-hidden="true" tabindex="-1"></a>CI.bs <span class="ot">&lt;-</span> <span class="fu">c</span>(bs_meanDiff.sorted[<span class="fu">round</span>(<span class="fl">0.025</span><span class="sc">*</span>R)],</span>
+<span id="cb76-27"><a href="how-bootstrap-works.html#cb76-27" aria-hidden="true" tabindex="-1"></a>           bs_meanDiff.sorted[<span class="fu">round</span>(<span class="fl">0.975</span><span class="sc">*</span>R<span class="sc">+</span><span class="dv">1</span>)])</span>
+<span id="cb76-28"><a href="how-bootstrap-works.html#cb76-28" aria-hidden="true" tabindex="-1"></a>CI.bs</span></code></pre></div>
+<p></p>
+<p></p>
+<p>
+<span class="marginnote shownote">
+<!--
+<div class="figure">--><span id="fig:f4-7"></span>
+<img src="graphics/4_7.png" alt="Histogram of the estimated mean difference of `HippoNV` in the two groups by Bootstrap with $10,000$ replications " width="250px"  />
+<!--
+<p class="caption marginnote">-->Figure 59: Histogram of the estimated mean difference of <code>HippoNV</code> in the two groups by Bootstrap with <span class="math inline">\(10,000\)</span> replications <!--</p>-->
+<!--</div>--></span>
+</p>
+<p></p>
+<p>The <span class="math inline">\(95\%\)</span> CI of the difference of the two mean parameters is</p>
+<p></p>
+<div class="sourceCode" id="cb77"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb77-1"><a href="how-bootstrap-works.html#cb77-1" aria-hidden="true" tabindex="-1"></a>CI.bs</span>
+<span id="cb77-2"><a href="how-bootstrap-works.html#cb77-2" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 0.08066058 0.10230428</span></span></code></pre></div>
+<p></p>
+<p>The following R code draws a histogram of the <code>bs_meanDiff</code> to give us visual information about the Bootstrapped estimation of the mean difference, which is shown in Figure <a href="how-bootstrap-works.html#fig:f4-7">59</a>. The difference is statistically significant.</p>
+<p></p>
+<div class="sourceCode" id="cb78"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb78-1"><a href="how-bootstrap-works.html#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Plot the bootstrap distribution with CI</span></span>
+<span id="cb78-2"><a href="how-bootstrap-works.html#cb78-2" aria-hidden="true" tabindex="-1"></a><span class="co"># First put data in data.frame for ggplot()</span></span>
+<span id="cb78-3"><a href="how-bootstrap-works.html#cb78-3" aria-hidden="true" tabindex="-1"></a>dat.bs_meanDiff <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(bs_meanDiff)</span>
+<span id="cb78-4"><a href="how-bootstrap-works.html#cb78-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb78-5"><a href="how-bootstrap-works.html#cb78-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb78-6"><a href="how-bootstrap-works.html#cb78-6" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(dat.bs_meanDiff, <span class="fu">aes</span>(<span class="at">x =</span> bs_meanDiff))</span>
+<span id="cb78-7"><a href="how-bootstrap-works.html#cb78-7" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> p <span class="sc">+</span> <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">y=</span>..density..))</span>
+<span id="cb78-8"><a href="how-bootstrap-works.html#cb78-8" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> p <span class="sc">+</span> <span class="fu">geom_density</span>(<span class="at">alpha=</span><span class="fl">0.1</span>, <span class="at">fill=</span><span class="st">&quot;white&quot;</span>)</span>
+<span id="cb78-9"><a href="how-bootstrap-works.html#cb78-9" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> p <span class="sc">+</span> <span class="fu">geom_rug</span>()</span>
+<span id="cb78-10"><a href="how-bootstrap-works.html#cb78-10" aria-hidden="true" tabindex="-1"></a><span class="co"># vertical line at CI</span></span>
+<span id="cb78-11"><a href="how-bootstrap-works.html#cb78-11" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> p <span class="sc">+</span> <span class="fu">geom_vline</span>(<span class="at">xintercept=</span>CI.bs[<span class="dv">1</span>], <span class="at">colour=</span><span class="st">&quot;blue&quot;</span>,</span>
+<span id="cb78-12"><a href="how-bootstrap-works.html#cb78-12" aria-hidden="true" tabindex="-1"></a>                    <span class="at">linetype=</span><span class="st">&quot;longdash&quot;</span>)</span>
+<span id="cb78-13"><a href="how-bootstrap-works.html#cb78-13" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> p <span class="sc">+</span> <span class="fu">geom_vline</span>(<span class="at">xintercept=</span>CI.bs[<span class="dv">2</span>], <span class="at">colour=</span><span class="st">&quot;blue&quot;</span>,</span>
+<span id="cb78-14"><a href="how-bootstrap-works.html#cb78-14" aria-hidden="true" tabindex="-1"></a>                    <span class="at">linetype=</span><span class="st">&quot;longdash&quot;</span>)</span>
+<span id="cb78-15"><a href="how-bootstrap-works.html#cb78-15" aria-hidden="true" tabindex="-1"></a>title <span class="ot">=</span> <span class="st">&quot;Bootstrap distribution of the estimated mean</span></span>
+<span id="cb78-16"><a href="how-bootstrap-works.html#cb78-16" aria-hidden="true" tabindex="-1"></a><span class="st">         difference of HippoNV between normal and diseased&quot;</span></span>
+<span id="cb78-17"><a href="how-bootstrap-works.html#cb78-17" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> p <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span>title)</span>
+<span id="cb78-18"><a href="how-bootstrap-works.html#cb78-18" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(p)</span></code></pre></div>
+<p></p>
+<p>We can also apply Bootstrap on linear regression. In <strong>Chapter 2</strong> we have fitted a regression model of <code>MMSCORE</code> and presented the analytically derived standard derivation of the estimated regression parameters<label for="tufte-sn-93" class="margin-toggle sidenote-number">93</label><input type="checkbox" id="tufte-sn-93" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">93</span> I.e., as shown in Eq. <a href="regression-models.html#eq:2-betaDist">(19)</a>.</span>. Here, we show that we could use Bootstrap to compute the <span class="math inline">\(95\%\)</span> CI of the regression parameters as well.</p>
+<p>First, we fit a linear regression model.</p>
+<p></p>
+<div class="sourceCode" id="cb79"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb79-1"><a href="how-bootstrap-works.html#cb79-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit a regression model first, for comparison</span></span>
+<span id="cb79-2"><a href="how-bootstrap-works.html#cb79-2" aria-hidden="true" tabindex="-1"></a>tempData <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(AD<span class="sc">$</span>MMSCORE,AD<span class="sc">$</span>AGE, AD<span class="sc">$</span>PTGENDER, AD<span class="sc">$</span>PTEDUCAT)</span>
+<span id="cb79-3"><a href="how-bootstrap-works.html#cb79-3" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(tempData) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;MMSCORE&quot;</span>,<span class="st">&quot;AGE&quot;</span>,<span class="st">&quot;PTGENDER&quot;</span>,<span class="st">&quot;PTEDUCAT&quot;</span>)</span>
+<span id="cb79-4"><a href="how-bootstrap-works.html#cb79-4" aria-hidden="true" tabindex="-1"></a>lm.AD <span class="ot">&lt;-</span> <span class="fu">lm</span>(MMSCORE <span class="sc">~</span>  AGE <span class="sc">+</span> PTGENDER <span class="sc">+</span> PTEDUCAT, <span class="at">data =</span> tempData)</span>
+<span id="cb79-5"><a href="how-bootstrap-works.html#cb79-5" aria-hidden="true" tabindex="-1"></a>sum.lm.AD <span class="ot">&lt;-</span> <span class="fu">summary</span>(lm.AD)</span>
+<span id="cb79-6"><a href="how-bootstrap-works.html#cb79-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Age is not significant according to the p-value</span></span>
+<span id="cb79-7"><a href="how-bootstrap-works.html#cb79-7" aria-hidden="true" tabindex="-1"></a>std.lm <span class="ot">&lt;-</span> sum.lm.AD<span class="sc">$</span>coefficients[ , <span class="dv">2</span>]</span>
+<span id="cb79-8"><a href="how-bootstrap-works.html#cb79-8" aria-hidden="true" tabindex="-1"></a>lm.AD<span class="sc">$</span>coefficients[<span class="dv">2</span>] <span class="sc">-</span> <span class="fl">1.96</span> <span class="sc">*</span> std.lm[<span class="dv">2</span>]</span>
+<span id="cb79-9"><a href="how-bootstrap-works.html#cb79-9" aria-hidden="true" tabindex="-1"></a>lm.AD<span class="sc">$</span>coefficients[<span class="dv">2</span>] <span class="sc">+</span> <span class="fl">1.96</span> <span class="sc">*</span> std.lm[<span class="dv">2</span>]</span></code></pre></div>
+<p></p>
+<p>The fitted regression model is</p>
+<p></p>
+<div class="sourceCode" id="cb80"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb80-1"><a href="how-bootstrap-works.html#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb80-2"><a href="how-bootstrap-works.html#cb80-2" aria-hidden="true" tabindex="-1"></a><span class="do">## Call:</span></span>
+<span id="cb80-3"><a href="how-bootstrap-works.html#cb80-3" aria-hidden="true" tabindex="-1"></a><span class="do">## lm(formula = MMSCORE   AGE + PTGENDER + PTEDUCAT,</span></span>
+<span id="cb80-4"><a href="how-bootstrap-works.html#cb80-4" aria-hidden="true" tabindex="-1"></a><span class="do">##                    data = tempData)</span></span>
+<span id="cb80-5"><a href="how-bootstrap-works.html#cb80-5" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb80-6"><a href="how-bootstrap-works.html#cb80-6" aria-hidden="true" tabindex="-1"></a><span class="do">## Residuals:</span></span>
+<span id="cb80-7"><a href="how-bootstrap-works.html#cb80-7" aria-hidden="true" tabindex="-1"></a><span class="do">##     Min      1Q  Median      3Q     Max </span></span>
+<span id="cb80-8"><a href="how-bootstrap-works.html#cb80-8" aria-hidden="true" tabindex="-1"></a><span class="do">## -8.4290 -0.9766  0.5796  1.4252  3.4539 </span></span>
+<span id="cb80-9"><a href="how-bootstrap-works.html#cb80-9" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb80-10"><a href="how-bootstrap-works.html#cb80-10" aria-hidden="true" tabindex="-1"></a><span class="do">## Coefficients:</span></span>
+<span id="cb80-11"><a href="how-bootstrap-works.html#cb80-11" aria-hidden="true" tabindex="-1"></a><span class="do">##             Estimate Std. Error t value Pr(&gt;|t|)    </span></span>
+<span id="cb80-12"><a href="how-bootstrap-works.html#cb80-12" aria-hidden="true" tabindex="-1"></a><span class="do">## (Intercept) 27.70377    1.11131  24.929  &lt; 2e-16 ***</span></span>
+<span id="cb80-13"><a href="how-bootstrap-works.html#cb80-13" aria-hidden="true" tabindex="-1"></a><span class="do">## AGE         -0.02453    0.01282  -1.913   0.0563 .  </span></span>
+<span id="cb80-14"><a href="how-bootstrap-works.html#cb80-14" aria-hidden="true" tabindex="-1"></a><span class="do">## PTGENDER    -0.43356    0.18740  -2.314   0.0211 *  </span></span>
+<span id="cb80-15"><a href="how-bootstrap-works.html#cb80-15" aria-hidden="true" tabindex="-1"></a><span class="do">## PTEDUCAT     0.17120    0.03432   4.988 8.35e-07 ***</span></span>
+<span id="cb80-16"><a href="how-bootstrap-works.html#cb80-16" aria-hidden="true" tabindex="-1"></a><span class="do">## ---</span></span>
+<span id="cb80-17"><a href="how-bootstrap-works.html#cb80-17" aria-hidden="true" tabindex="-1"></a><span class="do">## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 </span></span>
+<span id="cb80-18"><a href="how-bootstrap-works.html#cb80-18" aria-hidden="true" tabindex="-1"></a><span class="do">## &#39;.&#39; 0.1 &#39; &#39; 1</span></span>
+<span id="cb80-19"><a href="how-bootstrap-works.html#cb80-19" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb80-20"><a href="how-bootstrap-works.html#cb80-20" aria-hidden="true" tabindex="-1"></a><span class="do">## Residual standard error: 2.062 on 513 degrees of freedom</span></span>
+<span id="cb80-21"><a href="how-bootstrap-works.html#cb80-21" aria-hidden="true" tabindex="-1"></a><span class="do">## Multiple R-squared:  0.0612, Adjusted R-squared:  0.05571 </span></span>
+<span id="cb80-22"><a href="how-bootstrap-works.html#cb80-22" aria-hidden="true" tabindex="-1"></a><span class="do">## F-statistic: 11.15 on 3 and 513 DF,  p-value: 4.245e-07</span></span>
+<span id="cb80-23"><a href="how-bootstrap-works.html#cb80-23" aria-hidden="true" tabindex="-1"></a><span class="do">##     Lower bound   Upper bound</span></span>
+<span id="cb80-24"><a href="how-bootstrap-works.html#cb80-24" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] -0.04966834   0.000600785</span></span></code></pre></div>
+<p></p>
+<p>Then, we follow Option 1 to conduct Bootstrap for the linear regression model.</p>
+<p></p>
+<div class="sourceCode" id="cb81"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb81-1"><a href="how-bootstrap-works.html#cb81-1" aria-hidden="true" tabindex="-1"></a><span class="co"># draw R bootstrap replicates</span></span>
+<span id="cb81-2"><a href="how-bootstrap-works.html#cb81-2" aria-hidden="true" tabindex="-1"></a>R <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
+<span id="cb81-3"><a href="how-bootstrap-works.html#cb81-3" aria-hidden="true" tabindex="-1"></a><span class="co"># init location for bootstrap samples</span></span>
+<span id="cb81-4"><a href="how-bootstrap-works.html#cb81-4" aria-hidden="true" tabindex="-1"></a>bs_lm.AD_demo <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="cn">NA</span>, <span class="at">nrow =</span> R, <span class="at">ncol =</span> </span>
+<span id="cb81-5"><a href="how-bootstrap-works.html#cb81-5" aria-hidden="true" tabindex="-1"></a>                          <span class="fu">length</span>(lm.AD_demo<span class="sc">$</span>coefficients))</span>
+<span id="cb81-6"><a href="how-bootstrap-works.html#cb81-6" aria-hidden="true" tabindex="-1"></a><span class="co"># draw R bootstrap resamples and obtain the estimates</span></span>
+<span id="cb81-7"><a href="how-bootstrap-works.html#cb81-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>R) {</span>
+<span id="cb81-8"><a href="how-bootstrap-works.html#cb81-8" aria-hidden="true" tabindex="-1"></a>  resam_ID <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">dim</span>(tempData)[<span class="dv">1</span>]), <span class="fu">dim</span>(tempData)[<span class="dv">1</span>],</span>
+<span id="cb81-9"><a href="how-bootstrap-works.html#cb81-9" aria-hidden="true" tabindex="-1"></a>                     <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb81-10"><a href="how-bootstrap-works.html#cb81-10" aria-hidden="true" tabindex="-1"></a>resam_Data <span class="ot">&lt;-</span> tempData[resam_ID,]</span>
+<span id="cb81-11"><a href="how-bootstrap-works.html#cb81-11" aria-hidden="true" tabindex="-1"></a>  bs.lm.AD_demo <span class="ot">&lt;-</span> <span class="fu">lm</span>(MMSCORE <span class="sc">~</span>  AGE <span class="sc">+</span> PTGENDER <span class="sc">+</span> PTEDUCAT,</span>
+<span id="cb81-12"><a href="how-bootstrap-works.html#cb81-12" aria-hidden="true" tabindex="-1"></a>                      <span class="at">data =</span> resam_Data)</span>
+<span id="cb81-13"><a href="how-bootstrap-works.html#cb81-13" aria-hidden="true" tabindex="-1"></a>bs_lm.AD_demo[i,] <span class="ot">&lt;-</span> bs.lm.AD_demo<span class="sc">$</span>coefficients</span>
+<span id="cb81-14"><a href="how-bootstrap-works.html#cb81-14" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p></p>
+<p>The <code>bs_lm.AD_demo</code> records the estimated regression parameters in the <span class="math inline">\(10,000\)</span> replications. The following R code shows the <span class="math inline">\(95\%\)</span> CI of <code>AGE</code> by Bootstrap.</p>
+<p></p>
+<div class="sourceCode" id="cb82"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb82-1"><a href="how-bootstrap-works.html#cb82-1" aria-hidden="true" tabindex="-1"></a>bs.AGE <span class="ot">&lt;-</span> bs_lm.AD_demo[,<span class="dv">2</span>]</span>
+<span id="cb82-2"><a href="how-bootstrap-works.html#cb82-2" aria-hidden="true" tabindex="-1"></a><span class="co"># sort the mean estimates of AGE to obtain bootstrap CI</span></span>
+<span id="cb82-3"><a href="how-bootstrap-works.html#cb82-3" aria-hidden="true" tabindex="-1"></a>bs.AGE.sorted <span class="ot">&lt;-</span> <span class="fu">sort</span>(bs.AGE)</span>
+<span id="cb82-4"><a href="how-bootstrap-works.html#cb82-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-5"><a href="how-bootstrap-works.html#cb82-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 0.025th and 0.975th quantile gives equal-tail</span></span>
+<span id="cb82-6"><a href="how-bootstrap-works.html#cb82-6" aria-hidden="true" tabindex="-1"></a><span class="co"># bootstrap CI</span></span>
+<span id="cb82-7"><a href="how-bootstrap-works.html#cb82-7" aria-hidden="true" tabindex="-1"></a>CI.bs <span class="ot">&lt;-</span> <span class="fu">c</span>(bs.AGE.sorted[<span class="fu">round</span>(<span class="fl">0.025</span><span class="sc">*</span>R)],</span>
+<span id="cb82-8"><a href="how-bootstrap-works.html#cb82-8" aria-hidden="true" tabindex="-1"></a>       bs.AGE.sorted[<span class="fu">round</span>(<span class="fl">0.975</span><span class="sc">*</span>R<span class="sc">+</span><span class="dv">1</span>)])</span>
+<span id="cb82-9"><a href="how-bootstrap-works.html#cb82-9" aria-hidden="true" tabindex="-1"></a>CI.bs</span></code></pre></div>
+<p></p>
+<p>It is clear that the 95<span class="math inline">\(\%\)</span> CI of <code>AGE</code> includes <span class="math inline">\(0\)</span> in the range. This is consistent with the result by t-test that shows the variable <code>AGE</code> is insignificant (i.e., p-value<span class="math inline">\(=0.0563\)</span>). We can also see that the <span class="math inline">\(95\%\)</span> CI by Bootstrap is close to the <span class="math inline">\(95\%\)</span> CI by theoretical result.</p>
+<p></p>
+<div class="sourceCode" id="cb83"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb83-1"><a href="how-bootstrap-works.html#cb83-1" aria-hidden="true" tabindex="-1"></a>CI.bs</span>
+<span id="cb83-2"><a href="how-bootstrap-works.html#cb83-2" aria-hidden="true" tabindex="-1"></a><span class="do">##     Lower bound   Upper bound</span></span>
+<span id="cb83-3"><a href="how-bootstrap-works.html#cb83-3" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] -0.053940482  0.005090523</span></span></code></pre></div>
+<p></p>
+<p></p>
+<p>
+<span class="marginnote shownote">
+<!--
+<div class="figure">--><span id="fig:f4-8"></span>
+<img src="graphics/4_8.png" alt="Histogram of the estimated regression parameter of `AGE` by Bootstrap with $10,000$ replications" width="250px"  />
+<!--
+<p class="caption marginnote">-->Figure 60: Histogram of the estimated regression parameter of <code>AGE</code> by Bootstrap with <span class="math inline">\(10,000\)</span> replications<!--</p>-->
+<!--</div>--></span>
+</p>
+<p></p>
+<p>The following R codes draw a histogram of the Bootstrapped estimation of the regression parameter of <code>AGE</code> to give us a visual examination about the Bootstrapped estimation, which is shown in Figure <a href="how-bootstrap-works.html#fig:f4-8">60</a>.</p>
+<p></p>
+<div class="sourceCode" id="cb84"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb84-1"><a href="how-bootstrap-works.html#cb84-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Plot the bootstrap distribution with CI</span></span>
+<span id="cb84-2"><a href="how-bootstrap-works.html#cb84-2" aria-hidden="true" tabindex="-1"></a><span class="co"># First put data in data.frame for ggplot()</span></span>
+<span id="cb84-3"><a href="how-bootstrap-works.html#cb84-3" aria-hidden="true" tabindex="-1"></a>dat.bs.AGE <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(bs.AGE.sorted)</span>
+<span id="cb84-4"><a href="how-bootstrap-works.html#cb84-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb84-5"><a href="how-bootstrap-works.html#cb84-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb84-6"><a href="how-bootstrap-works.html#cb84-6" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(dat.bs.AGE, <span class="fu">aes</span>(<span class="at">x =</span> bs.AGE))</span>
+<span id="cb84-7"><a href="how-bootstrap-works.html#cb84-7" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> p <span class="sc">+</span> <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">y=</span>..density..))</span>
+<span id="cb84-8"><a href="how-bootstrap-works.html#cb84-8" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> p <span class="sc">+</span> <span class="fu">geom_density</span>(<span class="at">alpha=</span><span class="fl">0.1</span>, <span class="at">fill=</span><span class="st">&quot;white&quot;</span>)</span>
+<span id="cb84-9"><a href="how-bootstrap-works.html#cb84-9" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> p <span class="sc">+</span> <span class="fu">geom_rug</span>()</span>
+<span id="cb84-10"><a href="how-bootstrap-works.html#cb84-10" aria-hidden="true" tabindex="-1"></a><span class="co"># vertical line at CI</span></span>
+<span id="cb84-11"><a href="how-bootstrap-works.html#cb84-11" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> p <span class="sc">+</span> <span class="fu">geom_vline</span>(<span class="at">xintercept=</span>CI.bs[<span class="dv">1</span>], <span class="at">colour=</span><span class="st">&quot;blue&quot;</span>,</span>
+<span id="cb84-12"><a href="how-bootstrap-works.html#cb84-12" aria-hidden="true" tabindex="-1"></a>                    <span class="at">linetype=</span><span class="st">&quot;longdash&quot;</span>)</span>
+<span id="cb84-13"><a href="how-bootstrap-works.html#cb84-13" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> p <span class="sc">+</span> <span class="fu">geom_vline</span>(<span class="at">xintercept=</span>CI.bs[<span class="dv">2</span>], <span class="at">colour=</span><span class="st">&quot;blue&quot;</span>,</span>
+<span id="cb84-14"><a href="how-bootstrap-works.html#cb84-14" aria-hidden="true" tabindex="-1"></a>                    <span class="at">linetype=</span><span class="st">&quot;longdash&quot;</span>)</span>
+<span id="cb84-15"><a href="how-bootstrap-works.html#cb84-15" aria-hidden="true" tabindex="-1"></a>title <span class="ot">&lt;-</span> <span class="st">&quot;Bootstrap distribution of the estimated </span></span>
+<span id="cb84-16"><a href="how-bootstrap-works.html#cb84-16" aria-hidden="true" tabindex="-1"></a><span class="st">                          regression parameter of AGE&quot;</span></span>
+<span id="cb84-17"><a href="how-bootstrap-works.html#cb84-17" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> p <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> title)</span>
+<span id="cb84-18"><a href="how-bootstrap-works.html#cb84-18" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(p)</span></code></pre></div>
+<p></p>
+<p>We can also see the <span class="math inline">\(95\%\)</span> CI of <code>PTEDUCAT</code> as shown below, which is between <span class="math inline">\(0.1021189\)</span> and <span class="math inline">\(0.2429209\)</span>. This is also close to the the <span class="math inline">\(95\%\)</span> CI by theoretical result. Also, t-test also shows the variable <code>PTEDUCAT</code> is significant (i.e., p-value is <span class="math inline">\(8.35e-07\)</span>).</p>
+<p></p>
+<div class="sourceCode" id="cb85"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb85-1"><a href="how-bootstrap-works.html#cb85-1" aria-hidden="true" tabindex="-1"></a>bs.PTEDUCAT <span class="ot">&lt;-</span> bs_lm.AD_demo[,<span class="dv">4</span>]</span>
+<span id="cb85-2"><a href="how-bootstrap-works.html#cb85-2" aria-hidden="true" tabindex="-1"></a><span class="co"># sort the mean estimates of PTEDUCAT to obtain</span></span>
+<span id="cb85-3"><a href="how-bootstrap-works.html#cb85-3" aria-hidden="true" tabindex="-1"></a><span class="co"># bootstrap CI</span></span>
+<span id="cb85-4"><a href="how-bootstrap-works.html#cb85-4" aria-hidden="true" tabindex="-1"></a>bs.PTEDUCAT.sorted <span class="ot">&lt;-</span> <span class="fu">sort</span>(bs.PTEDUCAT)</span>
+<span id="cb85-5"><a href="how-bootstrap-works.html#cb85-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb85-6"><a href="how-bootstrap-works.html#cb85-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 0.025th and 0.975th quantile gives equal-tail</span></span>
+<span id="cb85-7"><a href="how-bootstrap-works.html#cb85-7" aria-hidden="true" tabindex="-1"></a><span class="co"># bootstrap CI</span></span>
+<span id="cb85-8"><a href="how-bootstrap-works.html#cb85-8" aria-hidden="true" tabindex="-1"></a>CI.bs <span class="ot">&lt;-</span> <span class="fu">c</span>(bs.PTEDUCAT.sorted[<span class="fu">round</span>(<span class="fl">0.025</span><span class="sc">*</span>R)],</span>
+<span id="cb85-9"><a href="how-bootstrap-works.html#cb85-9" aria-hidden="true" tabindex="-1"></a>           bs.PTEDUCAT.sorted[<span class="fu">round</span>(<span class="fl">0.975</span><span class="sc">*</span>R<span class="sc">+</span><span class="dv">1</span>)])</span>
+<span id="cb85-10"><a href="how-bootstrap-works.html#cb85-10" aria-hidden="true" tabindex="-1"></a>CI.bs</span>
+<span id="cb85-11"><a href="how-bootstrap-works.html#cb85-11" aria-hidden="true" tabindex="-1"></a>CI.bs</span>
+<span id="cb85-12"><a href="how-bootstrap-works.html#cb85-12" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 0.1021189 0.2429209</span></span></code></pre></div>
+<p></p>
+<p></p>
+<p>
+<span class="marginnote shownote">
+<!--
+<div class="figure">--><span id="fig:f4-9"></span>
+<img src="graphics/4_9.png" alt="Histogram of the estimated regression parameter of `PTEDUCAT` by Bootstrap with $10,000$ replications " width="250px"  />
+<!--
+<p class="caption marginnote">-->Figure 61: Histogram of the estimated regression parameter of <code>PTEDUCAT</code> by Bootstrap with <span class="math inline">\(10,000\)</span> replications <!--</p>-->
+<!--</div>--></span>
+</p>
+<p></p>
+<p>The following R code draws a histogram (i.e., Figure <a href="how-bootstrap-works.html#fig:f4-9">61</a>) of the Bootstrapped estimation of the regression parameter of <code>PTEDUCAT</code>.</p>
+<p></p>
+<div class="sourceCode" id="cb86"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb86-1"><a href="how-bootstrap-works.html#cb86-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Plot the bootstrap distribution with CI</span></span>
+<span id="cb86-2"><a href="how-bootstrap-works.html#cb86-2" aria-hidden="true" tabindex="-1"></a><span class="co"># First put data in data.frame for ggplot()</span></span>
+<span id="cb86-3"><a href="how-bootstrap-works.html#cb86-3" aria-hidden="true" tabindex="-1"></a>dat.bs.PTEDUCAT <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(bs.PTEDUCAT.sorted)</span>
+<span id="cb86-4"><a href="how-bootstrap-works.html#cb86-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb86-5"><a href="how-bootstrap-works.html#cb86-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb86-6"><a href="how-bootstrap-works.html#cb86-6" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(dat.bs.PTEDUCAT, <span class="fu">aes</span>(<span class="at">x =</span> bs.PTEDUCAT))</span>
+<span id="cb86-7"><a href="how-bootstrap-works.html#cb86-7" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> p <span class="sc">+</span> <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">y=</span>..density..))</span>
+<span id="cb86-8"><a href="how-bootstrap-works.html#cb86-8" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> p <span class="sc">+</span> <span class="fu">geom_density</span>(<span class="at">alpha=</span><span class="fl">0.1</span>, <span class="at">fill=</span><span class="st">&quot;white&quot;</span>)</span>
+<span id="cb86-9"><a href="how-bootstrap-works.html#cb86-9" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> p <span class="sc">+</span> <span class="fu">geom_rug</span>()</span>
+<span id="cb86-10"><a href="how-bootstrap-works.html#cb86-10" aria-hidden="true" tabindex="-1"></a><span class="co"># vertical line at CI</span></span>
+<span id="cb86-11"><a href="how-bootstrap-works.html#cb86-11" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> p <span class="sc">+</span> <span class="fu">geom_vline</span>(<span class="at">xintercept=</span>CI.bs[<span class="dv">1</span>], <span class="at">colour=</span><span class="st">&quot;blue&quot;</span>,</span>
+<span id="cb86-12"><a href="how-bootstrap-works.html#cb86-12" aria-hidden="true" tabindex="-1"></a>                    <span class="at">linetype=</span><span class="st">&quot;longdash&quot;</span>)</span>
+<span id="cb86-13"><a href="how-bootstrap-works.html#cb86-13" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> p <span class="sc">+</span> <span class="fu">geom_vline</span>(<span class="at">xintercept=</span>CI.bs[<span class="dv">2</span>], <span class="at">colour=</span><span class="st">&quot;blue&quot;</span>,</span>
+<span id="cb86-14"><a href="how-bootstrap-works.html#cb86-14" aria-hidden="true" tabindex="-1"></a>                    <span class="at">linetype=</span><span class="st">&quot;longdash&quot;</span>)</span>
+<span id="cb86-15"><a href="how-bootstrap-works.html#cb86-15" aria-hidden="true" tabindex="-1"></a>title <span class="ot">&lt;-</span> <span class="st">&quot;Bootstrap distribution of the estimated regression</span></span>
+<span id="cb86-16"><a href="how-bootstrap-works.html#cb86-16" aria-hidden="true" tabindex="-1"></a><span class="st">                                      parameter of PTEDUCAT&quot;</span></span>
+<span id="cb86-17"><a href="how-bootstrap-works.html#cb86-17" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> p <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> title )</span>
+<span id="cb86-18"><a href="how-bootstrap-works.html#cb86-18" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(p)</span></code></pre></div>
+<p></p>
+</div>
+</div>
+<p style="text-align: center;">
+<a href="overview-2.html"><button class="btn btn-default">Previous</button></a>
+<a href="random-forests.html"><button class="btn btn-default">Next</button></a>
+</p>
+</div>
+</div>
+
+<script src="js/jquery.js"></script>
+<script src="js/tablesaw-stackonly.js"></script>
+<script src="js/nudge.min.js"></script>
+
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+</body>
+</html>
