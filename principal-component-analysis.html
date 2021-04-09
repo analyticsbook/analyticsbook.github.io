@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta property="og:title" content="Principal component analysis | Data Analytics" />
+<meta property="og:type" content="book" />
+
+
+
+
+
+<meta name="author" content="Shuai Huang &amp; Houtao Deng" />
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  TeX: { equationNumbers: { autoNumber: "AMS" } }
+});
+</script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<meta name="description" content="Principal component analysis | Data Analytics">
+
+<title>Principal component analysis | Data Analytics</title>
+
+<script src="libs/header-attrs-2.7/header-attrs.js"></script>
+<link href="libs/tufte-css-2015.12.29/tufte.css" rel="stylesheet" />
+<link href="libs/tufte-css-2015.12.29/envisioned.css" rel="stylesheet" />
+<script src="https://use.typekit.net/ajy6rnl.js"></script>
+<script>try{Typekit.load({ async: true });}catch(e){}</script>
+<!-- <link rel="stylesheet" href="css/normalize.css"> -->
+<!-- <link rel="stylesheet" href="css/envisioned.css"/> -->
+<link rel="stylesheet" href="css/tablesaw-stackonly.css"/>
+<link rel="stylesheet" href="css/nudge.css"/>
+<link rel="stylesheet" href="css/sourcesans.css"/>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+
+
+</head>
+
+<body>
+
+<!--bookdown:toc:start-->
+
+<nav class="pushy pushy-left" id="TOC">
+<ul>
+<li><a href="#preface">Preface</a></li>
+<li><a href="#acknowledgments">Acknowledgments</a></li>
+<li><a href="#chapter-1.-introduction">Chapter 1. Introduction</a></li>
+<li><a href="#chapter-2.-abstraction-regression-tree-models">Chapter 2. Abstraction: Regression &amp; Tree Models</a></li>
+<li><a href="#chapter-3.-recognition-logistic-regression-ranking">Chapter 3. Recognition: Logistic Regression &amp; Ranking</a></li>
+<li><a href="#chapter-4.-resonance-bootstrap-random-forests">Chapter 4. Resonance: Bootstrap &amp; Random Forests</a></li>
+<li><a href="#chapter-5.-learning-i-cross-validation-oob">Chapter 5. Learning (I): Cross-validation &amp; OOB</a></li>
+<li><a href="#chapter-6.-diagnosis-residuals-heterogeneity">Chapter 6. Diagnosis: Residuals &amp; Heterogeneity</a></li>
+<li><a href="#chapter-7.-learning-ii-svm-ensemble-learning">Chapter 7. Learning (II): SVM &amp; Ensemble Learning</a></li>
+<li><a href="#chapter-8.-scalability-lasso-pca">Chapter 8. Scalability: LASSO &amp; PCA</a></li>
+<li><a href="#chapter-9.-pragmatism-experience-experimental">Chapter 9. Pragmatism: Experience &amp; Experimental</a></li>
+<li><a href="#chapter-10.-synthesis-architecture-pipeline">Chapter 10. Synthesis: Architecture &amp; Pipeline</a></li>
+<li><a href="#conclusion">Conclusion</a></li>
+<li><a href="#appendix-a-brief-review-of-background-knowledge">Appendix: A Brief Review of Background Knowledge</a></li>
+</ul>
+</nav>
+
+<!--bookdown:toc:end-->
+
+<div class="menu-btn"><h3>☰ Menu</h3></div>
+
+<div class="site-overlay"></div>
+
+
+<div class="row">
+<div class="col-sm-12">
+
+<nav class="pushy pushy-left" id="TOC">
+<ul>
+<li><a href="index.html#preface">Preface</a></li>
+<li><a href="acknowledgments.html#acknowledgments">Acknowledgments</a></li>
+<li><a href="chapter-1-introduction.html#chapter-1.-introduction">Chapter 1. Introduction</a></li>
+<li><a href="chapter-2-abstraction-regression-tree-models.html#chapter-2.-abstraction-regression-tree-models">Chapter 2. Abstraction: Regression &amp; Tree Models</a></li>
+<li><a href="chapter-3-recognition-logistic-regression-ranking.html#chapter-3.-recognition-logistic-regression-ranking">Chapter 3. Recognition: Logistic Regression &amp; Ranking</a></li>
+<li><a href="chapter-4-resonance-bootstrap-random-forests.html#chapter-4.-resonance-bootstrap-random-forests">Chapter 4. Resonance: Bootstrap &amp; Random Forests</a></li>
+<li><a href="chapter-5-learning-i-cross-validation-oob.html#chapter-5.-learning-i-cross-validation-oob">Chapter 5. Learning (I): Cross-validation &amp; OOB</a></li>
+<li><a href="chapter-6-diagnosis-residuals-heterogeneity.html#chapter-6.-diagnosis-residuals-heterogeneity">Chapter 6. Diagnosis: Residuals &amp; Heterogeneity</a></li>
+<li><a href="chapter-7-learning-ii-svm-ensemble-learning.html#chapter-7.-learning-ii-svm-ensemble-learning">Chapter 7. Learning (II): SVM &amp; Ensemble Learning</a></li>
+<li><a href="chapter-8-scalability-lasso-pca.html#chapter-8.-scalability-lasso-pca">Chapter 8. Scalability: LASSO &amp; PCA</a></li>
+<li><a href="chapter-9-pragmatism-experience-experimental.html#chapter-9.-pragmatism-experience-experimental">Chapter 9. Pragmatism: Experience &amp; Experimental</a></li>
+<li><a href="chapter-10-synthesis-architecture-pipeline.html#chapter-10.-synthesis-architecture-pipeline">Chapter 10. Synthesis: Architecture &amp; Pipeline</a></li>
+<li><a href="conclusion.html#conclusion">Conclusion</a></li>
+<li><a href="appendix-a-brief-review-of-background-knowledge.html#appendix-a-brief-review-of-background-knowledge">Appendix: A Brief Review of Background Knowledge</a></li>
+</ul>
+</nav>
+
+</div>
+</div>
+<div class="row">
+<div class="col-sm-12">
+<div id="principal-component-analysis" class="section level2 unnumbered">
+<h2>Principal component analysis</h2>
+<p></p>
+<div id="rationale-and-formulation-13" class="section level3 unnumbered">
+<h3>Rationale and formulation</h3>
+<!-- % *Our power comes from the perception of our power*^[A line quoted from HBO's Chernobyl]. -->
+<p>A dataset has many variables, but its inherent dimensionality may be smaller than it appears to be. For example, as shown in Figure <a href="principal-component-analysis.html#fig:f8-PCAintro">146</a>, the <span class="math inline">\(10\)</span> variables of the dataset, <span class="math inline">\(x_1\)</span>, <span class="math inline">\(x_2\)</span>, <span class="math inline">\(\ldots\)</span>, <span class="math inline">\(x_{10}\)</span>, are manifestations of three underlying independent variables, <span class="math inline">\(z_1\)</span>, <span class="math inline">\(z_2\)</span>, and <span class="math inline">\(z_3\)</span>. In other words, a dataset of <span class="math inline">\(10\)</span> variables is not necessarily a system of <span class="math inline">\(10\)</span> <em>degrees of freedom</em>.</p>
+<p></p>
+<p>
+<span class="marginnote shownote">
+<!--
+<div class="figure">--><span id="fig:f8-PCAintro"></span>
+<img src="graphics/8_PCAintro.png" alt="PCA---to uncover the Master of Puppets ($z_1$, $z_2$, and $z_3$) " width="250px"  />
+<!--
+<p class="caption marginnote">-->Figure 146: PCA—to uncover the Master of Puppets (<span class="math inline">\(z_1\)</span>, <span class="math inline">\(z_2\)</span>, and <span class="math inline">\(z_3\)</span>) <!--</p>-->
+<!--</div>--></span>
+</p>
+<p></p>
+<p>The question is how to uncover the “Master of Puppets,” i.e., <span class="math inline">\(z_1\)</span>, <span class="math inline">\(z_2\)</span>, and <span class="math inline">\(z_3\)</span>, based on data of the observed variables, <span class="math inline">\(x_1\)</span>, <span class="math inline">\(x_2\)</span>, <span class="math inline">\(\ldots\)</span>, <span class="math inline">\(x_{10}\)</span>.</p>
+<p>Let’s look at the scattered data points in Figure <a href="principal-component-analysis.html#fig:f8-11">147</a>. If we think of the data points as <em>stars</em>, and this is the universe after the <em>Big Bang</em>, we can identify two potential forces here: a force that stretches the data points towards one direction (i.e., labeled as <em>the <span class="math inline">\(1^{st}\)</span> PC)<label for="tufte-sn-205" class="margin-toggle sidenote-number">205</label><input type="checkbox" id="tufte-sn-205" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">205</span> PC stands for the <em>principal component</em>.</span></em>; and another force (i.e., labeled as <em>the <span class="math inline">\(2^{nd}\)</span> PC</em>) that drags the data points towards another direction. The forces are independent, so in mathematical terms they follow <strong>orthogonal</strong> directions . And it might be possible that the <span class="math inline">\(2^{nd}\)</span> PC only represents noise. If that is the case, calling it a force may not be the best way. Sometimes we say each PC represents a <em>variation source</em>.</p>
+<p></p>
+<div class="figure"><span id="fig:f8-11"></span>
+<p class="caption marginnote shownote">
+Figure 147: Illustration of the principal components in a dataset with 2 variables; the main variation source is represented by th e 1<sup>st</sup> dimension
+</p>
+<img src="graphics/8_11.png" alt="Illustration of the principal components in a dataset with 2 variables; the main variation source is represented by th e 1^st^  dimension" width="100%"  />
+</div>
+<p></p>
+<p>This interpretation of Figure <a href="principal-component-analysis.html#fig:f8-11">147</a> may seem natural. If so, it is only because it makes a tacit assumption that seems too <em>natural</em> to draw our attention: the forces are <em>represented</em> as <em>lines</em><label for="tufte-sn-206" class="margin-toggle sidenote-number">206</label><input type="checkbox" id="tufte-sn-206" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">206</span> Why is a force a line? It could be a wave, a spiral, or anything other than a line. But the challenge is to write up the mathematical form of an idea—like the example of maximum margin in <strong>Chapter 7</strong>.</span>, their mathematical forms are <em>linear models</em> that are defined by the existing variables, i.e., the two lines in Figure <a href="principal-component-analysis.html#fig:f8-11">147</a> could be defined by <span class="math inline">\(x_1\)</span> and <span class="math inline">\(x_2\)</span>. The PCA seeks linear combinations of the original variables to pinpoint the directions towards which the underlying forces push the data points. These directions are called <em>principal components</em> (PCs). In other words, the PCA assumes that the relationship between the underlying PCs and the observed variables is linear. And because they are linear, it takes <em>orthogonality</em> to separate different forces.</p>
+</div>
+<div id="theory-and-method-8" class="section level3 unnumbered">
+<h3>Theory and method</h3>
+<p>The lines in Figure <a href="principal-component-analysis.html#fig:f8-11">147</a> take the form as <span class="math inline">\(w_1x_1 + w_2x_2\)</span>,<label for="tufte-sn-207" class="margin-toggle sidenote-number">207</label><input type="checkbox" id="tufte-sn-207" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">207</span> For simplicity, from now on, we assume that all the variables in the dataset are normalized, i.e., for any variable <span class="math inline">\(x_i\)</span>, its mean is <span class="math inline">\(0\)</span> and its variance is <span class="math inline">\(1\)</span>.</span> where <span class="math inline">\(w_1\)</span> and <span class="math inline">\(w_2\)</span> are free parameters. To estimate <span class="math inline">\(w_1\)</span> and <span class="math inline">\(w_2\)</span> for the lines, we need to write an <em>optimization</em> formulation with an objective function and a constraints structure that carries out the idea outlined in Figure <a href="principal-component-analysis.html#fig:f8-11">147</a>: to identify the two lines.</p>
+<p></p>
+<div class="figure"><span id="fig:f8-PCA-line"></span>
+<p class="caption marginnote shownote">
+Figure 148: Any line <span class="math inline">\(z = w_1x_1 + w_2x_2\)</span> leads to a new one-dimensional space defined by <span class="math inline">\(z\)</span>
+</p>
+<img src="graphics/8_PCA_line.png" alt="Any line $z = w_1x_1 + w_2x_2$ leads to a new one-dimensional space defined by $z$" width="100%"  />
+</div>
+<p></p>
+<p>As shown in Figure <a href="principal-component-analysis.html#fig:f8-PCA-line">148</a>, any line <span class="math inline">\(z = w_1x_1 + w_2x_2\)</span> leads to a new one-dimensional space defined by <span class="math inline">\(z\)</span>. Data points find their projections on this new space, i.e., the white dots on the line. The variance of the white dots provides a quantitative evaluation of the strength of the force that stretched the data points. The PCA seeks the lines that have the largest variances, which are the strongest forces stretching the data and scattering the data points along the PCs. Specifically, as there would be one line that represents the strongest force (a.k.a., as the <span class="math inline">\(1^{st}\)</span> PC), the second line is called the <span class="math inline">\(2^{nd}\)</span> PC, and so on.</p>
+<p>To generalize the idea of Figure <a href="principal-component-analysis.html#fig:f8-PCA-line">148</a>, let’s focus on the identification of the <span class="math inline">\(1^{st}\)</span> PC first. Suppose there are <span class="math inline">\(p\)</span> variables, <span class="math inline">\(x_1\)</span>, <span class="math inline">\(x_2\)</span>, <span class="math inline">\(\ldots\)</span>, <span class="math inline">\(x_{p}\)</span>. The <em>line</em> for the <span class="math inline">\(1^{st}\)</span> PC is <span class="math inline">\(\boldsymbol{w}_{(1)}^T\boldsymbol{x}\)</span>. <span class="math inline">\(\boldsymbol{w}_{(1)}\in \mathbb{R}^{p \times 1}\)</span> is the weight vector of the <span class="math inline">\(1^{st}\)</span> PC<label for="tufte-sn-208" class="margin-toggle sidenote-number">208</label><input type="checkbox" id="tufte-sn-208" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">208</span> It is also called the <strong>loading</strong> of the PC.</span>. The projections of <span class="math inline">\(N\)</span> data points on the line of the <span class="math inline">\(1^{st}\)</span> PC, i.e., the coordinates of the <em>white dots</em>, are</p>
+<p><span class="math display" id="eq:8-PCA-z">\[\begin{equation}
+    z_{1n} = \boldsymbol{w}_{(1)}^T\boldsymbol{x}_n, \text{ for } n=1, 2, \ldots, N,
+\tag{92}
+\end{equation}\]</span></p>
+<p>where <span class="math inline">\(\boldsymbol{x}_n \in \mathbb{R}^{1 \times p}\)</span> is the <span class="math inline">\(n^{th}\)</span> data point.</p>
+<p>As we mentioned, the <span class="math inline">\(1^{st}\)</span> PC is the line that has the largest variance of <span class="math inline">\(z_1\)</span>. Suppose that the data have been standardized, we have</p>
+<p><span class="math display">\[\begin{equation}
+    var(z_1) = var\left(\boldsymbol{w}_{(1)}^T\boldsymbol{x}\right)=\frac{1}{N}\sum_{n=1}^N\left[\boldsymbol{w}_{(1)}^T\boldsymbol{x}_{n}\right]^2.
+\end{equation}\]</span></p>
+<p>This leads to the following formulation to learn the parameter <span class="math inline">\(\boldsymbol{w}_{(1)}\)</span></p>
+<p><span class="math display" id="eq:8-PC1">\[\begin{equation}
+    \boldsymbol{w}_{(1)} = \arg\max_{\boldsymbol{w}_{(1)}^T\boldsymbol{w}_{(1)}=1} \left \{ \sum\nolimits_{n=1}\nolimits^{N}\left [ \boldsymbol{w}_{(1)}^T\boldsymbol{x}_{n} \right ]^2\right \},
+\tag{93}
+\end{equation}\]</span></p>
+<p>where the constraint <span class="math inline">\(\boldsymbol{w}_{(1)}^T\boldsymbol{w}_{(1)}=1\)</span> is to normalize the scale of <span class="math inline">\(\boldsymbol{w}\)</span>.<label for="tufte-sn-209" class="margin-toggle sidenote-number">209</label><input type="checkbox" id="tufte-sn-209" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">209</span> Without which the optimization problem in Eq. <a href="principal-component-analysis.html#eq:8-PC1">(93)</a> is unbounded. This also indicates that the absolute magnitudes of <span class="math inline">\(\boldsymbol{w}_{(1)}\)</span> are often misleading. The relative magnitudes are more useful.</span></p>
+<p>A more succinct form of Eq. <a href="principal-component-analysis.html#eq:8-PC1">(93)</a> is</p>
+<p><span class="math display" id="eq:8-PC1-X">\[\begin{equation}
+    \boldsymbol{w}_{(1)} = \arg\max_{\boldsymbol{w}_{(1)}^T\boldsymbol{w}_{(1)}=1}\left \{ \boldsymbol{w}_{(1)}^T\boldsymbol{X}^T\boldsymbol{X}\boldsymbol{w}_{(1)} \right\},
+\tag{94}
+\end{equation}\]</span></p>
+<p>where <span class="math inline">\(\boldsymbol{X}\in \mathbb{R}^{N \times p}\)</span> is the data matrix that concatenates the <span class="math inline">\(N\)</span> samples into a matrix, i.e., each sample forms a row in <span class="math inline">\(\boldsymbol{X}\)</span>. Eq. <a href="principal-component-analysis.html#eq:8-PC1-X">(94)</a> is also known as the <strong>eigenvalue decomposition</strong> problem of the matrix <span class="math inline">\(\boldsymbol{X}^T\boldsymbol{X}\)</span>.<label for="tufte-sn-210" class="margin-toggle sidenote-number">210</label><input type="checkbox" id="tufte-sn-210" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">210</span> <span class="math inline">\(\frac{\boldsymbol{X}^T\boldsymbol{X}}{N-1}\)</span> is called the <strong>sample covariance matrix</strong> , usually denoted as <span class="math inline">\(\boldsymbol{S}\)</span>. <span class="math inline">\(\boldsymbol{S}\)</span> could be used in Eq. <a href="principal-component-analysis.html#eq:8-PC1-X">(94)</a> to replace <span class="math inline">\(\boldsymbol{X}^T\boldsymbol{X}\)</span>.</span> In this context, <span class="math inline">\(\boldsymbol{w}_{(1)}\)</span> is called the <span class="math inline">\(1^{st}\)</span> <strong>eigenvector</strong> .</p>
+<p>To identify the <span class="math inline">\(2^{nd}\)</span> PC, we again find a way to <em>iterate</em>. The idea is simple: as the <span class="math inline">\(1^{st}\)</span> PC represents a variance source, and the data <span class="math inline">\(\boldsymbol{X}\)</span> contains an aggregation of multiple variance sources, why not remove the first variance source from <span class="math inline">\(\boldsymbol{X}\)</span> and then create a new dataset that contains the remaining variance sources? Then, the procedure for finding <span class="math inline">\(\boldsymbol{w}_{(1)}\)</span> could be used for finding <span class="math inline">\(\boldsymbol{w}_{(2)}\)</span>—with <span class="math inline">\(\boldsymbol{w}_{(1)}\)</span> removed, <span class="math inline">\(\boldsymbol{w}_{(2)}\)</span> is the largest variance source.</p>
+<p>This process could be generalized as:</p>
+<p><!-- begin{itemize} --></p>
+<ul>
+<li> [<em>Create <span class="math inline">\(\boldsymbol{X}_{(k)}\)</span></em>] In order to find the <span class="math inline">\(k^{th}\)</span> PC, we could create a dataset by removing the variation sources from the previous <span class="math inline">\(k-1\)</span> PCs</li>
+</ul>
+<p><span class="math display" id="eq:8-PCA-removePC">\[\begin{equation}
+        \boldsymbol{X}_{(k)}=\boldsymbol{X}-\sum_{s=1}^{k-1}\boldsymbol{w}_{(s)}\boldsymbol{w}_{(s)}^T.
+\tag{95}
+    \end{equation}\]</span></p>
+<ul>
+<li> [<em>Solve for <span class="math inline">\(\boldsymbol{w}_{(k)}\)</span></em>] Then, we solve</li>
+</ul>
+<p><span class="math display" id="eq:8-PCA-wk">\[\begin{equation}
+        \boldsymbol{w}_{(k)}=\arg\max_{\boldsymbol{w}_{(k)}^T\boldsymbol{w}_{(k)}=1}\left \{ \boldsymbol{w}_{(k)}^T\boldsymbol{X}_{(k)}^T\boldsymbol{X}_{(k)}\boldsymbol{w}_{(k)} \right \}.
+\tag{96}
+    \end{equation}\]</span>
+We then compute <span class="math inline">\(\lambda_{(k)} = \boldsymbol{w}_{(k)}^T\boldsymbol{X}_{(k)}^T\boldsymbol{X}_{(k)}\boldsymbol{w}_{(k)}.\)</span> <span class="math inline">\(\lambda_{(k)}\)</span> is called the <strong>eigenvalue</strong> of the <span class="math inline">\(k^{th}\)</span> PC.</p>
+<p><!-- end{itemize} --></p>
+<p>So we create <span class="math inline">\(\boldsymbol{X}_{(k)}\)</span> and solve Eq. <a href="principal-component-analysis.html#eq:8-PCA-wk">(96)</a> in multiple iterations. Many R packages have packed all the iterations into one batch. Usually, we only need to calculate <span class="math inline">\(\boldsymbol{X}^T\boldsymbol{X}\)</span> or <span class="math inline">\(\boldsymbol{S}\)</span> and use it as input of these packages, then obtain all the eigenvalues and eigenvectors.</p>
+<p>This iterative algorithm would yield in total <span class="math inline">\(p\)</span> PCs for a dataset with <span class="math inline">\(p\)</span> variables. But usually, not all the PCs are significant. If we apply PCA on the dataset generated by the data-generating mechanism as shown in Figure <a href="principal-component-analysis.html#fig:f8-PCAintro">146</a>, only the first 3 PCs should be significant, and the other 7 PCs, although they <em>computationally exist</em>, statistically do not exist, as they are manifestations of noise.</p>
+<p></p>
+<p>
+<span class="marginnote shownote">
+<!--
+<div class="figure">--><span id="fig:f8-12"></span>
+<img src="graphics/8_12.png" alt="The scree plot shows that only the first 2 PCs are significant" width="250px"  />
+<!--
+<p class="caption marginnote">-->Figure 149: The scree plot shows that only the first 2 PCs are significant<!--</p>-->
+<!--</div>--></span>
+</p>
+<p></p>
+<p>In practice, we need to decide how many PCs are needed for a dataset. The <strong>scree plot</strong> as shown in Figure <a href="principal-component-analysis.html#fig:f8-12">149</a> is a common tool: it draws the eigenvalues of the PCs, <span class="math inline">\(\lambda_{(1)}, \lambda_{(2)}, \ldots, \lambda_{(p)}\)</span>. Then we look for the change point if it exists. We discard the PCs after the change point as they may be statistically insignificant.</p>
+</div>
+<div id="a-small-data-example-1" class="section level3 unnumbered">
+<h3>A small data example</h3>
+The dataset is shown in Table <a href="principal-component-analysis.html#tab:t8-2">35</a>. It has <span class="math inline">\(3\)</span> variables and <span class="math inline">\(5\)</span> data points.
+<p></p>
+<p><!--
+<caption>--><span class="marginnote shownote"><span id="tab:t8-2">Table 35: </span>A dataset example for PCA</span><!--</caption>--></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left"><span class="math inline">\(x_1\)</span></th>
+<th align="left"><span class="math inline">\(x_2\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><span class="math inline">\(-10\)</span></td>
+<td align="left"><span class="math inline">\(6\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(-4\)</span></td>
+<td align="left"><span class="math inline">\(2\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(2\)</span></td>
+<td align="left"><span class="math inline">\(1\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(8\)</span></td>
+<td align="left"><span class="math inline">\(0\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(14\)</span></td>
+<td align="left"><span class="math inline">\(-4\)</span></td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<p>First, we normalize (or, standardize) the variables<label for="tufte-sn-211" class="margin-toggle sidenote-number">211</label><input type="checkbox" id="tufte-sn-211" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">211</span> Recall that we assumed that all the variables are normalized when we derived the PCA algorithm</span>. I.e., for <span class="math inline">\(x_1\)</span>, we compute its mean and standard derivation first, which are <span class="math inline">\(2\)</span> and <span class="math inline">\(9.48\)</span>,<label for="tufte-sn-212" class="margin-toggle sidenote-number">212</label><input type="checkbox" id="tufte-sn-212" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">212</span> In this example, numbers are rounded to <span class="math inline">\(2\)</span> decimal places.</span> respectively. Then, we distract each measurement of <span class="math inline">\(x_1\)</span> from its mean and further divide it by its standard derivation. For example, for the first measurement of <span class="math inline">\(x_1\)</span>, <span class="math inline">\(-10\)</span>, it is converted as</p>
+<p><span class="math display">\[
+\frac{-10 - 2}{9.48}=-1.26.
+\]</span></p>
+<p>The second measurement, <span class="math inline">\(-4\)</span>, is converted as</p>
+<p><span class="math display">\[
+\frac{-4 - 2}{9.48}=-0.63.
+\]</span></p>
+<p>And so on.</p>
+<p>Similarly, for <span class="math inline">\(x_2\)</span>, we compute its mean and standard derivation, which are <span class="math inline">\(1\)</span> and <span class="math inline">\(3.61\)</span>, respectively. The standardized dataset is shown in Table <a href="principal-component-analysis.html#tab:t8-standardx">36</a>.</p>
+<p></p>
+<p><!--
+<caption>--><span class="marginnote shownote"><span id="tab:t8-standardx">Table 36: </span>Standardized dataset of Table <a href="principal-component-analysis.html#tab:t8-2">35</a></span><!--</caption>--></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left"><span class="math inline">\(x_1\)</span></th>
+<th align="left"><span class="math inline">\(x_2\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><span class="math inline">\(-1.26\)</span></td>
+<td align="left"><span class="math inline">\(1.39\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(-0.63\)</span></td>
+<td align="left"><span class="math inline">\(0.28\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(0\)</span></td>
+<td align="left"><span class="math inline">\(0\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(0.63\)</span></td>
+<td align="left"><span class="math inline">\(-0.28\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(1.26\)</span></td>
+<td align="left"><span class="math inline">\(-1.39\)</span></td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<p>We calculate <span class="math inline">\(\boldsymbol{S}\)</span> as</p>
+<p><span class="math display">\[ \boldsymbol{S}=\boldsymbol{X}^T \boldsymbol{X} / 4 = \begin{bmatrix}
+1 &amp; -0.96 \\
+-0.96 &amp; 1 \\
+\end{bmatrix}
+.\]</span></p>
+<p>Solving this eigenvalue decomposition problem<label for="tufte-sn-213" class="margin-toggle sidenote-number">213</label><input type="checkbox" id="tufte-sn-213" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">213</span> E.g., using <code>eigen()</code> in R.</span>, for the <span class="math inline">\(1^{st}\)</span> PC, we have</p>
+<p><span class="math display">\[
+\lambda_1=1.96 \, \text{ and } \, \boldsymbol{w}_{(1)}=\left[ -0.71, \, 0.71\right].
+\]</span></p>
+<p>Continuing to the <span class="math inline">\(2^{nd}\)</span> PC, we have</p>
+<p><span class="math display">\[
+\lambda_2=0.04 \, \text{ and } \, \boldsymbol{w}_{(2)}=\left[  -0.71, \, -0.71\right].
+\]</span></p>
+<p></p>
+<p>
+<span class="marginnote shownote">
+<!--
+<div class="figure">--><span id="fig:f8-PCA-example1"></span>
+<img src="graphics/8_PCA_example1.png" alt="Gray dots are data points (standardized); the black line is the $1^{st}$ PC" width="250px"  />
+<!--
+<p class="caption marginnote">-->Figure 150: Gray dots are data points (standardized); the black line is the <span class="math inline">\(1^{st}\)</span> PC<!--</p>-->
+<!--</div>--></span>
+</p>
+<p></p>
+<p>We can calculate the cumulative contributions of the <span class="math inline">\(2\)</span> PCs</p>
+<p><span class="math display">\[
+\text{For the } 1^{st} \text{ PC: } 1.96/(1.96+0.04) = 0.98.
+\]</span></p>
+<p><span class="math display">\[
+\text{For the } 2^{nd} \text{ PC: } 0.04/(1.96+0.04) = 0.02.
+\]</span></p>
+<p>The <span class="math inline">\(2^{nd}\)</span> PC is statistically insignificant.</p>
+<p>We visualize the <span class="math inline">\(1^{st}\)</span> PC in Figure <a href="principal-component-analysis.html#fig:f8-PCA-example1">150</a> (compare it with Figure <a href="principal-component-analysis.html#fig:f8-11">147</a>). The R code to generate Figure <a href="principal-component-analysis.html#fig:f8-PCA-example1">150</a> is shown below.</p>
+<p></p>
+<div class="sourceCode" id="cb171"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb171-1"><a href="principal-component-analysis.html#cb171-1" aria-hidden="true" tabindex="-1"></a>x1 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">10</span>, <span class="sc">-</span><span class="dv">4</span>, <span class="dv">2</span>, <span class="dv">8</span>, <span class="dv">14</span>)</span>
+<span id="cb171-2"><a href="principal-component-analysis.html#cb171-2" aria-hidden="true" tabindex="-1"></a>x2 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">6</span>, <span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="sc">-</span><span class="dv">4</span>)</span>
+<span id="cb171-3"><a href="principal-component-analysis.html#cb171-3" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">cbind</span>(x1,x2)</span>
+<span id="cb171-4"><a href="principal-component-analysis.html#cb171-4" aria-hidden="true" tabindex="-1"></a>x.scale <span class="ot">&lt;-</span> <span class="fu">scale</span>(x) <span class="co">#standardize the data</span></span>
+<span id="cb171-5"><a href="principal-component-analysis.html#cb171-5" aria-hidden="true" tabindex="-1"></a>eigen.x <span class="ot">&lt;-</span> <span class="fu">eigen</span>(<span class="fu">cor</span>(x))</span>
+<span id="cb171-6"><a href="principal-component-analysis.html#cb171-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(x.scale, <span class="at">col =</span> <span class="st">&quot;gray&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb171-7"><a href="principal-component-analysis.html#cb171-7" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="dv">0</span>,eigen.x<span class="sc">$</span>vectors[<span class="dv">2</span>,<span class="dv">1</span>]<span class="sc">/</span>eigen.x<span class="sc">$</span>vectors[<span class="dv">1</span>,<span class="dv">1</span>],</span>
+<span id="cb171-8"><a href="principal-component-analysis.html#cb171-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">lwd =</span> <span class="dv">3</span>, <span class="at">col =</span> <span class="st">&quot;black&quot;</span>)</span></code></pre></div>
+<p></p>
+<p>The coordinates of the <em>white dots</em> (a.k.a., the projections of the data points on the PCs, as shown in Figure <a href="principal-component-analysis.html#fig:f8-PCA-line">148</a>) can be obtained by using Eq. <a href="principal-component-analysis.html#eq:8-PCA-z">(92)</a>. Results are shown in Table <a href="principal-component-analysis.html#tab:t8-example1-PC">37</a>. This is an example of <em>data transformation</em> .</p>
+<p></p>
+<p><!--
+<caption>--><span class="marginnote shownote"><span id="tab:t8-example1-PC">Table 37: </span>The coordinates of the <em>white dots</em>, i.e., a.k.a., the projections of the data points on the PCs</span><!--</caption>--></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left"><span class="math inline">\(z_1\)</span></th>
+<th align="left"><span class="math inline">\(z_2\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><span class="math inline">\(1.88\)</span></td>
+<td align="left"><span class="math inline">\(-0.09\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(0.64\)</span></td>
+<td align="left"><span class="math inline">\(0.25\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(0\)</span></td>
+<td align="left"><span class="math inline">\(0\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(-0.64\)</span></td>
+<td align="left"><span class="math inline">\(-0.25\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(-1.88\)</span></td>
+<td align="left"><span class="math inline">\(0.09\)</span></td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<p>Data transformation is often a data preprocessing step before the use of other methods. For example, in clustering, sometimes we could not discover any clustering structure on the dataset of original variables, but we may discover clusters on the transformed dataset. In a regression model, as we have mentioned the issue of multicollinearity<label for="tufte-sn-214" class="margin-toggle sidenote-number">214</label><input type="checkbox" id="tufte-sn-214" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">214</span> I.e., in <strong>Chapter 6</strong> and <strong>Chapter 2</strong>.</span>, the <strong>Principal Component Regression</strong> (<strong>PCR</strong>) method uses the PCA first to convert the original <span class="math inline">\(x\)</span> variables into the <span class="math inline">\(z\)</span> variables and then applies the linear regression model on the transformed variables. This is because the <span class="math inline">\(z\)</span> variables are PCs and they are orthogonal with each other, without issue of multicollinearity.</p>
+</div>
+<div id="r-lab-12" class="section level3 unnumbered">
+<h3>R Lab</h3>
+<p><em>The 6-Step R Pipeline.</em> <strong>Step 1</strong> and <strong>Step 2</strong> get dataset into R and organize the dataset in the required format.<label for="tufte-sn-215" class="margin-toggle sidenote-number">215</label><input type="checkbox" id="tufte-sn-215" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">215</span> It is not necessary to split the dataset into training and testing datasets before the use of PCA, <em>if</em> the purpose of the analysis is <em>exploratory data analysis</em>. But if the purpose of using PCA is for <em>dimension reduction</em> or <em>feature extraction</em>, which is an intermediate step before building a prediction model, then we should split the dataset into training and testing datasets, and apply PCA only on the training dataset to learn the loadings of the significant PCs. The R lab shows an example of this process.</span></p>
+<p></p>
+<div class="sourceCode" id="cb172"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb172-1"><a href="principal-component-analysis.html#cb172-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1 -&gt; Read data into R</span></span>
+<span id="cb172-2"><a href="principal-component-analysis.html#cb172-2" aria-hidden="true" tabindex="-1"></a><span class="do">#### Read data from a CSV file</span></span>
+<span id="cb172-3"><a href="principal-component-analysis.html#cb172-3" aria-hidden="true" tabindex="-1"></a><span class="do">#### Example: Alzheimer&#39;s Disease</span></span>
+<span id="cb172-4"><a href="principal-component-analysis.html#cb172-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb172-5"><a href="principal-component-analysis.html#cb172-5" aria-hidden="true" tabindex="-1"></a><span class="co"># RCurl is the R package to read csv file using a link</span></span>
+<span id="cb172-6"><a href="principal-component-analysis.html#cb172-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(RCurl)</span>
+<span id="cb172-7"><a href="principal-component-analysis.html#cb172-7" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;https://raw.githubusercontent.com&quot;</span>,</span>
+<span id="cb172-8"><a href="principal-component-analysis.html#cb172-8" aria-hidden="true" tabindex="-1"></a>              <span class="st">&quot;/analyticsbook/book/main/data/AD_hd.csv&quot;</span>)</span>
+<span id="cb172-9"><a href="principal-component-analysis.html#cb172-9" aria-hidden="true" tabindex="-1"></a>AD <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="at">text=</span><span class="fu">getURL</span>(url))</span>
+<span id="cb172-10"><a href="principal-component-analysis.html#cb172-10" aria-hidden="true" tabindex="-1"></a><span class="co"># str(AD)</span></span></code></pre></div>
+<p></p>
+<p></p>
+<div class="sourceCode" id="cb173"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb173-1"><a href="principal-component-analysis.html#cb173-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2 -&gt; Data preprocessing</span></span>
+<span id="cb173-2"><a href="principal-component-analysis.html#cb173-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Create your X matrix (predictors) and Y vector </span></span>
+<span id="cb173-3"><a href="principal-component-analysis.html#cb173-3" aria-hidden="true" tabindex="-1"></a><span class="co"># (outcome variable)</span></span>
+<span id="cb173-4"><a href="principal-component-analysis.html#cb173-4" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> AD[,<span class="sc">-</span><span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">16</span>)]</span>
+<span id="cb173-5"><a href="principal-component-analysis.html#cb173-5" aria-hidden="true" tabindex="-1"></a>Y <span class="ot">&lt;-</span> AD<span class="sc">$</span>MMSCORE</span>
+<span id="cb173-6"><a href="principal-component-analysis.html#cb173-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb173-7"><a href="principal-component-analysis.html#cb173-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Then, we integrate everything into a data frame</span></span>
+<span id="cb173-8"><a href="principal-component-analysis.html#cb173-8" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(Y,X)</span>
+<span id="cb173-9"><a href="principal-component-analysis.html#cb173-9" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(data)[<span class="dv">1</span>] <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;MMSCORE&quot;</span>)</span>
+<span id="cb173-10"><a href="principal-component-analysis.html#cb173-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb173-11"><a href="principal-component-analysis.html#cb173-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a training data </span></span>
+<span id="cb173-12"><a href="principal-component-analysis.html#cb173-12" aria-hidden="true" tabindex="-1"></a>train.ix <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">nrow</span>(data),<span class="fu">floor</span>( <span class="fu">nrow</span>(data)) <span class="sc">*</span> <span class="dv">4</span> <span class="sc">/</span> <span class="dv">5</span> )</span>
+<span id="cb173-13"><a href="principal-component-analysis.html#cb173-13" aria-hidden="true" tabindex="-1"></a>data.train <span class="ot">&lt;-</span> data[train.ix,]</span>
+<span id="cb173-14"><a href="principal-component-analysis.html#cb173-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a testing data </span></span>
+<span id="cb173-15"><a href="principal-component-analysis.html#cb173-15" aria-hidden="true" tabindex="-1"></a>data.test <span class="ot">&lt;-</span> data[<span class="sc">-</span>train.ix,]</span>
+<span id="cb173-16"><a href="principal-component-analysis.html#cb173-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb173-17"><a href="principal-component-analysis.html#cb173-17" aria-hidden="true" tabindex="-1"></a>trainX <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(data.train[,<span class="sc">-</span><span class="dv">1</span>])</span>
+<span id="cb173-18"><a href="principal-component-analysis.html#cb173-18" aria-hidden="true" tabindex="-1"></a>testX <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(data.test[,<span class="sc">-</span><span class="dv">1</span>])</span>
+<span id="cb173-19"><a href="principal-component-analysis.html#cb173-19" aria-hidden="true" tabindex="-1"></a>trainY <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(data.train[,<span class="dv">1</span>])</span>
+<span id="cb173-20"><a href="principal-component-analysis.html#cb173-20" aria-hidden="true" tabindex="-1"></a>testY <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(data.test[,<span class="dv">1</span>])</span></code></pre></div>
+<p></p>
+<p><strong>Step 3</strong> implements the PCA analysis using the <code>FactoMineR</code> package.</p>
+<p></p>
+<div class="sourceCode" id="cb174"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb174-1"><a href="principal-component-analysis.html#cb174-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 3 -&gt; Implement principal component analysis</span></span>
+<span id="cb174-2"><a href="principal-component-analysis.html#cb174-2" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages(&quot;factoextra&quot;)</span></span>
+<span id="cb174-3"><a href="principal-component-analysis.html#cb174-3" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(FactoMineR)</span>
+<span id="cb174-4"><a href="principal-component-analysis.html#cb174-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Conduct the PCA analysis</span></span>
+<span id="cb174-5"><a href="principal-component-analysis.html#cb174-5" aria-hidden="true" tabindex="-1"></a>pca.AD <span class="ot">&lt;-</span> <span class="fu">PCA</span>(trainX,  <span class="at">graph =</span> <span class="cn">FALSE</span>,<span class="at">ncp=</span><span class="dv">10</span>) </span>
+<span id="cb174-6"><a href="principal-component-analysis.html#cb174-6" aria-hidden="true" tabindex="-1"></a><span class="co"># names(pca.AD) will give you the list of variable names in the</span></span>
+<span id="cb174-7"><a href="principal-component-analysis.html#cb174-7" aria-hidden="true" tabindex="-1"></a><span class="co"># object pca.AD created by PCA(). For instance, pca.AD$eig records</span></span>
+<span id="cb174-8"><a href="principal-component-analysis.html#cb174-8" aria-hidden="true" tabindex="-1"></a><span class="co"># the eigenvalues of all the PCs, also the transformed value into </span></span>
+<span id="cb174-9"><a href="principal-component-analysis.html#cb174-9" aria-hidden="true" tabindex="-1"></a><span class="co"># cumulative percentage of variance. pca.AD$var stores the </span></span>
+<span id="cb174-10"><a href="principal-component-analysis.html#cb174-10" aria-hidden="true" tabindex="-1"></a><span class="co"># loadings of the variables in each of the PCs.</span></span></code></pre></div>
+<p></p>
+<p></p>
+<div class="figure"><span id="fig:f8-BC-scree"></span>
+<p class="caption marginnote shownote">
+Figure 151: Scree plot of the PCA analysis on the AD dataset
+</p>
+<img src="graphics/8_BC_scree.png" alt="Scree plot of the PCA analysis on the AD dataset" width="100%"  />
+</div>
+<p></p>
+<p><strong>Step 4</strong> ranks the PCs based on their eigenvalues and identifies the significant ones.</p>
+<p></p>
+<div class="sourceCode" id="cb175"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb175-1"><a href="principal-component-analysis.html#cb175-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 4 -&gt; Examine the contributions of the PCs in explaining </span></span>
+<span id="cb175-2"><a href="principal-component-analysis.html#cb175-2" aria-hidden="true" tabindex="-1"></a><span class="co"># the variation in data.</span></span>
+<span id="cb175-3"><a href="principal-component-analysis.html#cb175-3" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(factoextra ) </span>
+<span id="cb175-4"><a href="principal-component-analysis.html#cb175-4" aria-hidden="true" tabindex="-1"></a><span class="co"># to use the following functions such as get_pca_var() </span></span>
+<span id="cb175-5"><a href="principal-component-analysis.html#cb175-5" aria-hidden="true" tabindex="-1"></a><span class="co"># and fviz_contrib()</span></span>
+<span id="cb175-6"><a href="principal-component-analysis.html#cb175-6" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_screeplot</span>(pca.AD, <span class="at">addlabels =</span> <span class="cn">TRUE</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">50</span>))</span></code></pre></div>
+<p></p>
+<p>The result is shown in Figure <a href="principal-component-analysis.html#fig:f8-BC-scree">151</a>. The <span class="math inline">\(1^{st}\)</span> PC explains away <span class="math inline">\(17.4\%\)</span> of the total variation, and the <span class="math inline">\(2^{nd}\)</span> PC explains away <span class="math inline">\(13\%\)</span> of the total variation. There is a change point at the <span class="math inline">\(3^{rd}\)</span> PC, indicating that the following PCs may be insignificant.</p>
+<p><strong>Step 5</strong> looks into the details of the learned PCA model, e.g., the <em>loadings</em> of the PCs. It leads to Figures <a href="principal-component-analysis.html#fig:f8-14">152</a> and <a href="principal-component-analysis.html#fig:f8-15">153</a> which visualize the contributions of the variables to the <span class="math inline">\(1^{st}\)</span> and <span class="math inline">\(2^{nd}\)</span> PC, respectively.</p>
+<p></p>
+<div class="sourceCode" id="cb176"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb176-1"><a href="principal-component-analysis.html#cb176-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 5 -&gt; Examine the loadings of the PCs.</span></span>
+<span id="cb176-2"><a href="principal-component-analysis.html#cb176-2" aria-hidden="true" tabindex="-1"></a>var <span class="ot">&lt;-</span> <span class="fu">get_pca_var</span>(pca.AD) <span class="co"># to get the loadings of the PCs</span></span>
+<span id="cb176-3"><a href="principal-component-analysis.html#cb176-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(var<span class="sc">$</span>contrib) <span class="co"># to show the first 10 PCs</span></span>
+<span id="cb176-4"><a href="principal-component-analysis.html#cb176-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb176-5"><a href="principal-component-analysis.html#cb176-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualize the contributions of top variables to </span></span>
+<span id="cb176-6"><a href="principal-component-analysis.html#cb176-6" aria-hidden="true" tabindex="-1"></a><span class="co"># PC1 using a bar plot</span></span>
+<span id="cb176-7"><a href="principal-component-analysis.html#cb176-7" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_contrib</span>(pca.AD, <span class="at">choice =</span> <span class="st">&quot;var&quot;</span>, <span class="at">axes =</span> <span class="dv">1</span>, <span class="at">top =</span> <span class="dv">20</span>)</span>
+<span id="cb176-8"><a href="principal-component-analysis.html#cb176-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualize the contributions of top variables to PC2 using </span></span>
+<span id="cb176-9"><a href="principal-component-analysis.html#cb176-9" aria-hidden="true" tabindex="-1"></a><span class="co"># a bar plot</span></span>
+<span id="cb176-10"><a href="principal-component-analysis.html#cb176-10" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_contrib</span>(pca.AD, <span class="at">choice =</span> <span class="st">&quot;var&quot;</span>, <span class="at">axes =</span> <span class="dv">2</span>, <span class="at">top =</span> <span class="dv">20</span>)</span></code></pre></div>
+<p></p>
+<p></p>
+<p>
+<span class="marginnote shownote">
+<!--
+<div class="figure">--><span id="fig:f8-14"></span>
+<img src="graphics/8_BC_varimp1.png" alt="Loading of the $1^{st}$ PC, i.e., coefficients are ranked in terms of their absolute magnitude and only the top 20 are shown" width="250px"  />
+<!--
+<p class="caption marginnote">-->Figure 152: Loading of the <span class="math inline">\(1^{st}\)</span> PC, i.e., coefficients are ranked in terms of their absolute magnitude and only the top 20 are shown<!--</p>-->
+<!--</div>--></span>
+</p>
+<p></p>
+<p><strong>Step 6</strong> implements linear regression model using the transformed data.</p>
+<p></p>
+<div class="sourceCode" id="cb177"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb177-1"><a href="principal-component-analysis.html#cb177-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 6 -&gt; use the transformed data fit a line regression model</span></span>
+<span id="cb177-2"><a href="principal-component-analysis.html#cb177-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb177-3"><a href="principal-component-analysis.html#cb177-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Data pre-processing</span></span>
+<span id="cb177-4"><a href="principal-component-analysis.html#cb177-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Transformation of the X matrix of the training data</span></span>
+<span id="cb177-5"><a href="principal-component-analysis.html#cb177-5" aria-hidden="true" tabindex="-1"></a>trainX <span class="ot">&lt;-</span> pca.AD<span class="sc">$</span>ind<span class="sc">$</span>coord </span>
+<span id="cb177-6"><a href="principal-component-analysis.html#cb177-6" aria-hidden="true" tabindex="-1"></a>trainX <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(trainX)</span>
+<span id="cb177-7"><a href="principal-component-analysis.html#cb177-7" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(trainX) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;PC1&quot;</span>,<span class="st">&quot;PC2&quot;</span>,<span class="st">&quot;PC3&quot;</span>,<span class="st">&quot;PC4&quot;</span>,<span class="st">&quot;PC5&quot;</span>,<span class="st">&quot;PC6&quot;</span>,<span class="st">&quot;PC7&quot;</span>,</span>
+<span id="cb177-8"><a href="principal-component-analysis.html#cb177-8" aria-hidden="true" tabindex="-1"></a>                   <span class="st">&quot;PC8&quot;</span>,<span class="st">&quot;PC9&quot;</span>,<span class="st">&quot;PC10&quot;</span>)</span>
+<span id="cb177-9"><a href="principal-component-analysis.html#cb177-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Transformation of the X matrix of the testing data</span></span>
+<span id="cb177-10"><a href="principal-component-analysis.html#cb177-10" aria-hidden="true" tabindex="-1"></a>testX <span class="ot">&lt;-</span> <span class="fu">predict</span>(pca.AD , <span class="at">newdata =</span> testX) </span>
+<span id="cb177-11"><a href="principal-component-analysis.html#cb177-11" aria-hidden="true" tabindex="-1"></a>testX <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(testX<span class="sc">$</span>coord)</span>
+<span id="cb177-12"><a href="principal-component-analysis.html#cb177-12" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(testX) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;PC1&quot;</span>,<span class="st">&quot;PC2&quot;</span>,<span class="st">&quot;PC3&quot;</span>,<span class="st">&quot;PC4&quot;</span>,<span class="st">&quot;PC5&quot;</span>,<span class="st">&quot;PC6&quot;</span>,</span>
+<span id="cb177-13"><a href="principal-component-analysis.html#cb177-13" aria-hidden="true" tabindex="-1"></a>                  <span class="st">&quot;PC7&quot;</span>,<span class="st">&quot;PC8&quot;</span>,<span class="st">&quot;PC9&quot;</span>,<span class="st">&quot;PC10&quot;</span>)</span>
+<span id="cb177-14"><a href="principal-component-analysis.html#cb177-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb177-15"><a href="principal-component-analysis.html#cb177-15" aria-hidden="true" tabindex="-1"></a>tempData <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(trainY,trainX)</span>
+<span id="cb177-16"><a href="principal-component-analysis.html#cb177-16" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(tempData)[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;MMSCORE&quot;</span>)</span>
+<span id="cb177-17"><a href="principal-component-analysis.html#cb177-17" aria-hidden="true" tabindex="-1"></a>lm.AD <span class="ot">&lt;-</span> <span class="fu">lm</span>(MMSCORE <span class="sc">~</span> ., <span class="at">data =</span> tempData)</span>
+<span id="cb177-18"><a href="principal-component-analysis.html#cb177-18" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm.AD)</span>
+<span id="cb177-19"><a href="principal-component-analysis.html#cb177-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb177-20"><a href="principal-component-analysis.html#cb177-20" aria-hidden="true" tabindex="-1"></a>y_hat <span class="ot">&lt;-</span> <span class="fu">predict</span>(lm.AD, testX)</span>
+<span id="cb177-21"><a href="principal-component-analysis.html#cb177-21" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(y_hat, testY)</span>
+<span id="cb177-22"><a href="principal-component-analysis.html#cb177-22" aria-hidden="true" tabindex="-1"></a>mse <span class="ot">&lt;-</span> <span class="fu">mean</span>((y_hat <span class="sc">-</span> testY)<span class="sc">^</span><span class="dv">2</span>) <span class="co"># The mean squared error (mse)</span></span>
+<span id="cb177-23"><a href="principal-component-analysis.html#cb177-23" aria-hidden="true" tabindex="-1"></a>mse</span></code></pre></div>
+<p></p>
+<p></p>
+<p>
+<span class="marginnote shownote">
+<!--
+<div class="figure">--><span id="fig:f8-15"></span>
+<img src="graphics/8_BC_varimp2.png" alt="Loading of the $2^{nd}$ PC, i.e., coefficients are ranked in terms of their absolute magnitude and only the top 20 are shown" width="250px"  />
+<!--
+<p class="caption marginnote">-->Figure 153: Loading of the <span class="math inline">\(2^{nd}\)</span> PC, i.e., coefficients are ranked in terms of their absolute magnitude and only the top 20 are shown<!--</p>-->
+<!--</div>--></span>
+</p>
+<p></p>
+<p>The result is shown below.</p>
+<p></p>
+<div class="sourceCode" id="cb178"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb178-1"><a href="principal-component-analysis.html#cb178-1" aria-hidden="true" tabindex="-1"></a><span class="do">##</span></span>
+<span id="cb178-2"><a href="principal-component-analysis.html#cb178-2" aria-hidden="true" tabindex="-1"></a><span class="do">## Call:</span></span>
+<span id="cb178-3"><a href="principal-component-analysis.html#cb178-3" aria-hidden="true" tabindex="-1"></a><span class="do">## lm(formula = AGE ~ ., data = tempData)</span></span>
+<span id="cb178-4"><a href="principal-component-analysis.html#cb178-4" aria-hidden="true" tabindex="-1"></a><span class="do">##</span></span>
+<span id="cb178-5"><a href="principal-component-analysis.html#cb178-5" aria-hidden="true" tabindex="-1"></a><span class="do">## Residuals:</span></span>
+<span id="cb178-6"><a href="principal-component-analysis.html#cb178-6" aria-hidden="true" tabindex="-1"></a><span class="do">##      Min       1Q   Median       3Q      Max</span></span>
+<span id="cb178-7"><a href="principal-component-analysis.html#cb178-7" aria-hidden="true" tabindex="-1"></a><span class="do">## -17.3377  -2.5627   0.0518   2.6820  11.1772</span></span>
+<span id="cb178-8"><a href="principal-component-analysis.html#cb178-8" aria-hidden="true" tabindex="-1"></a><span class="do">##</span></span>
+<span id="cb178-9"><a href="principal-component-analysis.html#cb178-9" aria-hidden="true" tabindex="-1"></a><span class="do">## Coefficients:</span></span>
+<span id="cb178-10"><a href="principal-component-analysis.html#cb178-10" aria-hidden="true" tabindex="-1"></a><span class="do">##             Estimate Std. Error t value Pr(&gt;|t|)</span></span>
+<span id="cb178-11"><a href="principal-component-analysis.html#cb178-11" aria-hidden="true" tabindex="-1"></a><span class="do">## (Intercept) 73.68767    0.59939 122.938  &lt; 2e-16 ***</span></span>
+<span id="cb178-12"><a href="principal-component-analysis.html#cb178-12" aria-hidden="true" tabindex="-1"></a><span class="do">## PC1          0.04011    0.08275   0.485 0.629580</span></span>
+<span id="cb178-13"><a href="principal-component-analysis.html#cb178-13" aria-hidden="true" tabindex="-1"></a><span class="do">## PC2         -0.31556    0.09490  -3.325 0.001488 **</span></span>
+<span id="cb178-14"><a href="principal-component-analysis.html#cb178-14" aria-hidden="true" tabindex="-1"></a><span class="do">## PC3          0.50022    0.13510   3.702 0.000456 ***</span></span>
+<span id="cb178-15"><a href="principal-component-analysis.html#cb178-15" aria-hidden="true" tabindex="-1"></a><span class="do">## PC4          0.14812    0.17462   0.848 0.399578</span></span>
+<span id="cb178-16"><a href="principal-component-analysis.html#cb178-16" aria-hidden="true" tabindex="-1"></a><span class="do">## PC5          0.47954    0.19404   2.471 0.016219 *</span></span>
+<span id="cb178-17"><a href="principal-component-analysis.html#cb178-17" aria-hidden="true" tabindex="-1"></a><span class="do">## PC6         -0.29760    0.20134  -1.478 0.144444</span></span>
+<span id="cb178-18"><a href="principal-component-analysis.html#cb178-18" aria-hidden="true" tabindex="-1"></a><span class="do">## PC7          0.10160    0.21388   0.475 0.636440</span></span>
+<span id="cb178-19"><a href="principal-component-analysis.html#cb178-19" aria-hidden="true" tabindex="-1"></a><span class="do">## PC8         -0.25015    0.22527  -1.110 0.271100</span></span>
+<span id="cb178-20"><a href="principal-component-analysis.html#cb178-20" aria-hidden="true" tabindex="-1"></a><span class="do">## PC9         -0.02837    0.22932  -0.124 0.901949</span></span>
+<span id="cb178-21"><a href="principal-component-analysis.html#cb178-21" aria-hidden="true" tabindex="-1"></a><span class="do">## PC10         0.16326    0.23282   0.701 0.485794</span></span>
+<span id="cb178-22"><a href="principal-component-analysis.html#cb178-22" aria-hidden="true" tabindex="-1"></a><span class="do">## ---</span></span>
+<span id="cb178-23"><a href="principal-component-analysis.html#cb178-23" aria-hidden="true" tabindex="-1"></a><span class="do">## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span></span>
+<span id="cb178-24"><a href="principal-component-analysis.html#cb178-24" aria-hidden="true" tabindex="-1"></a><span class="do">##</span></span>
+<span id="cb178-25"><a href="principal-component-analysis.html#cb178-25" aria-hidden="true" tabindex="-1"></a><span class="do">## Residual standard error: 5.121 on 62 degrees of freedom</span></span>
+<span id="cb178-26"><a href="principal-component-analysis.html#cb178-26" aria-hidden="true" tabindex="-1"></a><span class="do">## Multiple R-squared:  0.3672, Adjusted R-squared:  0.2651</span></span>
+<span id="cb178-27"><a href="principal-component-analysis.html#cb178-27" aria-hidden="true" tabindex="-1"></a><span class="do">## F-statistic: 3.598 on 10 and 62 DF,  p-value: 0.0008235</span></span></code></pre></div>
+<p></p>
+<p>It is not uncommon to see that the <span class="math inline">\(1^{st}\)</span> PC is insignificant in a prediction model. The <span class="math inline">\(1^{st}\)</span> PC is the largest <em>force</em> or <em>variation source</em> in <span class="math inline">\(\boldsymbol{X}\)</span> by definition, but not necessarily the one that correlates with any outcome variable <span class="math inline">\(y\)</span> with the strongest correlation.</p>
+<p>On the other hand, the <em>R-squared</em> of this model is <span class="math inline">\(0.3672\)</span>, and the <em>p-value</em> is <span class="math inline">\(0.0008235\)</span>. Overall, the data transformation by PCA yielded an effective linear regression model.</p>
+<p><em>Beyond the 6-Step R Pipeline.</em> PCA is a popular tool for <em>EDA</em>. For example, we can visualize the distribution of the data points in the new space spanned by a few selected PCs<label for="tufte-sn-216" class="margin-toggle sidenote-number">216</label><input type="checkbox" id="tufte-sn-216" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">216</span> It may reveal some structures of the dataset. For example, for a classification problem, it is hoped that in the space spanned by the selected PCs the data points from different classes would cluster around different centers.</span>. We use the following R script to draw a visualization figure.</p>
+<p></p>
+<div class="sourceCode" id="cb179"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb179-1"><a href="principal-component-analysis.html#cb179-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Projection of data points in the new space defined by </span></span>
+<span id="cb179-2"><a href="principal-component-analysis.html#cb179-2" aria-hidden="true" tabindex="-1"></a><span class="co"># the first two PCs</span></span>
+<span id="cb179-3"><a href="principal-component-analysis.html#cb179-3" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_pca_ind</span>(pca.AD, <span class="at">label=</span><span class="st">&quot;none&quot;</span>, </span>
+<span id="cb179-4"><a href="principal-component-analysis.html#cb179-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">habillage=</span><span class="fu">as.factor</span>(AD[train.ix,]<span class="sc">$</span>DX_bl),</span>
+<span id="cb179-5"><a href="principal-component-analysis.html#cb179-5" aria-hidden="true" tabindex="-1"></a>             <span class="at">addEllipses=</span><span class="cn">TRUE</span>, <span class="at">ellipse.level=</span><span class="fl">0.95</span>)</span></code></pre></div>
+<p></p>
+<p>The result is shown in Figure <a href="principal-component-analysis.html#fig:f8-17">154</a>. Two clusters are identified, which overlap significantly. One group is the <em>LMCI</em> (i.e., mild cognitive impairment) and the other one is <em>NC</em> (i.e., normal aging). The result is consistent with the fact that the clinical difference between the two groups is not as significant as <em>NC</em> versus <em>Diseased</em>.</p>
+<p></p>
+<div class="figure"><span id="fig:f8-17"></span>
+<p class="caption marginnote shownote">
+Figure 154: Scatterplot of the subjects in the space defined by the <span class="math inline">\(1^{st}\)</span> and <span class="math inline">\(2^{nd}\)</span> PCs
+</p>
+<img src="graphics/8_17.png" alt="Scatterplot of the subjects in the space defined by the $1^{st}$ and $2^{nd}$ PCs" width="100%"  />
+</div>
+<p></p>
+</div>
+</div>
+<p style="text-align: center;">
+<a href="lasso.html"><button class="btn btn-default">Previous</button></a>
+<a href="remarks-6.html"><button class="btn btn-default">Next</button></a>
+</p>
+</div>
+</div>
+
+<script src="js/jquery.js"></script>
+<script src="js/tablesaw-stackonly.js"></script>
+<script src="js/nudge.min.js"></script>
+
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+</body>
+</html>

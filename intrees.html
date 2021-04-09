@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta property="og:title" content="inTrees | Data Analytics" />
+<meta property="og:type" content="book" />
+
+
+
+
+
+<meta name="author" content="Shuai Huang &amp; Houtao Deng" />
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  TeX: { equationNumbers: { autoNumber: "AMS" } }
+});
+</script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<meta name="description" content="inTrees | Data Analytics">
+
+<title>inTrees | Data Analytics</title>
+
+<script src="libs/header-attrs-2.7/header-attrs.js"></script>
+<link href="libs/tufte-css-2015.12.29/tufte.css" rel="stylesheet" />
+<link href="libs/tufte-css-2015.12.29/envisioned.css" rel="stylesheet" />
+<script src="https://use.typekit.net/ajy6rnl.js"></script>
+<script>try{Typekit.load({ async: true });}catch(e){}</script>
+<!-- <link rel="stylesheet" href="css/normalize.css"> -->
+<!-- <link rel="stylesheet" href="css/envisioned.css"/> -->
+<link rel="stylesheet" href="css/tablesaw-stackonly.css"/>
+<link rel="stylesheet" href="css/nudge.css"/>
+<link rel="stylesheet" href="css/sourcesans.css"/>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+
+
+</head>
+
+<body>
+
+<!--bookdown:toc:start-->
+
+<nav class="pushy pushy-left" id="TOC">
+<ul>
+<li><a href="#preface">Preface</a></li>
+<li><a href="#acknowledgments">Acknowledgments</a></li>
+<li><a href="#chapter-1.-introduction">Chapter 1. Introduction</a></li>
+<li><a href="#chapter-2.-abstraction-regression-tree-models">Chapter 2. Abstraction: Regression &amp; Tree Models</a></li>
+<li><a href="#chapter-3.-recognition-logistic-regression-ranking">Chapter 3. Recognition: Logistic Regression &amp; Ranking</a></li>
+<li><a href="#chapter-4.-resonance-bootstrap-random-forests">Chapter 4. Resonance: Bootstrap &amp; Random Forests</a></li>
+<li><a href="#chapter-5.-learning-i-cross-validation-oob">Chapter 5. Learning (I): Cross-validation &amp; OOB</a></li>
+<li><a href="#chapter-6.-diagnosis-residuals-heterogeneity">Chapter 6. Diagnosis: Residuals &amp; Heterogeneity</a></li>
+<li><a href="#chapter-7.-learning-ii-svm-ensemble-learning">Chapter 7. Learning (II): SVM &amp; Ensemble Learning</a></li>
+<li><a href="#chapter-8.-scalability-lasso-pca">Chapter 8. Scalability: LASSO &amp; PCA</a></li>
+<li><a href="#chapter-9.-pragmatism-experience-experimental">Chapter 9. Pragmatism: Experience &amp; Experimental</a></li>
+<li><a href="#chapter-10.-synthesis-architecture-pipeline">Chapter 10. Synthesis: Architecture &amp; Pipeline</a></li>
+<li><a href="#conclusion">Conclusion</a></li>
+<li><a href="#appendix-a-brief-review-of-background-knowledge">Appendix: A Brief Review of Background Knowledge</a></li>
+</ul>
+</nav>
+
+<!--bookdown:toc:end-->
+
+<div class="menu-btn"><h3>☰ Menu</h3></div>
+
+<div class="site-overlay"></div>
+
+
+<div class="row">
+<div class="col-sm-12">
+
+<nav class="pushy pushy-left" id="TOC">
+<ul>
+<li><a href="index.html#preface">Preface</a></li>
+<li><a href="acknowledgments.html#acknowledgments">Acknowledgments</a></li>
+<li><a href="chapter-1-introduction.html#chapter-1.-introduction">Chapter 1. Introduction</a></li>
+<li><a href="chapter-2-abstraction-regression-tree-models.html#chapter-2.-abstraction-regression-tree-models">Chapter 2. Abstraction: Regression &amp; Tree Models</a></li>
+<li><a href="chapter-3-recognition-logistic-regression-ranking.html#chapter-3.-recognition-logistic-regression-ranking">Chapter 3. Recognition: Logistic Regression &amp; Ranking</a></li>
+<li><a href="chapter-4-resonance-bootstrap-random-forests.html#chapter-4.-resonance-bootstrap-random-forests">Chapter 4. Resonance: Bootstrap &amp; Random Forests</a></li>
+<li><a href="chapter-5-learning-i-cross-validation-oob.html#chapter-5.-learning-i-cross-validation-oob">Chapter 5. Learning (I): Cross-validation &amp; OOB</a></li>
+<li><a href="chapter-6-diagnosis-residuals-heterogeneity.html#chapter-6.-diagnosis-residuals-heterogeneity">Chapter 6. Diagnosis: Residuals &amp; Heterogeneity</a></li>
+<li><a href="chapter-7-learning-ii-svm-ensemble-learning.html#chapter-7.-learning-ii-svm-ensemble-learning">Chapter 7. Learning (II): SVM &amp; Ensemble Learning</a></li>
+<li><a href="chapter-8-scalability-lasso-pca.html#chapter-8.-scalability-lasso-pca">Chapter 8. Scalability: LASSO &amp; PCA</a></li>
+<li><a href="chapter-9-pragmatism-experience-experimental.html#chapter-9.-pragmatism-experience-experimental">Chapter 9. Pragmatism: Experience &amp; Experimental</a></li>
+<li><a href="chapter-10-synthesis-architecture-pipeline.html#chapter-10.-synthesis-architecture-pipeline">Chapter 10. Synthesis: Architecture &amp; Pipeline</a></li>
+<li><a href="conclusion.html#conclusion">Conclusion</a></li>
+<li><a href="appendix-a-brief-review-of-background-knowledge.html#appendix-a-brief-review-of-background-knowledge">Appendix: A Brief Review of Background Knowledge</a></li>
+</ul>
+</nav>
+
+</div>
+</div>
+<div class="row">
+<div class="col-sm-12">
+<div id="intrees" class="section level2 unnumbered">
+<h2>inTrees</h2>
+<div id="rationale-and-formulation-17" class="section level3 unnumbered">
+<h3>Rationale and formulation</h3>
+<p><em>What is a variable?</em> Given an Excel file, we call the column that is titled as the name <em>Age</em> as a variable. And in fact, as a convention, in an Excel file or a data table in some common formats, we usually do not doubt that each column implies a variable. These “variables,” or entities, may have definitions in the domain of common sense (i.e., where we take things for granted), but they may not be the best candidates to characterize the system under study. Recall that in <strong>Chapter 2</strong> we mentioned that the goal of modeling begins with abstraction—“identification of a few main entities from the problem,” and continues to “characterize their relationships.” If we comfortably play the data using the variables that have been defined without examination, we lose sight of a large territory of data analytics—identification of a few main entities from the problem that can sufficiently characterize the problem.</p>
+<p>Now let’s switch to the domain of linear regression. A variable is an abstract entity in the equation of the linear regression model<label for="tufte-sn-257" class="margin-toggle sidenote-number">257</label><input type="checkbox" id="tufte-sn-257" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">257</span> I.e., denoted as <span class="math inline">\(x_i\)</span>.</span>, multiplied by a regression coefficient<label for="tufte-sn-258" class="margin-toggle sidenote-number">258</label><input type="checkbox" id="tufte-sn-258" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">258</span> I.e., denoted as <span class="math inline">\(\beta_i\)</span>.</span>. It stands in the equation in parallel with other variables, which jointly determines an outcome variable. This form implies that the difference between the variables are only numeric, characterized by the differences in signs and magnitudes (i.e., encoded in the regression coefficients), but not in semantics. Now comes a reflection: in order for a linear regression model to work out in an application, shouldn’t we ensure that the variables <em>could be</em> lined up in this manner of apposition<label for="tufte-sn-259" class="margin-toggle sidenote-number">259</label><input type="checkbox" id="tufte-sn-259" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">259</span> <em>Apposition</em>—with a little abuse of the term—the grammar used in the linear regression to line up the variables in a parallel and additive manner.</span>?</p>
+<p><span class="math display" id="eq:10-apposition">\[\begin{equation}
+        y = \ldots + \underbrace{\beta_1 x_1}_{\text{A}} + \underbrace{\beta_2 x_2}_{\text{p}} + \underbrace{\beta_3 x_3}_{\text{p}} + \underbrace{\beta_4 x_4}_{\text{o}} + \underbrace{\beta_5 x_5}_{\text{s}} +
+        \underbrace{\beta_6 x_6}_{\text{i}} +
+        \underbrace{\beta_7 x_7}_{\text{t}} + \underbrace{\beta_8 x_8}_{\text{i}} + \underbrace{\beta_9 x_9}_{\text{o}} + \underbrace{\beta_{10} x_{10}}_{\text{n}} + \ldots
+\tag{102}
+\end{equation}\]</span></p>
+<p>In other words, if the variables in the domain of common sense are not semantic equals, the application of linear regression on them is questionable. For example, it is probably common sense to line up a few genetic factors in Eq. <a href="intrees.html#eq:10-apposition">(102)</a>, but could we also put <em>Age</em> as another variable that stands among the genetic factors in a line? In many contexts, we need to work out a better definition of the variable, i.e., it is not uncommon to define two new variables such as <em><span class="math inline">\(\text{Age} \leq 65\)</span></em> and <em><span class="math inline">\(\text{Age} &gt; 65\)</span></em> instead of using the variable <em>Age</em> directly. Sometimes we use the variable <em>Age</em> in a model because it is named as <em>Age</em>. But what is <em>Age</em>? When we put a variable in a model, it is destined to be <em>re</em>defined, either before the analysis, or after, or along the way.</p>
+<p>This effort to redefine variables could be automated by tree models. Recall that the tree models use rule-based semantics. Rules like <em><span class="math inline">\(\text{Age} \leq 65\)</span></em> and <em><span class="math inline">\(\text{Age} &gt; 65\)</span></em> sometimes yield statistically significant <em>and</em> semantically meaningful entities, perfect candidates for variable redefinition purposes. And a tree is essentially a collection of multiple rules. If we could run tree models on a dataset first, we could extract those rules, and each rule is a new variable.</p>
+<p>This is the starting point of <code>inTrees</code>. It uses the random forest to collect potentially useful rules<label for="tufte-sn-260" class="margin-toggle sidenote-number">260</label><input type="checkbox" id="tufte-sn-260" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">260</span> This step automates the variable redefinition process.</span>, then puts the rules as the variables into a model<label for="tufte-sn-261" class="margin-toggle sidenote-number">261</label><input type="checkbox" id="tufte-sn-261" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">261</span> I.e., a classification/regression model. This step automates the integration of the variable redefinition with modeling.</span> and employs a computational process to select the final variables. In this way, we have the best parts of both methods: the rules capture the variable-level patterns in the data, and the model (i.e., a regression model) captures the synthetic effects of these patterns in predicting an outcome variable. Note that <code>inTrees</code> is not the first of its kind. It follows a few pioneers such as the <code>rulefit</code> and modifies existing efforts according to some in-field experiences.</p>
+</div>
+<div id="theory-and-method-11" class="section level3 unnumbered">
+<h3>Theory and method</h3>
+<p>The <code>inTrees</code> uses a framework that is shown in Figure <a href="intrees.html#fig:f10-inTrees">186</a>. In the following text, we introduce each functionality of the <code>inTrees</code> framework.</p>
+<p></p>
+<div class="figure"><span id="fig:f10-inTrees"></span>
+<p class="caption marginnote shownote">
+Figure 186: The pipeline of <code>inTrees</code>
+</p>
+<img src="graphics/10_intrees.png" alt="The pipeline of `inTrees`" width="100%"  />
+</div>
+<p></p>
+<p>Consider the dataset that has <span class="math inline">\(2\)</span> predictors and <span class="math inline">\(7\)</span> instances as shown in Table <a href="intrees.html#tab:t10-1">54</a>.</p>
+<p></p>
+<p><!--
+<caption>--><span class="marginnote shownote"><span id="tab:t10-1">Table 54: </span>Example of a dataset with <span class="math inline">\(7\)</span> instances</span><!--</caption>--></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">ID</th>
+<th align="left"><span class="math inline">\(x_1\)</span></th>
+<th align="left"><span class="math inline">\(x_2\)</span></th>
+<th align="left">Class</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><span class="math inline">\(1\)</span></td>
+<td align="left"><span class="math inline">\(1\)</span></td>
+<td align="left"><span class="math inline">\(1\)</span></td>
+<td align="left"><span class="math inline">\(C0\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(2\)</span></td>
+<td align="left"><span class="math inline">\(1\)</span></td>
+<td align="left"><span class="math inline">\(0\)</span></td>
+<td align="left"><span class="math inline">\(C1\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(3\)</span></td>
+<td align="left"><span class="math inline">\(0\)</span></td>
+<td align="left"><span class="math inline">\(1\)</span></td>
+<td align="left"><span class="math inline">\(C1\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(4\)</span></td>
+<td align="left"><span class="math inline">\(0\)</span></td>
+<td align="left"><span class="math inline">\(0\)</span></td>
+<td align="left"><span class="math inline">\(C1\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(5\)</span></td>
+<td align="left"><span class="math inline">\(0\)</span></td>
+<td align="left"><span class="math inline">\(0\)</span></td>
+<td align="left"><span class="math inline">\(C0\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(6\)</span></td>
+<td align="left"><span class="math inline">\(0\)</span></td>
+<td align="left"><span class="math inline">\(0\)</span></td>
+<td align="left"><span class="math inline">\(C0\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(7\)</span></td>
+<td align="left"><span class="math inline">\(0\)</span></td>
+<td align="left"><span class="math inline">\(0\)</span></td>
+<td align="left"><span class="math inline">\(C0\)</span></td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<!-- % It can be seen that the tree was built based on the resampled dataset that includes the instances $\{1,1,2,2,7,7,7\}$. In other words, in this resampled dataset, the instance (ID: $1$) was resampled twice, the instance (ID: $2$) was resampled twice, and the instance (ID: $7$) was resampled three times. In the tree, the root and inner nodes are labeled with the data point IDs and leaf nodes are labeled with the data point IDs and the decisions (i.e., which class to predict).   -->
+<p><em>Extract rules.</em> The <code>inTrees</code> uses a tree emsemble learning method to grow many trees. A decision tree can be dissembled into a set of rules. For example, suppose that a random forest model has been built on the dataset shown in Table <a href="intrees.html#tab:t10-1">54</a>. One tree of this random forest model is shown in Figure <a href="intrees.html#fig:f10-3">187</a>. Three rules (each rule corresponds to a leaf node) are extracted and shown in Table <a href="intrees.html#tab:t10-2">55</a>.</p>
+<p></p>
+<p>
+<span class="marginnote shownote">
+<!--
+<div class="figure">--><span id="fig:f10-3"></span>
+<img src="graphics/10_3.png" alt="Example of a decision tree; leaf nodes (a.k.a., decision nodes) are shadowed in gray." width="250px"  />
+<!--
+<p class="caption marginnote">-->Figure 187: Example of a decision tree; leaf nodes (a.k.a., decision nodes) are shadowed in gray.<!--</p>-->
+<!--</div>--></span>
+</p>
+<p></p>
+<!-- % \[ -->
+<!-- % \begin{array}{l}{\text{Rule 1: } \{ X_1=0\to Class=C_1\}}; \\ { \text{Rule 2: } \{ X_1 \neq 0,X_2=0\to Class=C_1\}}; \\ { \text{Rule 3: } \{X_1 \neq 0,X_2 \neq 0 \to Class=C_0\}.}\end{array} -->
+<!-- % \] -->
+<p>Each rule is evaluated by three criteria: the <strong>length</strong> of a rule that is defined as the number of variables in the rule; the <strong>frequency</strong> of a rule that is the proportion of data points in the dataset that meet the condition of the rule, and the <strong>error rate</strong> of a rule. For classification problems, the error rate of a rule is the number of data points incorrectly identified by the rule divided by the number of data points that meet the condition of the rule.</p>
+<p>For regression problems, the error rate of a rule is the <em>mean squared error (MSE)</em> , that is defined as</p>
+<p><span class="math display">\[MSE = \frac{1}{N}\sum_{i=1}^N \left(y_i - \bar{y}\right)^2,\]</span></p>
+<p>where <span class="math inline">\(N\)</span> is the number of data points in the leaf node that corresponds to the rule, <span class="math inline">\(y_i\)</span> is the value of the outcome variable of the <span class="math inline">\(i^{th}\)</span> data point, and <span class="math inline">\(\bar y\)</span> is the average of the outcome variable (i.e., as the prediction at the leaf node).</p>
+<p>Based on these three criteria, the evaluation of the three rules is shown in Table <a href="intrees.html#tab:t10-2">55</a>.<label for="tufte-sn-262" class="margin-toggle sidenote-number">262</label><input type="checkbox" id="tufte-sn-262" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">262</span> Apply each rule on the data points in Table <a href="intrees.html#tab:t10-1">54</a>.</span></p>
+<p></p>
+<p><!--
+<caption>--><span class="marginnote shownote"><span id="tab:t10-2">Table 55: </span>Evaluation of the three rules extracted from the tree in Figure <a href="intrees.html#fig:f10-3">187</a></span><!--</caption>--></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">ID</th>
+<th align="left">Rule</th>
+<th align="left">Length</th>
+<th align="left">Frequency</th>
+<th align="left">Error</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><span class="math inline">\(1\)</span></td>
+<td align="left"><span class="math inline">\(\{x_1 = 0 \to Class = C_0\}\)</span></td>
+<td align="left"><span class="math inline">\(1\)</span></td>
+<td align="left"><span class="math inline">\(5/7\)</span></td>
+<td align="left"><span class="math inline">\(2/5\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(2\)</span></td>
+<td align="left"><span class="math inline">\(\{x_1 \neq 0, x_2 = 0 \to Class=C_1\}\)</span></td>
+<td align="left"><span class="math inline">\(2\)</span></td>
+<td align="left"><span class="math inline">\(1/7\)</span></td>
+<td align="left"><span class="math inline">\(0/1\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(3\)</span></td>
+<td align="left"><span class="math inline">\(\{x_1 \neq 0, x_2 \neq 0 \to Class=C_0\}\)</span></td>
+<td align="left"><span class="math inline">\(2\)</span></td>
+<td align="left"><span class="math inline">\(1/7\)</span></td>
+<td align="left"><span class="math inline">\(0/1\)</span></td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<p><em>Prune rules.</em> A lengthy rule, i.e., a rule with many variables, is hard to interpret. For example, consider a rule</p>
+<p><span class="math display">\[
+\text{Rule: } \{ \text{Age} \leq 65, \text{Gene A } = \text{Type 1}, \text{Gene B } = \text{Type 3} \to Class= \text{No risk}\}.
+\]</span></p>
+<p>It is unknown if the three variables are equally important in making the prediction. And, because the way the random forests grow the trees, it is possible that some variables in a rule are not significant at all<label for="tufte-sn-263" class="margin-toggle sidenote-number">263</label><input type="checkbox" id="tufte-sn-263" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">263</span> I.e., these variables are selected because the random forest model purposely <em>randomizes</em> the learning process.</span>. Therefore, it is beneficial to prune the rules and remove irrelevant variables from the rules.</p>
+<p>Take Rule <span class="math inline">\(2\)</span> <span class="math inline">\(\{x_1 \neq 0, x_2=0\to Class=C_1\}\)</span> for example. The error rate for this rule is <span class="math inline">\(0\)</span>.<label for="tufte-sn-264" class="margin-toggle sidenote-number">264</label><input type="checkbox" id="tufte-sn-264" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">264</span> See Table <a href="intrees.html#tab:t10-2">55</a>.</span> Now remove <span class="math inline">\(x_1 \neq 0\)</span> from the rule, and the new rule becomes <span class="math display">\[\{x_2=0\to Class=C_1\},\]</span> which has an error of <span class="math inline">\(3/5\)</span>.<label for="tufte-sn-265" class="margin-toggle sidenote-number">265</label><input type="checkbox" id="tufte-sn-265" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">265</span> Use Table <a href="intrees.html#tab:t10-1">54</a>.</span> Therefore, the error rate increases by <span class="math inline">\(3/5\)</span>. This increase of error rate is named <em>decay</em> in the terminology of <code>inTrees</code>. A threshold is set by the user, i.e., here, if the threshold is set to be <span class="math inline">\(0.05\)</span>, we should not remove <span class="math inline">\(x_1\)</span> from Rule <span class="math inline">\(2\)</span> since <span class="math inline">\(3/5&gt;0.05\)</span>.</p>
+<p>Now let’s remove <span class="math inline">\(x_2=0\)</span>. The resulting rule is <span class="math display">\[ \{x_1 \neq 0\to Class=C_1\}, \]</span> which has an error of <span class="math inline">\(1/2\)</span>. Therefore, <span class="math inline">\(x_2\)</span> should not be pruned either.</p>
+<p><em>Rules are variables.</em> Each rule leads to a redefined variable. For example, consider the dataset in Table <a href="intrees.html#tab:t10-1">54</a>. We name the three rules shown in Table <a href="intrees.html#tab:t10-2">55</a> as variables <span class="math inline">\(z_1\)</span>, <span class="math inline">\(z_2\)</span>, and <span class="math inline">\(z_3\)</span>, respectively. We only use the <strong>condition of a rule</strong> to define the variable. For instance, the condition of a rule is illustrated below</p>
+<p><span class="math display">\[ \{\underbrace{x_1 \neq 0}_{condition}\to \underbrace{Class=C_1}_{outcome}\}. \]</span></p>
+<p>Consider <span class="math inline">\(z_1\)</span> first<label for="tufte-sn-266" class="margin-toggle sidenote-number">266</label><input type="checkbox" id="tufte-sn-266" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">266</span> I.e., <span class="math inline">\(\{x_1=0\}\)</span>.</span>. The data points in Table <a href="intrees.html#tab:t10-1">54</a> that meet the condition <span class="math inline">\(\{x_1=0\}\)</span> include <span class="math inline">\(\text{ID} = \{3,4,5,6,7\}\)</span>. Thus, the values of <span class="math inline">\(z_1\)</span> are <span class="math inline">\(\{0,0,1,1,1,1,1\}\)</span>. For <span class="math inline">\(z_2\)</span>,<label for="tufte-sn-267" class="margin-toggle sidenote-number">267</label><input type="checkbox" id="tufte-sn-267" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">267</span> I.e., <span class="math inline">\(\{x_1 \neq 0,x_2=0\}\)</span>.</span> only data point <span class="math inline">\(\text{ID} = \{2\}\)</span> meets the condition, and therefore, the values of <span class="math inline">\(z_2\)</span> are <span class="math inline">\(\{0,1,0,0,0,0,0\}\)</span>. Similarly, the values of <span class="math inline">\(z_3\)</span> are <span class="math inline">\(\{1,0,0,0,0,0,0\}\)</span>.<label for="tufte-sn-268" class="margin-toggle sidenote-number">268</label><input type="checkbox" id="tufte-sn-268" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">268</span> I.e., <span class="math inline">\(\{x_1 \neq 0, x_2 \neq 0\}\)</span>.</span></p>
+<p>The new dataset is shown in Table <a href="intrees.html#tab:t10-5">56</a>.</p>
+<p></p>
+<p><!--
+<caption>--><span class="marginnote shownote"><span id="tab:t10-5">Table 56: </span>The <em>binarized</em> dataset of Table <a href="intrees.html#tab:t10-1">54</a> by the rules in Table <a href="intrees.html#tab:t10-2">55</a></span><!--</caption>--></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">ID</th>
+<th align="left"><span class="math inline">\(z_1\)</span></th>
+<th align="left"><span class="math inline">\(z_2\)</span></th>
+<th align="left"><span class="math inline">\(z_3\)</span></th>
+<th align="left">Class</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><span class="math inline">\(1\)</span></td>
+<td align="left"><span class="math inline">\(0\)</span></td>
+<td align="left"><span class="math inline">\(0\)</span></td>
+<td align="left"><span class="math inline">\(1\)</span></td>
+<td align="left"><span class="math inline">\(C_0\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(2\)</span></td>
+<td align="left"><span class="math inline">\(0\)</span></td>
+<td align="left"><span class="math inline">\(1\)</span></td>
+<td align="left"><span class="math inline">\(0\)</span></td>
+<td align="left"><span class="math inline">\(C_1\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(3\)</span></td>
+<td align="left"><span class="math inline">\(1\)</span></td>
+<td align="left"><span class="math inline">\(0\)</span></td>
+<td align="left"><span class="math inline">\(0\)</span></td>
+<td align="left"><span class="math inline">\(C_1\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(4\)</span></td>
+<td align="left"><span class="math inline">\(1\)</span></td>
+<td align="left"><span class="math inline">\(0\)</span></td>
+<td align="left"><span class="math inline">\(0\)</span></td>
+<td align="left"><span class="math inline">\(C_1\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(5\)</span></td>
+<td align="left"><span class="math inline">\(1\)</span></td>
+<td align="left"><span class="math inline">\(0\)</span></td>
+<td align="left"><span class="math inline">\(0\)</span></td>
+<td align="left"><span class="math inline">\(C_0\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(6\)</span></td>
+<td align="left"><span class="math inline">\(1\)</span></td>
+<td align="left"><span class="math inline">\(0\)</span></td>
+<td align="left"><span class="math inline">\(0\)</span></td>
+<td align="left"><span class="math inline">\(C_0\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(7\)</span></td>
+<td align="left"><span class="math inline">\(1\)</span></td>
+<td align="left"><span class="math inline">\(0\)</span></td>
+<td align="left"><span class="math inline">\(0\)</span></td>
+<td align="left"><span class="math inline">\(C_0\)</span></td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<p><em>Select rules.</em> A feature selection method could be applied on the new dataset to select the significant variables. Methods such as the <span class="math inline">\(L_1\)</span> regularized logistics regression (i.e., the equivalent of LASSO for logistic regression model) and regularized random forests are used in the <code>inTrees</code>.</p>
+<p>Note that most existing methods don’t concern the length of the rules. But, given two rules with the same predictive power, the rule with a shorter length should be preferred<label for="tufte-sn-269" class="margin-toggle sidenote-number">269</label><input type="checkbox" id="tufte-sn-269" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">269</span> A shorter rule means a simpler model, better interpretability, etc.</span>. In <code>inTrees</code>, the <strong>Guided Regularized Random Forest</strong> (<strong>GRRF</strong>) is also an option for feature selection: the GRRF can assign a weight to each variable, so that when two variables have similar predictive power, the variable with higher weight is more likely to be selected. In our case, we could set higher weight<label for="tufte-sn-270" class="margin-toggle sidenote-number">270</label><input type="checkbox" id="tufte-sn-270" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">270</span> What is the optimal weight? We could use cross-validation to decide.</span> for shorter rules in GRRF.</p>
+<p><em>Rule ensemble.</em> As the rules are taken as new variables, a new dataset such as the one shown in Table <a href="intrees.html#tab:t10-5">56</a> is created. So theoretically, any model could be applied on the new dataset to build a prediction model. There are preferences in different packages. For example, in <code>RuleFit</code>, a linear regression model is used that takes the rules as predictors. In <code>inTrees</code>, a simple rule ensemble method summarizes the rules into an <em>ordered rule set</em> for prediction.</p>
+<p>It takes a few iterations to develop the ordered rule set. First, we create a default rule, denoted as <span class="math inline">\(r_0\)</span>, that has a null <em>condition</em> and classifies all the data points to be the most frequent class (if it is a regression model, then <span class="math inline">\(r_0\)</span> predicts all the data points to be the population average).</p>
+<p>Denote the ordered rule set as <em>R</em>, which is set to be empty at the beginning. Then, the algorithm searches through the available rules and identifies the best rule and adds it into <em>R</em>. The best rule is defined as the rule with the minimum error evaluated by the training data. If there are ties, the rule with higher frequency and smaller length is selected. Then, the data points that meet the condition of the best rule are removed, and the default rule <span class="math inline">\(r_0\)</span> is re-calculated with the data points left. The algorithm iterates to search for the next best rule and update <span class="math inline">\(r_0\)</span> after each iteration. This iterative process continues until no data point is left in the training dataset, or the default rule <span class="math inline">\(r_0\)</span> beats all other available rules that have not been added into the rule ensemble set <span class="math inline">\(R\)</span>. Note that, the selected rules in <em>R</em> are ordered according to the sequential order of their inclusion.</p>
+<p>Consider the dataset shown in Table <a href="intrees.html#tab:t10-1">54</a> and the rules shown in Table <a href="intrees.html#tab:t10-2">55</a>. The error rate and frequency of each rule is shown in Table <a href="intrees.html#tab:t10-9">57</a>.</p>
+<p></p>
+<p><!--
+<caption>--><span class="marginnote shownote"><span id="tab:t10-9">Table 57: </span>Error rates and frequencies of the rules in Table <a href="intrees.html#tab:t10-2">55</a> using the dataset in Table <a href="intrees.html#tab:t10-1">54</a></span><!--</caption>--></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">ID</th>
+<th align="left">Rule</th>
+<th align="left">Error</th>
+<th align="left">Frequency</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><span class="math inline">\(0\)</span></td>
+<td align="left"><span class="math inline">\(\{Class=C_0\}\)</span></td>
+<td align="left"><span class="math inline">\(3/7\)</span></td>
+<td align="left"><span class="math inline">\(7/7\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(1\)</span></td>
+<td align="left"><span class="math inline">\(\{x_1 = 0 \to Class = C_0\}\)</span></td>
+<td align="left"><span class="math inline">\(2/5\)</span></td>
+<td align="left"><span class="math inline">\(5/7\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(2\)</span></td>
+<td align="left"><span class="math inline">\(\{x_1 \neq 0, x_2 = 0 \to Class=C_1\}\)</span></td>
+<td align="left"><span class="math inline">\(0/1\)</span></td>
+<td align="left"><span class="math inline">\(1/7\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(3\)</span></td>
+<td align="left"><span class="math inline">\(\{x_1 \neq 0, x_2 \neq 0 \to Class=C_0\}\)</span></td>
+<td align="left"><span class="math inline">\(0/1\)</span></td>
+<td align="left"><span class="math inline">\(1/7\)</span></td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<p>At the beginning, the default rule is <span class="math inline">\(\{Class=C_0\}\)</span>, and its error rate is <span class="math inline">\(3/7\)</span>. The algorithm then searches for the best rule in the available rules (i.e., shown in Table <a href="intrees.html#tab:t10-2">55</a>). Rule 2 and Rule 3 have the least errors, and their frequency and length are also the same. Thus, we can add either of them into <span class="math inline">\(R\)</span>. Assume that Rule 2 is selected: <span class="math inline">\(R=\{x_1 \neq 0,x_2=0\to Class=C_1\}\)</span>. Then, the data point (ID:<span class="math inline">\(2\)</span>) classified by this rule is removed from Table <a href="intrees.html#tab:t10-1">54</a>. The default rule <span class="math inline">\(r_0\)</span> is still <span class="math inline">\(\{Class=C_0\}\)</span>, and the error and frequency of each rule on the updated dataset<label for="tufte-sn-271" class="margin-toggle sidenote-number">271</label><input type="checkbox" id="tufte-sn-271" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">271</span> The data point (ID:<span class="math inline">\(2\)</span>) is removed.</span> is updated, as shown in Table <a href="intrees.html#tab:t10-10">58</a>.</p>
+<p></p>
+<p><!--
+<caption>--><span class="marginnote shownote"><span id="tab:t10-10">Table 58: </span>Updated error rates and frequencies of the rules in Table <a href="intrees.html#tab:t10-2">55</a> using the reduced dataset, i.e., data point (ID:<span class="math inline">\(2\)</span>) in Table <a href="intrees.html#tab:t10-1">54</a> is removed</span><!--</caption>--></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">ID</th>
+<th align="left">Rule</th>
+<th align="left">Error</th>
+<th align="left">Frequency</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><span class="math inline">\(0\)</span></td>
+<td align="left"><span class="math inline">\(\{Class=C_0\}\)</span></td>
+<td align="left"><span class="math inline">\(2/6\)</span></td>
+<td align="left"><span class="math inline">\(6/6\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(1\)</span></td>
+<td align="left"><span class="math inline">\(\{x_1 = 0 \to Class = C_0\}\)</span></td>
+<td align="left"><span class="math inline">\(2/5\)</span></td>
+<td align="left"><span class="math inline">\(5/6\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(2\)</span></td>
+<td align="left"><span class="math inline">\(\{x_1 \neq 0, x_2 = 0 \to Class=C_1\}\)</span></td>
+<td align="left">NA</td>
+<td align="left"><span class="math inline">\(0/6\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(3\)</span></td>
+<td align="left"><span class="math inline">\(\{x_1 \neq 0, x_2 \neq 0 \to Class=C_0\}\)</span></td>
+<td align="left"><span class="math inline">\(0/1\)</span></td>
+<td align="left"><span class="math inline">\(1/6\)</span></td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<p>A new iteration begins and <span class="math inline">\(\{x_1 \neq 0,x_2\neq 0\to Class=C_0\}\)</span> is added to <em>R</em>, and the data point (ID:<span class="math inline">\(1\)</span>) is removed. The default rule remains unchanged and the error and frequency of each rule on the updated dataset<label for="tufte-sn-272" class="margin-toggle sidenote-number">272</label><input type="checkbox" id="tufte-sn-272" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">272</span> The data points (ID:<span class="math inline">\(1\)</span> and ID:<span class="math inline">\(2\)</span>) in Table <a href="intrees.html#tab:t10-1">54</a> are removed.</span> is updated in Table <a href="intrees.html#tab:t10-11">59</a>.</p>
+<p></p>
+<p><!--
+<caption>--><span class="marginnote shownote"><span id="tab:t10-11">Table 59: </span>Updated error rates and frequencies of the rules in Table <a href="intrees.html#tab:t10-2">55</a> using the reduced dataset, i.e., data points (ID:<span class="math inline">\(1\)</span> and ID:<span class="math inline">\(2\)</span>) in Table <a href="intrees.html#tab:t10-1">54</a> are removed</span><!--</caption>--></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">ID</th>
+<th align="left">Rule</th>
+<th align="left">Error</th>
+<th align="left">Frequency</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><span class="math inline">\(0\)</span></td>
+<td align="left"><span class="math inline">\(\{Class=C_0\}\)</span></td>
+<td align="left"><span class="math inline">\(2/5\)</span></td>
+<td align="left"><span class="math inline">\(5/5\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(1\)</span></td>
+<td align="left"><span class="math inline">\(\{x_1 = 0 \to Class = C_0\}\)</span></td>
+<td align="left"><span class="math inline">\(2/5\)</span></td>
+<td align="left"><span class="math inline">\(5/5\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(2\)</span></td>
+<td align="left"><span class="math inline">\(\{x_1 \neq 0, x_2 = 0 \to Class=C_1\}\)</span></td>
+<td align="left">NA</td>
+<td align="left"><span class="math inline">\(0/5\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(3\)</span></td>
+<td align="left"><span class="math inline">\(\{x_1 \neq 0, x_2 \neq 0 \to Class=C_0\}\)</span></td>
+<td align="left">NA</td>
+<td align="left"><span class="math inline">\(0/5\)</span></td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<p>Now the default rule <span class="math inline">\(Class=C_0\)</span> has the minimum error <span class="math inline">\(2/5\)</span>, the same as <span class="math inline">\(\{x_1=0\to Class=C_0\}\)</span>. Therefore, the default rule is added to <em>R</em> and the process stops. The final ordered rule set <em>R</em> is summarized in Table <a href="intrees.html#tab:t10-12">60</a>.</p>
+<p></p>
+<p><!--
+<caption>--><span class="marginnote shownote"><span id="tab:t10-12">Table 60: </span>Final results of <em>R</em></span><!--</caption>--></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Order</th>
+<th align="left">Rule</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><span class="math inline">\(0\)</span></td>
+<td align="left"><span class="math inline">\(\{Class=C_0\}\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(1\)</span></td>
+<td align="left"><span class="math inline">\(\{x_1 \neq 0, x_2 = 0 \to Class=C_1\}\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(2\)</span></td>
+<td align="left"><span class="math inline">\(\{x_1 \neq 0, x_2 \neq 0 \to Class=C_1\}\)</span></td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<p>When predicting on an instance, the first rule in <em>R</em> that <em>hits</em> the data point is used for prediction. For example, for a data point <span class="math inline">\(\{x_1 \neq 0,x_2=1\}\)</span>, it meets the condition of Rule 2 in <em>R</em>. The prediction on this data point is <span class="math inline">\(C_1\)</span>. For data point <span class="math inline">\(\{x_1=0,x_2=1\}\)</span>, it does not meet the condition of either Rule <span class="math inline">\(1\)</span> or Rule <span class="math inline">\(2\)</span> in <em>R</em>. Therefore, the default rule is used, and the prediction is <span class="math inline">\(C_0\)</span>.</p>
+</div>
+<div id="r-lab-16" class="section level3 unnumbered">
+<h3>R Lab</h3>
+<p>We use <code>inTrees</code> on the AD datasedt. Based on the random forest model, <span class="math inline">\(4555\)</span> rules are extracted.</p>
+<p></p>
+<div class="sourceCode" id="cb220"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb220-1"><a href="intrees.html#cb220-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(<span class="at">list =</span> <span class="fu">ls</span>(<span class="at">all =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb220-2"><a href="intrees.html#cb220-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;arules&quot;</span>)</span>
+<span id="cb220-3"><a href="intrees.html#cb220-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;randomForest&quot;</span>)</span>
+<span id="cb220-4"><a href="intrees.html#cb220-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;RRF&quot;</span>)</span>
+<span id="cb220-5"><a href="intrees.html#cb220-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;inTrees&quot;</span>)</span>
+<span id="cb220-6"><a href="intrees.html#cb220-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;reshape&quot;</span>)</span>
+<span id="cb220-7"><a href="intrees.html#cb220-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;ggplot2&quot;</span>)</span>
+<span id="cb220-8"><a href="intrees.html#cb220-8" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb220-9"><a href="intrees.html#cb220-9" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;https://raw.githubusercontent.com&quot;</span>,</span>
+<span id="cb220-10"><a href="intrees.html#cb220-10" aria-hidden="true" tabindex="-1"></a>              <span class="st">&quot;/analyticsbook/book/main/data/AD.csv&quot;</span>)</span>
+<span id="cb220-11"><a href="intrees.html#cb220-11" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="at">text=</span><span class="fu">getURL</span>(url))</span>
+<span id="cb220-12"><a href="intrees.html#cb220-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb220-13"><a href="intrees.html#cb220-13" aria-hidden="true" tabindex="-1"></a>target_indx <span class="ot">&lt;-</span> <span class="fu">which</span>(<span class="fu">colnames</span>(data) <span class="sc">==</span> <span class="st">&quot;DX_bl&quot;</span>)</span>
+<span id="cb220-14"><a href="intrees.html#cb220-14" aria-hidden="true" tabindex="-1"></a>target <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;class_&quot;</span>, <span class="fu">as.character</span>(data[, target_indx]))</span>
+<span id="cb220-15"><a href="intrees.html#cb220-15" aria-hidden="true" tabindex="-1"></a>rm_indx <span class="ot">&lt;-</span> <span class="fu">which</span>(<span class="fu">colnames</span>(data) <span class="sc">%in%</span> </span>
+<span id="cb220-16"><a href="intrees.html#cb220-16" aria-hidden="true" tabindex="-1"></a>            <span class="fu">c</span>(<span class="st">&quot;DX_bl&quot;</span>, <span class="st">&quot;ID&quot;</span>, <span class="st">&quot;TOTAL13&quot;</span>, <span class="st">&quot;MMSCORE&quot;</span>))</span>
+<span id="cb220-17"><a href="intrees.html#cb220-17" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> data</span>
+<span id="cb220-18"><a href="intrees.html#cb220-18" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> X[, <span class="sc">-</span>rm_indx]</span>
+<span id="cb220-19"><a href="intrees.html#cb220-19" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">ncol</span>(X)) X[, i] <span class="ot">&lt;-</span> </span>
+<span id="cb220-20"><a href="intrees.html#cb220-20" aria-hidden="true" tabindex="-1"></a>      <span class="fu">as.factor</span>(<span class="fu">dicretizeVector</span>(X[, i], <span class="at">K =</span> <span class="dv">3</span>))</span>
+<span id="cb220-21"><a href="intrees.html#cb220-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb220-22"><a href="intrees.html#cb220-22" aria-hidden="true" tabindex="-1"></a><span class="do">## Use random forests to grow the trees</span></span>
+<span id="cb220-23"><a href="intrees.html#cb220-23" aria-hidden="true" tabindex="-1"></a>rf <span class="ot">&lt;-</span> <span class="fu">randomForest</span>(X, <span class="fu">as.factor</span>(target))</span>
+<span id="cb220-24"><a href="intrees.html#cb220-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb220-25"><a href="intrees.html#cb220-25" aria-hidden="true" tabindex="-1"></a><span class="co"># transform rf object to an inTrees&#39; format</span></span>
+<span id="cb220-26"><a href="intrees.html#cb220-26" aria-hidden="true" tabindex="-1"></a>treeList <span class="ot">&lt;-</span> <span class="fu">RF2List</span>(rf)  </span>
+<span id="cb220-27"><a href="intrees.html#cb220-27" aria-hidden="true" tabindex="-1"></a>exec <span class="ot">&lt;-</span> <span class="fu">extractRules</span>(treeList, X)  <span class="co"># Extract the rules</span></span>
+<span id="cb220-28"><a href="intrees.html#cb220-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb220-29"><a href="intrees.html#cb220-29" aria-hidden="true" tabindex="-1"></a><span class="do">## The rules are measured by length, error and frequency.</span></span>
+<span id="cb220-30"><a href="intrees.html#cb220-30" aria-hidden="true" tabindex="-1"></a>class <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;class_&quot;</span>, <span class="fu">as.character</span>(target))</span>
+<span id="cb220-31"><a href="intrees.html#cb220-31" aria-hidden="true" tabindex="-1"></a>rules <span class="ot">&lt;-</span> <span class="fu">getRuleMetric</span>(exec, X, target)</span></code></pre></div>
+<p></p>
+<p>The statistics of the rules could be extracted, e.g., <span class="math inline">\(5\)</span> rules are shown below.</p>
+<p></p>
+<div class="sourceCode" id="cb221"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb221-1"><a href="intrees.html#cb221-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(rules[<span class="fu">order</span>(<span class="fu">as.numeric</span>(rules[, <span class="st">&quot;len&quot;</span>])), ][<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, ])</span>
+<span id="cb221-2"><a href="intrees.html#cb221-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb221-3"><a href="intrees.html#cb221-3" aria-hidden="true" tabindex="-1"></a><span class="co">#      len freq    err     </span></span>
+<span id="cb221-4"><a href="intrees.html#cb221-4" aria-hidden="true" tabindex="-1"></a><span class="co"># [1,] &quot;2&quot; &quot;0.118&quot; &quot;0.098&quot; </span></span>
+<span id="cb221-5"><a href="intrees.html#cb221-5" aria-hidden="true" tabindex="-1"></a><span class="co"># [2,] &quot;2&quot; &quot;0.182&quot; &quot;0&quot;     </span></span>
+<span id="cb221-6"><a href="intrees.html#cb221-6" aria-hidden="true" tabindex="-1"></a><span class="co"># [3,] &quot;2&quot; &quot;0.182&quot; &quot;0&quot;     </span></span>
+<span id="cb221-7"><a href="intrees.html#cb221-7" aria-hidden="true" tabindex="-1"></a><span class="co"># [4,] &quot;2&quot; &quot;0.081&quot; &quot;0.024&quot; </span></span>
+<span id="cb221-8"><a href="intrees.html#cb221-8" aria-hidden="true" tabindex="-1"></a><span class="co"># [5,] &quot;2&quot; &quot;0.043&quot; &quot;0.136&quot; </span></span>
+<span id="cb221-9"><a href="intrees.html#cb221-9" aria-hidden="true" tabindex="-1"></a><span class="co">#      condition                                    pred</span></span>
+<span id="cb221-10"><a href="intrees.html#cb221-10" aria-hidden="true" tabindex="-1"></a><span class="co"># [1,] &quot;X[,6] %in% c(&#39;L1&#39;) &amp; X[,11] %in% c(&#39;L1&#39;)&quot;  &quot;class_1&quot;</span></span>
+<span id="cb221-11"><a href="intrees.html#cb221-11" aria-hidden="true" tabindex="-1"></a><span class="co"># [2,] &quot;X[,4] %in% c(&#39;L1&#39;) &amp; X[,6] %in% c(&#39;L1&#39;)&quot;   &quot;class_1&quot;</span></span>
+<span id="cb221-12"><a href="intrees.html#cb221-12" aria-hidden="true" tabindex="-1"></a><span class="co"># [3,] &quot;X[,4] %in% c(&#39;L1&#39;) &amp; X[,6] %in% c(&#39;L1&#39;)&quot;   &quot;class_1&quot;</span></span>
+<span id="cb221-13"><a href="intrees.html#cb221-13" aria-hidden="true" tabindex="-1"></a><span class="co"># [4,] &quot;X[,3] %in% c(&#39;L3&#39;) &amp; X[,4] %in% c(&#39;L3&#39;)&quot;    &quot;class_0&quot;</span></span>
+<span id="cb221-14"><a href="intrees.html#cb221-14" aria-hidden="true" tabindex="-1"></a><span class="co"># [5,] &quot;X[,6] %in% c(&#39;L3&#39;) &amp; X[,7] %in% c(&#39;L3&#39;)&quot;    &quot;class_0&quot;</span></span></code></pre></div>
+<p></p>
+<p>We then prune the rules. Recall that we need to specify the threshold of <em>decay</em>. This could be done in R by setting the value of the parameter <code>maxDecay</code>. The statistics of the rules before and after pruning are shown in Figures <a href="intrees.html#fig:f10-4">188</a>—<a href="intrees.html#fig:f10-6">190</a>.</p>
+<p></p>
+<p>
+<span class="marginnote shownote">
+<!--
+<div class="figure">--><span id="fig:f10-4"></span>
+<img src="graphics/10_4.png" alt="Histogram of *lengths of the rules* before and after the pruning " width="250px"  />
+<!--
+<p class="caption marginnote">-->Figure 188: Histogram of <em>lengths of the rules</em> before and after the pruning <!--</p>-->
+<!--</div>--></span>
+</p>
+<p></p>
+<p>The R code below generates Figure <a href="intrees.html#fig:f10-4">188</a>.</p>
+<p></p>
+<div class="sourceCode" id="cb222"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb222-1"><a href="intrees.html#cb222-1" aria-hidden="true" tabindex="-1"></a>rules.pruned <span class="ot">&lt;-</span> <span class="fu">pruneRule</span>(rules, X, target, <span class="at">maxDecay =</span> <span class="fl">0.005</span>,</span>
+<span id="cb222-2"><a href="intrees.html#cb222-2" aria-hidden="true" tabindex="-1"></a>                          <span class="at">typeDecay =</span> <span class="dv">2</span>)</span>
+<span id="cb222-3"><a href="intrees.html#cb222-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb222-4"><a href="intrees.html#cb222-4" aria-hidden="true" tabindex="-1"></a>length <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">original =</span> <span class="fu">as.numeric</span>(rules[, <span class="st">&quot;len&quot;</span>]),</span>
+<span id="cb222-5"><a href="intrees.html#cb222-5" aria-hidden="true" tabindex="-1"></a>                <span class="at">pruned =</span> <span class="fu">as.numeric</span>(rules.pruned[,<span class="st">&quot;len&quot;</span>]))</span>
+<span id="cb222-6"><a href="intrees.html#cb222-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb222-7"><a href="intrees.html#cb222-7" aria-hidden="true" tabindex="-1"></a><span class="do">## Visualize the result</span></span>
+<span id="cb222-8"><a href="intrees.html#cb222-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">melt</span>(length), <span class="fu">aes</span>(value, <span class="at">fill =</span> variable)) <span class="sc">+</span></span>
+<span id="cb222-9"><a href="intrees.html#cb222-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">position =</span> <span class="st">&quot;dodge&quot;</span>,<span class="at">binwidth =</span> <span class="fl">0.4</span>) <span class="sc">+</span></span>
+<span id="cb222-10"><a href="intrees.html#cb222-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&quot;Histogram of Lengths&quot;</span>) <span class="sc">+</span></span>
+<span id="cb222-11"><a href="intrees.html#cb222-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>))</span></code></pre></div>
+<p></p>
+<p></p>
+<p>
+<span class="marginnote shownote">
+<!--
+<div class="figure">--><span id="fig:f10-5"></span>
+<img src="graphics/10_5.png" alt="Histogram of *frequencies of the rules* before and after the pruning" width="250px"  />
+<!--
+<p class="caption marginnote">-->Figure 189: Histogram of <em>frequencies of the rules</em> before and after the pruning<!--</p>-->
+<!--</div>--></span>
+</p>
+<p></p>
+<p>The R code below generates Figure <a href="intrees.html#fig:f10-5">189</a>.</p>
+<p></p>
+<div class="sourceCode" id="cb223"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb223-1"><a href="intrees.html#cb223-1" aria-hidden="true" tabindex="-1"></a>frequency <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb223-2"><a href="intrees.html#cb223-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">original =</span> <span class="fu">as.numeric</span>(rules[, <span class="st">&quot;freq&quot;</span>]),</span>
+<span id="cb223-3"><a href="intrees.html#cb223-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">pruned =</span> <span class="fu">as.numeric</span>(rules.pruned[,<span class="st">&quot;freq&quot;</span>]))</span>
+<span id="cb223-4"><a href="intrees.html#cb223-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">melt</span>(frequency), <span class="fu">aes</span>(value, <span class="at">fill =</span> variable)) <span class="sc">+</span></span>
+<span id="cb223-5"><a href="intrees.html#cb223-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">position =</span> <span class="st">&quot;dodge&quot;</span>,<span class="at">binwidth =</span> <span class="fl">0.05</span>) <span class="sc">+</span></span>
+<span id="cb223-6"><a href="intrees.html#cb223-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&quot;Histogram of Frequencies&quot;</span>) <span class="sc">+</span></span>
+<span id="cb223-7"><a href="intrees.html#cb223-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>))</span></code></pre></div>
+<p></p>
+<p>The R code below generates Figure <a href="intrees.html#fig:f10-6">190</a>.</p>
+<p></p>
+<div class="sourceCode" id="cb224"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb224-1"><a href="intrees.html#cb224-1" aria-hidden="true" tabindex="-1"></a>error <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">original =</span> <span class="fu">as.numeric</span>(rules[, <span class="st">&quot;err&quot;</span>]),</span>
+<span id="cb224-2"><a href="intrees.html#cb224-2" aria-hidden="true" tabindex="-1"></a>                  <span class="at">pruned =</span> <span class="fu">as.numeric</span>(rules.pruned[,<span class="st">&quot;err&quot;</span>]))</span>
+<span id="cb224-3"><a href="intrees.html#cb224-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb224-4"><a href="intrees.html#cb224-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Visualize the result</span></span>
+<span id="cb224-5"><a href="intrees.html#cb224-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">melt</span>(error), <span class="fu">aes</span>(value, <span class="at">fill =</span> variable)) <span class="sc">+</span></span>
+<span id="cb224-6"><a href="intrees.html#cb224-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">position =</span> <span class="st">&quot;dodge&quot;</span>,<span class="at">binwidth =</span> <span class="fl">0.01</span>) <span class="sc">+</span></span>
+<span id="cb224-7"><a href="intrees.html#cb224-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&quot;Histogram of Errors&quot;</span>) <span class="sc">+</span></span>
+<span id="cb224-8"><a href="intrees.html#cb224-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>))</span></code></pre></div>
+<p></p>
+<p></p>
+<p>
+<span class="marginnote shownote">
+<!--
+<div class="figure">--><span id="fig:f10-6"></span>
+<img src="graphics/10_6.png" alt="Histogram of *errors of the rules* before and after the pruning" width="250px"  />
+<!--
+<p class="caption marginnote">-->Figure 190: Histogram of <em>errors of the rules</em> before and after the pruning<!--</p>-->
+<!--</div>--></span>
+</p>
+<p></p>
+<p>Figure <a href="intrees.html#fig:f10-4">188</a> shows that the lengths of the rules are substantially reduced. For example, a majority of the original rules have a length of <span class="math inline">\(6\)</span>, while after pruning, only a slight percentage of the rules have a length of <span class="math inline">\(6\)</span>. Also, since rules are shortened, reduction of frequencies of the rules is also significant, as shown in Figure <a href="intrees.html#fig:f10-5">189</a>. The errors are also reduced; e.g., Figure <a href="intrees.html#fig:f10-6">190</a> shows the distribution of errors shifted to the left after pruning. Overall, the quality of the rules is improved with a proper choice of the pruning parameters.</p>
+<p>The following R code prunes the rule set.</p>
+<p></p>
+<div class="sourceCode" id="cb225"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb225-1"><a href="intrees.html#cb225-1" aria-hidden="true" tabindex="-1"></a>rules.selected <span class="ot">&lt;-</span> <span class="fu">selectRuleRRF</span>(rules.pruned, X, target)</span>
+<span id="cb225-2"><a href="intrees.html#cb225-2" aria-hidden="true" tabindex="-1"></a>rules.present <span class="ot">&lt;-</span> <span class="fu">presentRules</span>(rules.selected, <span class="fu">colnames</span>(X))</span>
+<span id="cb225-3"><a href="intrees.html#cb225-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb225-4"><a href="intrees.html#cb225-4" aria-hidden="true" tabindex="-1"></a><span class="do">## See the specific contents of the selected rules</span></span>
+<span id="cb225-5"><a href="intrees.html#cb225-5" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">cbind</span>(<span class="at">ID =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(rules.present), </span>
+<span id="cb225-6"><a href="intrees.html#cb225-6" aria-hidden="true" tabindex="-1"></a>            rules.present[, <span class="fu">c</span>(<span class="st">&quot;condition&quot;</span>, <span class="st">&quot;pred&quot;</span>)]))</span></code></pre></div>
+<p></p>
+<p>Finally, <span class="math inline">\(16\)</span> rules are selected. Their performances are shown below<label for="tufte-sn-273" class="margin-toggle sidenote-number">273</label><input type="checkbox" id="tufte-sn-273" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">273</span> Details of the rules could also be printed out in R.</span>.</p>
+<p></p>
+<div class="sourceCode" id="cb226"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb226-1"><a href="intrees.html#cb226-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">cbind</span>(<span class="at">ID =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(rules.present),</span>
+<span id="cb226-2"><a href="intrees.html#cb226-2" aria-hidden="true" tabindex="-1"></a>            rules.present[, <span class="fu">c</span>(<span class="st">&quot;len&quot;</span>, <span class="st">&quot;freq&quot;</span>, <span class="st">&quot;err&quot;</span>)]))</span>
+<span id="cb226-3"><a href="intrees.html#cb226-3" aria-hidden="true" tabindex="-1"></a><span class="do">##       ID   len freq    err</span></span>
+<span id="cb226-4"><a href="intrees.html#cb226-4" aria-hidden="true" tabindex="-1"></a><span class="do">##  [1,] &quot;1&quot;  &quot;2&quot; &quot;0.279&quot; &quot;0.083&quot;</span></span>
+<span id="cb226-5"><a href="intrees.html#cb226-5" aria-hidden="true" tabindex="-1"></a><span class="do">##  [2,] &quot;2&quot;  &quot;2&quot; &quot;0.279&quot; &quot;0.09&quot;</span></span>
+<span id="cb226-6"><a href="intrees.html#cb226-6" aria-hidden="true" tabindex="-1"></a><span class="do">##  [3,] &quot;3&quot;  &quot;5&quot; &quot;0.029&quot; &quot;0.133&quot;</span></span>
+<span id="cb226-7"><a href="intrees.html#cb226-7" aria-hidden="true" tabindex="-1"></a><span class="do">##  [4,] &quot;4&quot;  &quot;3&quot; &quot;0.122&quot; &quot;0.016&quot;</span></span>
+<span id="cb226-8"><a href="intrees.html#cb226-8" aria-hidden="true" tabindex="-1"></a><span class="do">##  [5,] &quot;5&quot;  &quot;4&quot; &quot;0.031&quot; &quot;0.312&quot;</span></span>
+<span id="cb226-9"><a href="intrees.html#cb226-9" aria-hidden="true" tabindex="-1"></a><span class="do">##  [6,] &quot;6&quot;  &quot;2&quot; &quot;0.207&quot; &quot;0.121&quot;</span></span>
+<span id="cb226-10"><a href="intrees.html#cb226-10" aria-hidden="true" tabindex="-1"></a><span class="do">##  [7,] &quot;7&quot;  &quot;3&quot; &quot;0.172&quot; &quot;0.124&quot;</span></span>
+<span id="cb226-11"><a href="intrees.html#cb226-11" aria-hidden="true" tabindex="-1"></a><span class="do">##  [8,] &quot;8&quot;  &quot;4&quot; &quot;0.06&quot;  &quot;0.194&quot;</span></span>
+<span id="cb226-12"><a href="intrees.html#cb226-12" aria-hidden="true" tabindex="-1"></a><span class="do">##  [9,] &quot;9&quot;  &quot;5&quot; &quot;0.006&quot; &quot;0&quot;</span></span>
+<span id="cb226-13"><a href="intrees.html#cb226-13" aria-hidden="true" tabindex="-1"></a><span class="do">## [10,] &quot;10&quot; &quot;4&quot; &quot;0.044&quot; &quot;0.13&quot;</span></span>
+<span id="cb226-14"><a href="intrees.html#cb226-14" aria-hidden="true" tabindex="-1"></a><span class="do">## [11,] &quot;11&quot; &quot;5&quot; &quot;0.019&quot; &quot;0.2&quot;</span></span>
+<span id="cb226-15"><a href="intrees.html#cb226-15" aria-hidden="true" tabindex="-1"></a><span class="do">## [12,] &quot;12&quot; &quot;3&quot; &quot;0.043&quot; &quot;0.182&quot;</span></span>
+<span id="cb226-16"><a href="intrees.html#cb226-16" aria-hidden="true" tabindex="-1"></a><span class="do">## [13,] &quot;13&quot; &quot;4&quot; &quot;0.037&quot; &quot;0.158&quot;</span></span>
+<span id="cb226-17"><a href="intrees.html#cb226-17" aria-hidden="true" tabindex="-1"></a><span class="do">## [14,] &quot;14&quot; &quot;3&quot; &quot;0.114&quot; &quot;0.203&quot;</span></span>
+<span id="cb226-18"><a href="intrees.html#cb226-18" aria-hidden="true" tabindex="-1"></a><span class="do">## [15,] &quot;15&quot; &quot;2&quot; &quot;0.234&quot; &quot;0.215&quot;</span></span>
+<span id="cb226-19"><a href="intrees.html#cb226-19" aria-hidden="true" tabindex="-1"></a><span class="do">## [16,] &quot;16&quot; &quot;3&quot; &quot;0.282&quot; &quot;0.144&quot;</span></span></code></pre></div>
+<p></p>
+</div>
+</div>
+<p style="text-align: center;">
+<a href="deep-learning.html"><button class="btn btn-default">Previous</button></a>
+<a href="remarks-8.html"><button class="btn btn-default">Next</button></a>
+</p>
+</div>
+</div>
+
+<script src="js/jquery.js"></script>
+<script src="js/tablesaw-stackonly.js"></script>
+<script src="js/nudge.min.js"></script>
+
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+</body>
+</html>

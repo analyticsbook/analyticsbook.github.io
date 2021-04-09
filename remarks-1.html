@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta property="og:title" content="Remarks | Data Analytics" />
+<meta property="og:type" content="book" />
+
+
+
+
+
+<meta name="author" content="Shuai Huang &amp; Houtao Deng" />
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  TeX: { equationNumbers: { autoNumber: "AMS" } }
+});
+</script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<meta name="description" content="Remarks | Data Analytics">
+
+<title>Remarks | Data Analytics</title>
+
+<script src="libs/header-attrs-2.7/header-attrs.js"></script>
+<link href="libs/tufte-css-2015.12.29/tufte.css" rel="stylesheet" />
+<link href="libs/tufte-css-2015.12.29/envisioned.css" rel="stylesheet" />
+<script src="https://use.typekit.net/ajy6rnl.js"></script>
+<script>try{Typekit.load({ async: true });}catch(e){}</script>
+<!-- <link rel="stylesheet" href="css/normalize.css"> -->
+<!-- <link rel="stylesheet" href="css/envisioned.css"/> -->
+<link rel="stylesheet" href="css/tablesaw-stackonly.css"/>
+<link rel="stylesheet" href="css/nudge.css"/>
+<link rel="stylesheet" href="css/sourcesans.css"/>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+
+
+</head>
+
+<body>
+
+<!--bookdown:toc:start-->
+
+<nav class="pushy pushy-left" id="TOC">
+<ul>
+<li><a href="#preface">Preface</a></li>
+<li><a href="#acknowledgments">Acknowledgments</a></li>
+<li><a href="#chapter-1.-introduction">Chapter 1. Introduction</a></li>
+<li><a href="#chapter-2.-abstraction-regression-tree-models">Chapter 2. Abstraction: Regression &amp; Tree Models</a></li>
+<li><a href="#chapter-3.-recognition-logistic-regression-ranking">Chapter 3. Recognition: Logistic Regression &amp; Ranking</a></li>
+<li><a href="#chapter-4.-resonance-bootstrap-random-forests">Chapter 4. Resonance: Bootstrap &amp; Random Forests</a></li>
+<li><a href="#chapter-5.-learning-i-cross-validation-oob">Chapter 5. Learning (I): Cross-validation &amp; OOB</a></li>
+<li><a href="#chapter-6.-diagnosis-residuals-heterogeneity">Chapter 6. Diagnosis: Residuals &amp; Heterogeneity</a></li>
+<li><a href="#chapter-7.-learning-ii-svm-ensemble-learning">Chapter 7. Learning (II): SVM &amp; Ensemble Learning</a></li>
+<li><a href="#chapter-8.-scalability-lasso-pca">Chapter 8. Scalability: LASSO &amp; PCA</a></li>
+<li><a href="#chapter-9.-pragmatism-experience-experimental">Chapter 9. Pragmatism: Experience &amp; Experimental</a></li>
+<li><a href="#chapter-10.-synthesis-architecture-pipeline">Chapter 10. Synthesis: Architecture &amp; Pipeline</a></li>
+<li><a href="#conclusion">Conclusion</a></li>
+<li><a href="#appendix-a-brief-review-of-background-knowledge">Appendix: A Brief Review of Background Knowledge</a></li>
+</ul>
+</nav>
+
+<!--bookdown:toc:end-->
+
+<div class="menu-btn"><h3>☰ Menu</h3></div>
+
+<div class="site-overlay"></div>
+
+
+<div class="row">
+<div class="col-sm-12">
+
+<nav class="pushy pushy-left" id="TOC">
+<ul>
+<li><a href="index.html#preface">Preface</a></li>
+<li><a href="acknowledgments.html#acknowledgments">Acknowledgments</a></li>
+<li><a href="chapter-1-introduction.html#chapter-1.-introduction">Chapter 1. Introduction</a></li>
+<li><a href="chapter-2-abstraction-regression-tree-models.html#chapter-2.-abstraction-regression-tree-models">Chapter 2. Abstraction: Regression &amp; Tree Models</a></li>
+<li><a href="chapter-3-recognition-logistic-regression-ranking.html#chapter-3.-recognition-logistic-regression-ranking">Chapter 3. Recognition: Logistic Regression &amp; Ranking</a></li>
+<li><a href="chapter-4-resonance-bootstrap-random-forests.html#chapter-4.-resonance-bootstrap-random-forests">Chapter 4. Resonance: Bootstrap &amp; Random Forests</a></li>
+<li><a href="chapter-5-learning-i-cross-validation-oob.html#chapter-5.-learning-i-cross-validation-oob">Chapter 5. Learning (I): Cross-validation &amp; OOB</a></li>
+<li><a href="chapter-6-diagnosis-residuals-heterogeneity.html#chapter-6.-diagnosis-residuals-heterogeneity">Chapter 6. Diagnosis: Residuals &amp; Heterogeneity</a></li>
+<li><a href="chapter-7-learning-ii-svm-ensemble-learning.html#chapter-7.-learning-ii-svm-ensemble-learning">Chapter 7. Learning (II): SVM &amp; Ensemble Learning</a></li>
+<li><a href="chapter-8-scalability-lasso-pca.html#chapter-8.-scalability-lasso-pca">Chapter 8. Scalability: LASSO &amp; PCA</a></li>
+<li><a href="chapter-9-pragmatism-experience-experimental.html#chapter-9.-pragmatism-experience-experimental">Chapter 9. Pragmatism: Experience &amp; Experimental</a></li>
+<li><a href="chapter-10-synthesis-architecture-pipeline.html#chapter-10.-synthesis-architecture-pipeline">Chapter 10. Synthesis: Architecture &amp; Pipeline</a></li>
+<li><a href="conclusion.html#conclusion">Conclusion</a></li>
+<li><a href="appendix-a-brief-review-of-background-knowledge.html#appendix-a-brief-review-of-background-knowledge">Appendix: A Brief Review of Background Knowledge</a></li>
+</ul>
+</nav>
+
+</div>
+</div>
+<div class="row">
+<div class="col-sm-12">
+<div id="remarks-1" class="section level2 unnumbered">
+<h2>Remarks</h2>
+<div id="more-about-the-logistic-function" class="section level3 unnumbered">
+<h3>More about the logistic function</h3>
+<p>Like the linear regression model, Eq. <a href="logistic-regression-model.html#eq:3-logitR">(27)</a> seems like <em>one</em> model that explains all the data points<label for="tufte-sn-74" class="margin-toggle sidenote-number">74</label><input type="checkbox" id="tufte-sn-74" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">74</span> We have mentioned that a model with this trait is called a <em>global</em> model.</span>. This observation is good, but we may easily overlook its subtle complexity. As shown in Figure <a href="remarks-1.html#fig:f3-lr3regions">42</a>, the logistic regression model is able to encapsulate a complex relationships between <span class="math inline">\(x\)</span> (the dose) with <span class="math inline">\(y\)</span> (the response to treatment) as one succinct mathematical form. This is remarkable, probably unusual, and unmistakably beautiful.</p>
+<p></p>
+<p>
+<span class="marginnote shownote">
+<!--
+<div class="figure">--><span id="fig:f3-lr3regions"></span>
+<img src="graphics/3_lr3regions.png" alt="The three regions of the logistic function" width="250px"  />
+<!--
+<p class="caption marginnote">-->Figure 42: The three regions of the logistic function<!--</p>-->
+<!--</div>--></span>
+</p>
+<p></p>
+<p>And the regression coefficients flexibly tune the exact shape of the logistic function for each dataset, as shown in Figure <a href="remarks-1.html#fig:f3-difflogit">43</a>.</p>
+<p>On the other hand, the logistic function is not the only choice. There are some other options, i.e., Chester Ittner Bliss used the <em>cumulative normal distribution function</em> to perform the transformation and called his model the <strong>probit regression</strong> model. There is an interesting discussion of this piece of history in statistics in Chapter 9 of the book<label for="tufte-sn-75" class="margin-toggle sidenote-number">75</label><input type="checkbox" id="tufte-sn-75" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">75</span> Cramer, J.S., <em>Logit Models from Economics and Other Fields</em>, Cambridge University Press, 2003.</span>.</p>
+<p></p>
+<p>
+<span class="marginnote shownote">
+<!--
+<div class="figure">--><span id="fig:f3-difflogit"></span>
+<img src="graphics/3_difflogit.png" alt="Three examples of the logistic function" width="250px"  />
+<!--
+<p class="caption marginnote">-->Figure 43: Three examples of the logistic function<!--</p>-->
+<!--</div>--></span>
+</p>
+<p></p>
+</div>
+<div id="does-the-logistic-function-make-sense-an-eda-approach" class="section level3 unnumbered">
+<h3>Does the logistic function make sense? — An EDA approach</h3>
+<p>Figure <a href="logistic-regression-model.html#fig:f3-lrgoal3">28</a> outlines the main premise of the logistic regression model. It remains unknown whether or not this is a practical assumption. Here, we show how we could evaluate this assumption in a specific dataset. Let’s use the AD dataset and pick up the predictor, <code>HippoNV</code>, and the outcome variable <code>DX_bl</code>.</p>
+<p>First, we create a data table like the one shown in Table <a href="logistic-regression-model.html#tab:t3-goal3">6</a>. We discretize the continuous variable <code>HippoNV</code> into distinct levels, and compute the prevalence of AD incidences within each level (i.e., the <span class="math inline">\(Pr(y=1|x)\)</span>). The following R code serves this data processing purpose.</p>
+<p></p>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="remarks-1.html#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the frequency table in accordance of categorization</span></span>
+<span id="cb64-2"><a href="remarks-1.html#cb64-2" aria-hidden="true" tabindex="-1"></a><span class="co"># of HippoNV</span></span>
+<span id="cb64-3"><a href="remarks-1.html#cb64-3" aria-hidden="true" tabindex="-1"></a>temp <span class="ot">=</span> <span class="fu">quantile</span>(AD<span class="sc">$</span>HippoNV,<span class="fu">seq</span>(<span class="at">from =</span> <span class="fl">0.05</span>, <span class="at">to =</span> <span class="fl">0.95</span>,</span>
+<span id="cb64-4"><a href="remarks-1.html#cb64-4" aria-hidden="true" tabindex="-1"></a>                                          <span class="at">by =</span> <span class="fl">0.05</span>))</span>
+<span id="cb64-5"><a href="remarks-1.html#cb64-5" aria-hidden="true" tabindex="-1"></a>AD<span class="sc">$</span>HippoNV.category <span class="ot">&lt;-</span> <span class="fu">cut</span>(AD<span class="sc">$</span>HippoNV, <span class="at">breaks=</span><span class="fu">c</span>(<span class="sc">-</span><span class="cn">Inf</span>,</span>
+<span id="cb64-6"><a href="remarks-1.html#cb64-6" aria-hidden="true" tabindex="-1"></a>                                              temp, <span class="cn">Inf</span>))</span>
+<span id="cb64-7"><a href="remarks-1.html#cb64-7" aria-hidden="true" tabindex="-1"></a>tempData <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="fu">xtabs</span>(<span class="sc">~</span>DX_bl <span class="sc">+</span> HippoNV.category, </span>
+<span id="cb64-8"><a href="remarks-1.html#cb64-8" aria-hidden="true" tabindex="-1"></a>                              <span class="at">data =</span> AD))</span>
+<span id="cb64-9"><a href="remarks-1.html#cb64-9" aria-hidden="true" tabindex="-1"></a>tempData <span class="ot">&lt;-</span> tempData[<span class="fu">seq</span>(<span class="at">from =</span> <span class="dv">2</span>, <span class="at">to =</span> </span>
+<span id="cb64-10"><a href="remarks-1.html#cb64-10" aria-hidden="true" tabindex="-1"></a>                   <span class="dv">2</span><span class="sc">*</span><span class="fu">length</span>(<span class="fu">unique</span>(AD<span class="sc">$</span>HippoNV.category)), </span>
+<span id="cb64-11"><a href="remarks-1.html#cb64-11" aria-hidden="true" tabindex="-1"></a>                   <span class="at">by =</span> <span class="dv">2</span>),]</span>
+<span id="cb64-12"><a href="remarks-1.html#cb64-12" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">xtabs</span>(<span class="sc">~</span>DX_bl <span class="sc">+</span> HippoNV.category, <span class="at">data =</span> AD))</span>
+<span id="cb64-13"><a href="remarks-1.html#cb64-13" aria-hidden="true" tabindex="-1"></a>tempData<span class="sc">$</span>Total <span class="ot">&lt;-</span> <span class="fu">colSums</span>(<span class="fu">as.matrix</span>(<span class="fu">xtabs</span>(<span class="sc">~</span>DX_bl <span class="sc">+</span></span>
+<span id="cb64-14"><a href="remarks-1.html#cb64-14" aria-hidden="true" tabindex="-1"></a>                    HippoNV.category,<span class="at">data =</span> AD)))</span>
+<span id="cb64-15"><a href="remarks-1.html#cb64-15" aria-hidden="true" tabindex="-1"></a>tempData<span class="sc">$</span>p.hat <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> tempData<span class="sc">$</span>Freq<span class="sc">/</span>tempData<span class="sc">$</span>Total</span>
+<span id="cb64-16"><a href="remarks-1.html#cb64-16" aria-hidden="true" tabindex="-1"></a>tempData<span class="sc">$</span>HippoNV.category <span class="ot">=</span> <span class="fu">as.numeric</span>(tempData<span class="sc">$</span>HippoNV.category)</span>
+<span id="cb64-17"><a href="remarks-1.html#cb64-17" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(tempData)</span></code></pre></div>
+<p></p>
+<p>We use the <code>str()</code> function to visualize the data we have converted: <span class="math inline">\(20\)</span> levels of <code>HippoNV</code> have been created, denoted by the variable <code>HippoNV.category</code>; <code>Total</code> denotes the total number of subjects within each level; and <code>p.hat</code> denotes the proportion of the diseased subjects within each level (i.e., the <span class="math inline">\(Pr(y=1|x)\)</span>).</p>
+<p></p>
+<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb65-1"><a href="remarks-1.html#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(tempData)</span>
+<span id="cb65-2"><a href="remarks-1.html#cb65-2" aria-hidden="true" tabindex="-1"></a><span class="do">## &#39;data.frame&#39;:    20 obs. of  5 variables:</span></span>
+<span id="cb65-3"><a href="remarks-1.html#cb65-3" aria-hidden="true" tabindex="-1"></a><span class="do">##  $ DX_bl           : Factor w/ 2 levels &quot;0&quot;,&quot;1&quot;: 2 2 2 2 2 2 ...</span></span>
+<span id="cb65-4"><a href="remarks-1.html#cb65-4" aria-hidden="true" tabindex="-1"></a><span class="do">##  $ HippoNV.category: num  1 2 3 4 5 6 7 8 9 10 ...</span></span>
+<span id="cb65-5"><a href="remarks-1.html#cb65-5" aria-hidden="true" tabindex="-1"></a><span class="do">##  $ Freq            : int  24 25 25 21 22 15 17 17 19 11 ...</span></span>
+<span id="cb65-6"><a href="remarks-1.html#cb65-6" aria-hidden="true" tabindex="-1"></a><span class="do">##  $ Total           : num  26 26 26 26 26 25 26 26 26 34 ...</span></span>
+<span id="cb65-7"><a href="remarks-1.html#cb65-7" aria-hidden="true" tabindex="-1"></a><span class="do">##  $ p.hat           : num  0.0769 0.0385 0.0385 0.1923 0.1538</span></span></code></pre></div>
+<p></p>
+<p>We draw a scatterplot of <code>HippoNV.category</code> versus <code>p.hat</code>, as shown in Figure <a href="remarks-1.html#fig:f3-4">44</a>. We also use the <code>loess</code> method, which is a <em>nonparametric smoothing</em> method<label for="tufte-sn-76" class="margin-toggle sidenote-number">76</label><input type="checkbox" id="tufte-sn-76" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">76</span> Related methods will be introduced in <strong>Chapter 9</strong>.</span>, to fit a smooth curve of the scatter data points. Figure <a href="remarks-1.html#fig:f3-4">44</a> exhibits a similar pattern as Figure <a href="logistic-regression-model.html#fig:f3-lrgoal3">28</a>. This provides an empirical justification of the use of the logistic regression model in this dataset.</p>
+<p></p>
+<p>
+<span class="marginnote shownote">
+<!--
+<div class="figure">--><span id="fig:f3-4"></span>
+<img src="graphics/3_4.png" alt="The empirical relationship between `HippoNV` and `DX_bl` takes a shape as the logistic function" width="250px"  />
+<!--
+<p class="caption marginnote">-->Figure 44: The empirical relationship between <code>HippoNV</code> and <code>DX_bl</code> takes a shape as the logistic function<!--</p>-->
+<!--</div>--></span>
+</p>
+<p></p>
+<p></p>
+<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb66-1"><a href="remarks-1.html#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Draw the scatterplot of HippoNV.category </span></span>
+<span id="cb66-2"><a href="remarks-1.html#cb66-2" aria-hidden="true" tabindex="-1"></a><span class="co"># versus the probability of normal</span></span>
+<span id="cb66-3"><a href="remarks-1.html#cb66-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb66-4"><a href="remarks-1.html#cb66-4" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(tempData, <span class="fu">aes</span>(<span class="at">x =</span> HippoNV.category, <span class="at">y =</span> p.hat))</span>
+<span id="cb66-5"><a href="remarks-1.html#cb66-5" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> p <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="at">size=</span><span class="dv">3</span>)</span>
+<span id="cb66-6"><a href="remarks-1.html#cb66-6" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> p <span class="sc">+</span> <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">&quot;loess&quot;</span>)</span>
+<span id="cb66-7"><a href="remarks-1.html#cb66-7" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> p <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span><span class="st">&quot;Empirically observed probability of normal&quot;</span></span>
+<span id="cb66-8"><a href="remarks-1.html#cb66-8" aria-hidden="true" tabindex="-1"></a>              , <span class="at">xlab =</span> <span class="st">&quot;HippoNV&quot;</span>)</span>
+<span id="cb66-9"><a href="remarks-1.html#cb66-9" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(p)</span></code></pre></div>
+<p></p>
+</div>
+<div id="regression-vs.-tree-models" class="section level3 unnumbered">
+<h3>Regression vs. tree models</h3>
+<p>A decision tree model draws a distinct type of <strong>decision boundary</strong> , as illustrated in Figure <a href="remarks-1.html#fig:f3-tree-boundary">45</a>. Think about how a tree is built: at each node, a split is implemented based on <em>one single variable</em>, and in Figure <a href="remarks-1.html#fig:f3-tree-boundary">45</a> the classification boundary is either parallel or perpendicular to one axis.</p>
+<p></p>
+<div class="figure"><span id="fig:f3-tree-boundary"></span>
+<p class="caption marginnote shownote">
+Figure 45: Illustration of a decision tree model for a binary classification problem (i.e., the solid circles and empty squares represent data points from two classes), built on two predictors (i.e., <span class="math inline">\(x_1\)</span> and <span class="math inline">\(x_2\)</span>); (left) is the scatterplot of the data overlaid with the decision boundary of the decision tree model, which is shown in the (right)
+</p>
+<img src="graphics/5_simple_tree.png" alt="Illustration of a decision tree model for a binary classification problem (i.e., the solid circles and empty squares represent data points from two classes), built on two predictors (i.e., $x_1$ and $x_2$); (left) is the scatterplot of the data overlaid with the decision boundary of the decision tree model, which is shown in the (right)" width="100%"  />
+</div>
+<p></p>
+<p>This implies that, when applying a decision tree to a dataset with linear relationship between predictors and outcome variables, it may not be an optimal choice. In the following example, we simulate a dataset and apply a decision tree and a logistics regression model to the data, respectively. The training data, and the predicted classes for each data point from the logistic regression and decision models are shown in Figures <a href="remarks-1.html#fig:f2-22">46</a>, <a href="remarks-1.html#fig:f2-23">47</a> and <a href="remarks-1.html#fig:f2-24">48</a>, respectively. It can be seen that the classification boundary from the logistics regression model is linear, while the one from the decision tree is parallel to the axis. Decision tree is not able to capture the linear relationship in the data. The R code for this experiment is shown in below.</p>
+<p></p>
+<p>
+<span class="marginnote shownote">
+<!--
+<div class="figure">--><span id="fig:f2-22"></span>
+<img src="graphics/2_22.png" alt="Scatterplot of the generated dataset" width="250px"  />
+<!--
+<p class="caption marginnote">-->Figure 46: Scatterplot of the generated dataset<!--</p>-->
+<!--</div>--></span>
+</p>
+<p></p>
+<p></p>
+<p>
+<span class="marginnote shownote">
+<!--
+<div class="figure">--><span id="fig:f2-23"></span>
+<img src="graphics/2_23.png" alt="Decision boundary captured by a logistic regression model" width="250px"  />
+<!--
+<p class="caption marginnote">-->Figure 47: Decision boundary captured by a logistic regression model<!--</p>-->
+<!--</div>--></span>
+</p>
+<p></p>
+<p></p>
+<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb67-1"><a href="remarks-1.html#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(rpart)</span>
+<span id="cb67-2"><a href="remarks-1.html#cb67-2" aria-hidden="true" tabindex="-1"></a>ndata <span class="ot">&lt;-</span> <span class="dv">2000</span></span>
+<span id="cb67-3"><a href="remarks-1.html#cb67-3" aria-hidden="true" tabindex="-1"></a>X1 <span class="ot">&lt;-</span> <span class="fu">runif</span>(ndata, <span class="at">min =</span> <span class="dv">0</span>, <span class="at">max =</span> <span class="dv">1</span>)</span>
+<span id="cb67-4"><a href="remarks-1.html#cb67-4" aria-hidden="true" tabindex="-1"></a>X2 <span class="ot">&lt;-</span> <span class="fu">runif</span>(ndata, <span class="at">min =</span> <span class="dv">0</span>, <span class="at">max =</span> <span class="dv">1</span>)</span>
+<span id="cb67-5"><a href="remarks-1.html#cb67-5" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(X1,X2)</span>
+<span id="cb67-6"><a href="remarks-1.html#cb67-6" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span> <span class="fu">mutate</span>( <span class="at">X12 =</span> <span class="fl">0.5</span> <span class="sc">*</span> (X1 <span class="sc">-</span> X2), <span class="at">Y =</span></span>
+<span id="cb67-7"><a href="remarks-1.html#cb67-7" aria-hidden="true" tabindex="-1"></a>                           <span class="fu">ifelse</span>(X12<span class="sc">&gt;=</span><span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>))</span>
+<span id="cb67-8"><a href="remarks-1.html#cb67-8" aria-hidden="true" tabindex="-1"></a>ix <span class="ot">&lt;-</span> <span class="fu">which</span>( <span class="fu">abs</span>(data<span class="sc">$</span>X12) <span class="sc">&lt;=</span> <span class="fl">0.05</span>)</span>
+<span id="cb67-9"><a href="remarks-1.html#cb67-9" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>Y[ix] <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="fu">runif</span>( <span class="fu">length</span>(ix)) <span class="sc">&lt;</span> <span class="fl">0.5</span>, <span class="dv">0</span>, <span class="dv">1</span>)</span>
+<span id="cb67-10"><a href="remarks-1.html#cb67-10" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> data  <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>X12) <span class="sc">%&gt;%</span>  <span class="fu">mutate</span>(<span class="at">Y =</span></span>
+<span id="cb67-11"><a href="remarks-1.html#cb67-11" aria-hidden="true" tabindex="-1"></a>                          <span class="fu">as.factor</span>(<span class="fu">as.character</span>(Y)))</span>
+<span id="cb67-12"><a href="remarks-1.html#cb67-12" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data,<span class="fu">aes</span>(<span class="at">x=</span>X1,<span class="at">y=</span>X2,<span class="at">color=</span>Y))<span class="sc">+</span><span class="fu">geom_point</span>()</span>
+<span id="cb67-13"><a href="remarks-1.html#cb67-13" aria-hidden="true" tabindex="-1"></a>linear_model <span class="ot">&lt;-</span> <span class="fu">glm</span>(Y <span class="sc">~</span>  ., <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">&quot;logit&quot;</span>),</span>
+<span id="cb67-14"><a href="remarks-1.html#cb67-14" aria-hidden="true" tabindex="-1"></a>                                                  <span class="at">data =</span> data)</span>
+<span id="cb67-15"><a href="remarks-1.html#cb67-15" aria-hidden="true" tabindex="-1"></a>tree_model <span class="ot">&lt;-</span> <span class="fu">rpart</span>( Y <span class="sc">~</span>  ., <span class="at">data =</span> data)</span>
+<span id="cb67-16"><a href="remarks-1.html#cb67-16" aria-hidden="true" tabindex="-1"></a>pred_linear <span class="ot">&lt;-</span> <span class="fu">predict</span>(linear_model, data,<span class="at">type=</span><span class="st">&quot;response&quot;</span>)</span>
+<span id="cb67-17"><a href="remarks-1.html#cb67-17" aria-hidden="true" tabindex="-1"></a>pred_tree <span class="ot">&lt;-</span> <span class="fu">predict</span>(tree_model, data,<span class="at">type=</span><span class="st">&quot;prob&quot;</span>)[,<span class="dv">1</span>]</span>
+<span id="cb67-18"><a href="remarks-1.html#cb67-18" aria-hidden="true" tabindex="-1"></a>data_pred <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">pred_linear_class =</span></span>
+<span id="cb67-19"><a href="remarks-1.html#cb67-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ifelse</span>(pred_linear <span class="sc">&lt;</span><span class="fl">0.5</span>,<span class="dv">0</span>,<span class="dv">1</span>)) <span class="sc">%&gt;%</span><span class="fu">mutate</span>(<span class="at">pred_linear_class =</span></span>
+<span id="cb67-20"><a href="remarks-1.html#cb67-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">as.factor</span>(<span class="fu">as.character</span>(pred_linear_class)))<span class="sc">%&gt;%</span></span>
+<span id="cb67-21"><a href="remarks-1.html#cb67-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">pred_tree_class =</span> <span class="fu">ifelse</span>( pred_tree <span class="sc">&lt;</span><span class="fl">0.5</span>,<span class="dv">0</span>,<span class="dv">1</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb67-22"><a href="remarks-1.html#cb67-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>( <span class="at">pred_tree_class =</span></span>
+<span id="cb67-23"><a href="remarks-1.html#cb67-23" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">as.factor</span>(<span class="fu">as.character</span>(pred_tree_class)))</span>
+<span id="cb67-24"><a href="remarks-1.html#cb67-24" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data_pred,<span class="fu">aes</span>(<span class="at">x=</span>X1,<span class="at">y=</span>X2,<span class="at">color=</span>pred_linear_class))<span class="sc">+</span></span>
+<span id="cb67-25"><a href="remarks-1.html#cb67-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span>
+<span id="cb67-26"><a href="remarks-1.html#cb67-26" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data_pred,<span class="fu">aes</span>(<span class="at">x=</span>X1,<span class="at">y=</span>X2,<span class="at">color=</span>pred_tree_class))<span class="sc">+</span></span>
+<span id="cb67-27"><a href="remarks-1.html#cb67-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code></pre></div>
+<p></p>
+<p></p>
+<p>
+<span class="marginnote shownote">
+<!--
+<div class="figure">--><span id="fig:f2-24"></span>
+<img src="graphics/2_24.png" alt="Decision boundary captured by the tree model" width="250px"  />
+<!--
+<p class="caption marginnote">-->Figure 48: Decision boundary captured by the tree model<!--</p>-->
+<!--</div>--></span>
+</p>
+<p></p>
+</div>
+<div id="can-we-use-a-tree-model-for-regression" class="section level3 unnumbered">
+<h3>Can we use a tree model for regression?</h3>
+<p>The answer is yes. There is nothing preventing us from modifying the tree-learning process as we have presented in <strong>Chapter 2</strong> for predicting continuous outcome. You only need to modify the IG, i.e., to create a similar counterpart for continuous outcomes.</p>
+<p>Without going into further technical details, we present the modified 6-step R pipeline for a regression tree.</p>
+<p></p>
+<div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb68-1"><a href="remarks-1.html#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="co"># AGE, PTGENDER and PTEDUCAT are used as the </span></span>
+<span id="cb68-2"><a href="remarks-1.html#cb68-2" aria-hidden="true" tabindex="-1"></a><span class="co"># predictor variables. </span></span>
+<span id="cb68-3"><a href="remarks-1.html#cb68-3" aria-hidden="true" tabindex="-1"></a><span class="co"># MMSCORE (a numeric value) is the outcome.</span></span>
+<span id="cb68-4"><a href="remarks-1.html#cb68-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb68-5"><a href="remarks-1.html#cb68-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1: read data into R</span></span>
+<span id="cb68-6"><a href="remarks-1.html#cb68-6" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;https://raw.githubusercontent.com&quot;</span>,</span>
+<span id="cb68-7"><a href="remarks-1.html#cb68-7" aria-hidden="true" tabindex="-1"></a>              <span class="st">&quot;/analyticsbook/book/main/data/AD.csv&quot;</span>)</span>
+<span id="cb68-8"><a href="remarks-1.html#cb68-8" aria-hidden="true" tabindex="-1"></a>AD <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="at">text=</span><span class="fu">getURL</span>(url))</span>
+<span id="cb68-9"><a href="remarks-1.html#cb68-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2: data preprocessing</span></span>
+<span id="cb68-10"><a href="remarks-1.html#cb68-10" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> AD[,<span class="dv">2</span><span class="sc">:</span><span class="dv">16</span>]</span>
+<span id="cb68-11"><a href="remarks-1.html#cb68-11" aria-hidden="true" tabindex="-1"></a>Y <span class="ot">&lt;-</span> AD<span class="sc">$</span>MMSCORE</span>
+<span id="cb68-12"><a href="remarks-1.html#cb68-12" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(X,Y)</span>
+<span id="cb68-13"><a href="remarks-1.html#cb68-13" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(data)[<span class="dv">16</span>] <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;MMSCORE&quot;</span>)</span>
+<span id="cb68-14"><a href="remarks-1.html#cb68-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb68-15"><a href="remarks-1.html#cb68-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a training data (half the original data size)</span></span>
+<span id="cb68-16"><a href="remarks-1.html#cb68-16" aria-hidden="true" tabindex="-1"></a>train.ix <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">nrow</span>(data),<span class="fu">floor</span>( <span class="fu">nrow</span>(data)<span class="sc">/</span><span class="dv">2</span>) )</span>
+<span id="cb68-17"><a href="remarks-1.html#cb68-17" aria-hidden="true" tabindex="-1"></a>data.train <span class="ot">&lt;-</span> data[train.ix,]</span>
+<span id="cb68-18"><a href="remarks-1.html#cb68-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a testing data (half the original data size)</span></span>
+<span id="cb68-19"><a href="remarks-1.html#cb68-19" aria-hidden="true" tabindex="-1"></a>data.test <span class="ot">&lt;-</span> data[<span class="sc">-</span>train.ix,]</span>
+<span id="cb68-20"><a href="remarks-1.html#cb68-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb68-21"><a href="remarks-1.html#cb68-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 3: build the tree</span></span>
+<span id="cb68-22"><a href="remarks-1.html#cb68-22" aria-hidden="true" tabindex="-1"></a><span class="co"># for regression problems, use method=&quot;anova&quot;</span></span>
+<span id="cb68-23"><a href="remarks-1.html#cb68-23" aria-hidden="true" tabindex="-1"></a>tree_reg <span class="ot">&lt;-</span> <span class="fu">rpart</span>( MMSCORE <span class="sc">~</span>  ., data.train, <span class="at">method=</span><span class="st">&quot;anova&quot;</span>) </span>
+<span id="cb68-24"><a href="remarks-1.html#cb68-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb68-25"><a href="remarks-1.html#cb68-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 4: draw the tree</span></span>
+<span id="cb68-26"><a href="remarks-1.html#cb68-26" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(rpart.plot)</span>
+<span id="cb68-27"><a href="remarks-1.html#cb68-27" aria-hidden="true" tabindex="-1"></a><span class="fu">prp</span>(tree_reg, <span class="at">nn.cex=</span><span class="dv">1</span>)</span>
+<span id="cb68-28"><a href="remarks-1.html#cb68-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb68-29"><a href="remarks-1.html#cb68-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 5 -&gt; prune the tree</span></span>
+<span id="cb68-30"><a href="remarks-1.html#cb68-30" aria-hidden="true" tabindex="-1"></a>tree_reg <span class="ot">&lt;-</span> <span class="fu">prune</span>(tree_reg,<span class="at">cp=</span><span class="fl">0.03</span>)</span>
+<span id="cb68-31"><a href="remarks-1.html#cb68-31" aria-hidden="true" tabindex="-1"></a><span class="fu">prp</span>(tree_reg,<span class="at">nn.cex=</span><span class="dv">1</span>)</span>
+<span id="cb68-32"><a href="remarks-1.html#cb68-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb68-33"><a href="remarks-1.html#cb68-33" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 6 -&gt; Predict using your tree model</span></span>
+<span id="cb68-34"><a href="remarks-1.html#cb68-34" aria-hidden="true" tabindex="-1"></a>pred.tree <span class="ot">&lt;-</span> <span class="fu">predict</span>(tree_reg, data.test)</span>
+<span id="cb68-35"><a href="remarks-1.html#cb68-35" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(pred.tree, data.test<span class="sc">$</span>MMSCORE)</span>
+<span id="cb68-36"><a href="remarks-1.html#cb68-36" aria-hidden="true" tabindex="-1"></a><span class="co">#For regression model, you can use correlation </span></span>
+<span id="cb68-37"><a href="remarks-1.html#cb68-37" aria-hidden="true" tabindex="-1"></a><span class="co"># to measure how close are your predictions </span></span>
+<span id="cb68-38"><a href="remarks-1.html#cb68-38" aria-hidden="true" tabindex="-1"></a><span class="co"># with the true outcome values of the data points</span></span></code></pre></div>
+<p></p>
+<p></p>
+<p>
+<span class="marginnote shownote">
+<!--
+<div class="figure">--><span id="fig:f3-tree-interaction"></span>
+<img src="graphics/3_tree_interaction.png" alt="Decision tree to predict `MMSCORE` using `PTEDUCAT` and `AGE`" width="250px"  />
+<!--
+<p class="caption marginnote">-->Figure 49: Decision tree to predict <code>MMSCORE</code> using <code>PTEDUCAT</code> and <code>AGE</code><!--</p>-->
+<!--</div>--></span>
+</p>
+<p></p>
+<p>The learned tree is shown in Figure <a href="remarks-1.html#fig:f3-tree-interaction">49</a>. In the EDA analysis shown in <strong>Chapter 2</strong>, it has been shown that the relationship between <code>MMSCORE</code> and <code>PTEDUCAT</code> changes substantially according to different levels of <code>AGE</code>. Here shows the decision tree can also capture the interaction between <code>PTEDUCAT</code>, <code>AGE</code> and <code>MMSCORE</code>.</p>
+<!-- % \footnote{Some advanced examples for interested readers: Neal, R. *Bayesian learning for neural networks*, Springer Verlag 1996. \\ Lee, K. and Kim, J. *On the equivalence of linear discriminant analysis and least squares*, AAAI 2005. \\ Ye, J. *Least squares linear discriminant analysis*, ICML 2007. \\ Li, F., Yang, Y. and Xing, E. *From LASSO regression to feature vector machine*, NIPS 2005.} -->
+</div>
+</div>
+<p style="text-align: center;">
+<a href="statistical-process-control-using-decision-tree.html"><button class="btn btn-default">Previous</button></a>
+<a href="exercises-1.html"><button class="btn btn-default">Next</button></a>
+</p>
+</div>
+</div>
+
+<script src="js/jquery.js"></script>
+<script src="js/tablesaw-stackonly.js"></script>
+<script src="js/nudge.min.js"></script>
+
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+</body>
+</html>
