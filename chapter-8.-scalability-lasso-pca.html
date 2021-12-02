@@ -1,0 +1,1815 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta property="og:title" content="Chapter 8. Scalability: LASSO &amp; PCA | Data Analytics: A Small Data Approach" />
+<meta property="og:type" content="book" />
+
+
+<meta property="og:description" content="This book is suitable for an introductory course of data analytics to help students understand some main statistical learning models, such as linear regression, logistic regression, tree models and random forests, ensemble learning, sparse learning, principal component analysis, kernel methods including the support vector machine and kernel regression, etc. Data science practice is a process that should be told as a story, rather than a one-time implementation of one single model. This process is a main focus of this book, with many course materials about exploratory data analysis, residual analysis, and flowcharts to develop and validate models and data pipelines." />
+
+
+<meta name="author" content="Shuai Huang &amp; Houtao Deng" />
+
+<meta name="date" content="2021-12-02" />
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  TeX: { equationNumbers: { autoNumber: "AMS" } }
+});
+</script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<meta name="description" content="This book is suitable for an introductory course of data analytics to help students understand some main statistical learning models, such as linear regression, logistic regression, tree models and random forests, ensemble learning, sparse learning, principal component analysis, kernel methods including the support vector machine and kernel regression, etc. Data science practice is a process that should be told as a story, rather than a one-time implementation of one single model. This process is a main focus of this book, with many course materials about exploratory data analysis, residual analysis, and flowcharts to develop and validate models and data pipelines.">
+
+<title>Chapter 8. Scalability: LASSO &amp; PCA | Data Analytics: A Small Data Approach</title>
+
+<script src="libs/header-attrs-2.11/header-attrs.js"></script>
+<link href="libs/tufte-css-2015.12.29/tufte.css" rel="stylesheet" />
+<link href="libs/tufte-css-2015.12.29/envisioned.css" rel="stylesheet" />
+<meta name="description" content="My awesome presentation"/>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-194836795-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-194836795-1');
+</script>
+<script src="https://use.typekit.net/ajy6rnl.js"></script>
+<script>try{Typekit.load({ async: true });}catch(e){}</script>
+<!-- <link rel="stylesheet" href="css/normalize.css"> -->
+<!-- <link rel="stylesheet" href="css/envisioned.css"/> -->
+<link rel="stylesheet" href="css/tablesaw-stackonly.css"/>
+<link rel="stylesheet" href="css/nudge.css"/>
+<link rel="stylesheet" href="css/sourcesans.css"/>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+
+
+</head>
+
+<body>
+
+<!--bookdown:toc:start-->
+
+<nav class="pushy pushy-left" id="TOC">
+<ul>
+<li><a href="#cover">Cover</a></li>
+<li><a href="#preface">Preface</a></li>
+<li><a href="#acknowledgments">Acknowledgments</a></li>
+<li><a href="#chapter-1.-introduction">Chapter 1. Introduction</a></li>
+<li><a href="#chapter-2.-abstraction-regression-tree-models">Chapter 2. Abstraction: Regression &amp; Tree Models</a></li>
+<li><a href="#chapter-3.-recognition-logistic-regression-ranking">Chapter 3. Recognition: Logistic Regression &amp; Ranking</a></li>
+<li><a href="#chapter-4.-resonance-bootstrap-random-forests">Chapter 4. Resonance: Bootstrap &amp; Random Forests</a></li>
+<li><a href="#chapter-5.-learning-i-cross-validation-oob">Chapter 5. Learning (I): Cross-validation &amp; OOB</a></li>
+<li><a href="#chapter-6.-diagnosis-residuals-heterogeneity">Chapter 6. Diagnosis: Residuals &amp; Heterogeneity</a></li>
+<li><a href="#chapter-7.-learning-ii-svm-ensemble-learning">Chapter 7. Learning (II): SVM &amp; Ensemble Learning</a></li>
+<li><a href="#chapter-8.-scalability-lasso-pca">Chapter 8. Scalability: LASSO &amp; PCA</a></li>
+<li><a href="#chapter-9.-pragmatism-experience-experimental">Chapter 9. Pragmatism: Experience &amp; Experimental</a></li>
+<li><a href="#chapter-10.-synthesis-architecture-pipeline">Chapter 10. Synthesis: Architecture &amp; Pipeline</a></li>
+<li><a href="#conclusion">Conclusion</a></li>
+<li><a href="#appendix-a-brief-review-of-background-knowledge">Appendix: A Brief Review of Background Knowledge</a></li>
+</ul>
+</nav>
+
+<!--bookdown:toc:end-->
+
+<div class="menu-btn"><h3>☰ Menu</h3></div>
+
+<div class="site-overlay"></div>
+
+
+<div class="row">
+<div class="col-sm-12">
+
+<nav class="pushy pushy-left" id="TOC">
+<ul>
+<li><a href="index.html#cover">Cover</a></li>
+<li><a href="preface.html#preface">Preface</a></li>
+<li><a href="acknowledgments.html#acknowledgments">Acknowledgments</a></li>
+<li><a href="chapter-1.-introduction.html#chapter-1.-introduction">Chapter 1. Introduction</a></li>
+<li><a href="chapter-2.-abstraction-regression-tree-models.html#chapter-2.-abstraction-regression-tree-models">Chapter 2. Abstraction: Regression &amp; Tree Models</a></li>
+<li><a href="chapter-3.-recognition-logistic-regression-ranking.html#chapter-3.-recognition-logistic-regression-ranking">Chapter 3. Recognition: Logistic Regression &amp; Ranking</a></li>
+<li><a href="chapter-4.-resonance-bootstrap-random-forests.html#chapter-4.-resonance-bootstrap-random-forests">Chapter 4. Resonance: Bootstrap &amp; Random Forests</a></li>
+<li><a href="chapter-5.-learning-i-cross-validation-oob.html#chapter-5.-learning-i-cross-validation-oob">Chapter 5. Learning (I): Cross-validation &amp; OOB</a></li>
+<li><a href="chapter-6.-diagnosis-residuals-heterogeneity.html#chapter-6.-diagnosis-residuals-heterogeneity">Chapter 6. Diagnosis: Residuals &amp; Heterogeneity</a></li>
+<li><a href="chapter-7.-learning-ii-svm-ensemble-learning.html#chapter-7.-learning-ii-svm-ensemble-learning">Chapter 7. Learning (II): SVM &amp; Ensemble Learning</a></li>
+<li><a href="chapter-8.-scalability-lasso-pca.html#chapter-8.-scalability-lasso-pca">Chapter 8. Scalability: LASSO &amp; PCA</a></li>
+<li><a href="chapter-9.-pragmatism-experience-experimental.html#chapter-9.-pragmatism-experience-experimental">Chapter 9. Pragmatism: Experience &amp; Experimental</a></li>
+<li><a href="chapter-10.-synthesis-architecture-pipeline.html#chapter-10.-synthesis-architecture-pipeline">Chapter 10. Synthesis: Architecture &amp; Pipeline</a></li>
+<li><a href="conclusion.html#conclusion">Conclusion</a></li>
+<li><a href="appendix-a-brief-review-of-background-knowledge.html#appendix-a-brief-review-of-background-knowledge">Appendix: A Brief Review of Background Knowledge</a></li>
+</ul>
+</nav>
+
+</div>
+</div>
+<div class="row">
+<div class="col-sm-12">
+<div id="chapter-8.-scalability-lasso-pca" class="section level1 unnumbered">
+<h1>Chapter 8. Scalability: LASSO &amp; PCA</h1>
+<div id="overview-6" class="section level2 unnumbered">
+<h2>Overview</h2>
+<p>Chapter 8 is about <em>Scalability</em>. <strong>LASSO</strong> and <strong>PCA</strong> will be introduced. LASSO stands for the <strong>least absolute shrinkage and selection operator</strong>, which is a representative method for <em>feature selection</em>. PCA stands for the <strong>principal component analysis</strong>, which is a representative method for <em>dimension reduction</em>. Both methods can reduce the dimensionality of a dataset but follow different styles. LASSO, as a feature selection method, focuses on deletion of irrelevant or redundant features. PCA, as a dimension reduction method, combines the features into a smaller number of aggregated components (a.k.a., the new features). A remarkable difference between the two approaches is that, while both create a dataset with a smaller dimensionality, in PCA the original features are used to derive the new features<label for="tufte-sn-201" class="margin-toggle sidenote-number">201</label><input type="checkbox" id="tufte-sn-201" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">201</span> As a result, no feature is discarded.</span>.</p>
+</div>
+<div id="lasso" class="section level2 unnumbered">
+<h2>LASSO</h2>
+<p></p>
+<div id="rationale-and-formulation-12" class="section level3 unnumbered">
+<h3>Rationale and formulation</h3>
+<p></p>
+<p>
+<span class="marginnote shownote">
+<!--
+<div class="figure">--><span style="display:block;" id="fig:f8-intro1"></span>
+<img src="graphics/8_intro1.png" alt="A line is not a model" width="80%"  />
+<!--
+<p class="caption marginnote">-->Figure 143: A line is not a model<!--</p>-->
+<!--</div>--></span>
+</p>
+<p></p>
+<p>Two points determine a line, as shown in Figure <a href="chapter-8.-scalability-lasso-pca.html#fig:f8-intro1">143</a>. It shares the same geometric form as a linear regression model, but it is a deterministic geometric pattern and has nothing to do with <em>error</em>.</p>
+<p></p>
+<p>
+<span class="marginnote shownote">
+<!--
+<div class="figure">--><span style="display:block;" id="fig:f8-intro"></span>
+<img src="graphics/8_intro.png" alt="Revisit the linear regression model" width="100%"  />
+<!--
+<p class="caption marginnote">-->Figure 144: Revisit the linear regression model<!--</p>-->
+<!--</div>--></span>
+</p>
+<p></p>
+<p>With one more data point, magic happens: as shown in Figure <a href="chapter-8.-scalability-lasso-pca.html#fig:f8-intro">144</a>, now we can estimate the <em>residuals</em> and study the systematic patterns of <em>error</em>. The line in Figure <a href="chapter-8.-scalability-lasso-pca.html#fig:f8-intro">144</a> becomes a statistical model.</p>
+<p>The two lines in Figures <a href="chapter-8.-scalability-lasso-pca.html#fig:f8-intro1">143</a> and <a href="chapter-8.-scalability-lasso-pca.html#fig:f8-intro">144</a>, one is a deterministic pattern, while another is a statistical model, are like <em>homonym</em>. The different meanings share the same form of their signifier (e.g., like the word <em>bass</em> that means a certain sound that is low and deep, or a type of fish).</p>
+<p>The <em>error</em> is a defining component of a statistical model. It models the <em>noise</em> in the data. In an application context, understanding the noise and knowing how much proportion the noise contributes to the total variation of the dataset is important knowledge. And, to derive the <em>p-values</em> of the regression coefficients, we need the noise so that we can compare the strength of the estimated coefficients with the noise to evaluate if the estimated coefficients are significantly different from random manifestation (i.e., if we cannot model the noise, then we have no basis to define what is random manifestation.).</p>
+<p>To model a linear regression model, we need enough data points to estimate the error. For the simple example when there is only one predictor <span class="math inline">\(x\)</span>, as shown in Figures <a href="chapter-8.-scalability-lasso-pca.html#fig:f8-intro1">143</a> and <a href="chapter-8.-scalability-lasso-pca.html#fig:f8-intro">144</a>, we would need at least <span class="math inline">\(3\)</span> data points to estimate the error<label for="tufte-sn-202" class="margin-toggle sidenote-number">202</label><input type="checkbox" id="tufte-sn-202" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">202</span> While this is obvious from Figures <a href="chapter-8.-scalability-lasso-pca.html#fig:f8-intro1">143</a> and <a href="chapter-8.-scalability-lasso-pca.html#fig:f8-intro">144</a>, we can also obtain the conclusion by derivation. I.e., given two data points, <span class="math inline">\((x_1, y_1)\)</span> and <span class="math inline">\((x_2, y_2)\)</span> we could write two equations, <span class="math inline">\(y_1 = \beta_{0}+\beta_{1} x_1\)</span> and <span class="math inline">\(y_2 = \beta_{0}+\beta_{1} x_2\)</span>.</span>. This is just enough to solve for the <span class="math inline">\(2\)</span> regression coefficients. Consider a problem with <span class="math inline">\(10\)</span> variables, what is the minimum number of data points needed to enable the estimation of error<label for="tufte-sn-203" class="margin-toggle sidenote-number">203</label><input type="checkbox" id="tufte-sn-203" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">203</span> The answer is <span class="math inline">\(12\)</span>. Suppose that we only have <span class="math inline">\(11\)</span> data points. The regression <em>line</em> is defined by <span class="math inline">\(11\)</span> regression coefficients. For each data point, we can write up an equation. Thus, <span class="math inline">\(11\)</span> data points are just enough to estimate the <span class="math inline">\(11\)</span> regression coefficients, leaving no room for estimating errors.</span>?</p>
+<p>From the examples aforementioned, we could deduce that the number of data points, i.e., denoted as <span class="math inline">\(N\)</span>, needs to be larger than the number of variables, i.e., denoted as <span class="math inline">\(p\)</span>. This is barely a minimum requirement of linear regression, as we haven’t asked how many data points are needed to ensure high-quality estimation of the parameters. In classic settings in statistics, <span class="math inline">\(N\)</span> is assumed to be much larger than <span class="math inline">\(p\)</span> in order to prove asymptotics—a common approach to prove a statistical model is valid. Practically, linear regression model finds difficulty in applications where the ratio <span class="math inline">\(N/p\)</span> is small. In recent years, there are applications where the number of data points is even smaller than the number of variables, i.e., commonly referred to as <span class="math inline">\(N &lt; p\)</span> problems.</p>
+<p>When increasing <span class="math inline">\(N\)</span> is not always a feasible option, reducing <span class="math inline">\(p\)</span> is a necessity. Some variables may be irrelevant or simply noise. Even if all variables are statistically informative, when considered as a whole, some of them may be redundant, and some are weaker than others. In those scenarios, there is room for us to wriggle with the problematic dataset and improve on the ratio <span class="math inline">\(N/p\)</span> by reducing <span class="math inline">\(p\)</span>.</p>
+<p>LASSO was invented in 1996 to sparsify the linear regression model and allow the regression model to select significant predictors automatically<label for="tufte-sn-204" class="margin-toggle sidenote-number">204</label><input type="checkbox" id="tufte-sn-204" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">204</span> Tibshirani, R. <em>Regression shrinkage and selection via the Lasso,</em> Journal of the Royal Statistical Society (Series B), Volume 58, Issue 1, Pages 267-288, 1996.</span>.</p>
+<p>Remember that, to estimate <span class="math inline">\(\boldsymbol{\beta}\)</span>, the least squares estimation of linear regression is</p>
+<p><span class="math display" id="eq:8-LS">\[\begin{equation}
+\small
+        \boldsymbol{\hat \beta} = \arg\min_{\boldsymbol \beta} {  (\boldsymbol{y}-\boldsymbol{X} \boldsymbol{\beta})^{T}(\boldsymbol{y}-\boldsymbol{X} \boldsymbol{\beta}), }   
+\tag{83}
+\end{equation}\]</span></p>
+<p>where <span class="math inline">\(\boldsymbol{y} \in \mathbb{R}^{N \times 1}\)</span> is the measurement vector of the outcome variable, <span class="math inline">\(\boldsymbol{X} \in \mathbb{R}^{N \times p}\)</span> is the data matrix of the <span class="math inline">\(N\)</span> measurement vectors of the <span class="math inline">\(p\)</span> predictors, <span class="math inline">\(\boldsymbol \beta \in \mathbb{R}^{p \times 1}\)</span> is the regression coefficient vector<label for="tufte-sn-205" class="margin-toggle sidenote-number">205</label><input type="checkbox" id="tufte-sn-205" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">205</span> Here, we assume that the data is normalized/standardized and no intercept coefficient <span class="math inline">\(\beta_0\)</span> is needed. Normalization means <span class="math inline">\(\sum_{n=1}^N x_{nj}/N=0\)</span>, <span class="math inline">\(\sum_{n=1}^N x_{ij}^2/N=1\)</span> for <span class="math inline">\(j=1,2,\dots,p\)</span> and <span class="math inline">\(\sum_{n=1}^N y_n/N=0\)</span>. Normalization is a common practice, and some R packages automatically normalize the data as a default preprocessing step before the application of a model.</span>.</p>
+<p>The formulation of LASSO is</p>
+<p><span class="math display" id="eq:8-LASSO">\[\begin{equation}
+\small
+        \boldsymbol{\hat \beta} = \arg\min_{\boldsymbol \beta} \left \{   \underbrace{(\boldsymbol{y}-\boldsymbol{X} \boldsymbol{\beta})^{T}(\boldsymbol{y}-\boldsymbol{X} \boldsymbol{\beta})}_{\text{Least squares}} + \underbrace{\lambda \lVert \boldsymbol{\beta}\rVert_{1}}_{L_1 \text{ norm penalty}} \right \}
+\tag{84}
+\end{equation}\]</span></p>
+<p>where <span class="math inline">\(\lVert \boldsymbol{\beta} \rVert_1 = \sum_{i=1}^p \lvert \beta_i \rvert\)</span>. The parameter, <span class="math inline">\(\lambda\)</span>, is called the <strong>penalty parameter</strong> that is specified by user of LASSO. The larger the parameter <span class="math inline">\(\lambda\)</span>, the more zeros in <span class="math inline">\(\boldsymbol{\hat \beta}\)</span>.</p>
+<p>It could be seen that LASSO embodies two components in its formulation. The <span class="math inline">\(1\)</span>^{st} term is the least squares loss function inherited from linear regression that is used to measure the goodness-of-fit of the model. The <span class="math inline">\(2\)</span> term is the sum of absolute values of elements in <span class="math inline">\(\boldsymbol{\beta}\)</span> that is called the <span class="math inline">\(L_1\)</span> norm penatly. It measures the <em>model complexity</em>, i.e., smaller <span class="math inline">\(\lVert \boldsymbol{\beta} \rVert_1\)</span> tends to create more zeros in <span class="math inline">\(\boldsymbol{\beta}\)</span>, leading to a simpler model. In practice, by tuning the parameter <span class="math inline">\(\lambda\)</span>, we hope to find the best model with an optimal balance between model fit and model complexity.</p>
+<!-- $\left\lVert \boldsymbol{\beta} \right\rVert_1 $ -->
+<p></p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:f8-1"></span>
+<p class="caption marginnote shownote">
+Figure 145: Path solution trajectory of the coefficients; each curve corresponds to a regression coefficient
+</p>
+<img src="graphics/8_1.png" alt="Path solution trajectory of the coefficients; each curve corresponds to a regression coefficient" width="80%"  />
+</div>
+<p></p>
+<p>As shown in Figure <a href="chapter-8.-scalability-lasso-pca.html#fig:f8-1">145</a>, LASSO can generate a <strong>path solution trajectory</strong> that visualizes the solutions of <span class="math inline">\(\boldsymbol{\beta}\)</span> for a continuum of values of <span class="math inline">\(\lambda\)</span>. Model selection criteria such as the Akaike Information Criteria (AIC) or cross-validation can be used to identify the best <span class="math inline">\(\lambda\)</span> that would help us find the final model, i.e., as the vertical line shown in Figure <a href="chapter-8.-scalability-lasso-pca.html#fig:f8-1">145</a>. When many variables are deleted from the model, the dimensionality of the model is reduced, and <span class="math inline">\(N/p\)</span> is increased.</p>
+<!-- %\begin{equation} -->
+<!-- %    \begin{gathered} -->
+<!-- %    y = \beta_{0}+\beta_{1} x + \epsilon, \\ -->
+<!-- %    \epsilon \sim N\left(0, \sigma_{\varepsilon}^{2}\right). -->
+<!-- %    \end{gathered} -->
+<!-- %(\#eq:8-simLR) -->
+<!-- %\end{equation} -->
+</div>
+<div id="the-shooting-algorithm" class="section level3 unnumbered">
+<h3>The shooting algorithm</h3>
+<p>We introduce the <strong>shooting algorithm</strong> to solve for the optimization problem shown in Eq. <a href="chapter-8.-scalability-lasso-pca.html#eq:8-LASSO">(84)</a>. Let’s consider a simple example when there is only one predictor <span class="math inline">\(x\)</span>. The objective function in Eq. <a href="chapter-8.-scalability-lasso-pca.html#eq:8-LASSO">(84)</a> could be rewritten as</p>
+<p><span class="math display" id="eq:8-simLR-LASSO">\[\begin{equation}
+\small
+    l\left(\beta\right)=(\boldsymbol{y} - \boldsymbol{X}\beta)^{T}(\boldsymbol{y} - \boldsymbol{X}\beta) + \lambda \lvert \beta \rvert.
+\tag{85}
+\end{equation}\]</span></p>
+<p>To solve Eq. <a href="chapter-8.-scalability-lasso-pca.html#eq:8-simLR-LASSO">(85)</a>, we take the differential of <span class="math inline">\(l\left(\beta\right)\)</span> and put it equal to zero</p>
+<p><span class="math display" id="eq:8-simLASSO-grad">\[\begin{equation}
+\small
+    \frac {\partial l(\beta)}{\partial \beta}=0.
+\tag{86}
+\end{equation}\]</span></p>
+<p>A complication of this differential operation is that the <span class="math inline">\(L_1\)</span>-norm term, <span class="math inline">\(\lvert \beta \rvert\)</span>, has no gradient when <span class="math inline">\(\beta=0\)</span>. There are three scenarios:</p>
+<p><!-- begin{itemize} --></p>
+<ul>
+<li><p>If <span class="math inline">\(\beta&gt;0\)</span>, then <span class="math inline">\(\frac {\partial L(\beta)}{\partial \beta}=2\beta-2\boldsymbol{X}^T\boldsymbol{y}+\lambda\)</span>. Based on Eq. <a href="chapter-8.-scalability-lasso-pca.html#eq:8-simLASSO-grad">(86)</a>, we can estimate <span class="math inline">\(\beta\)</span> as <span class="math inline">\(\hat \beta =\boldsymbol{X}^T\boldsymbol{y}-\lambda/2\)</span>. Note that this estimate of <span class="math inline">\(\beta\)</span> may turn out to be negative. If that happens, it would be a contradiction since we have assumed <span class="math inline">\(\beta&gt;0\)</span> to derive the result. This contradiction points to the only possibility that <span class="math inline">\(\beta=0\)</span>.</p></li>
+<li><p>If <span class="math inline">\(\beta&lt;0\)</span>, then <span class="math inline">\(\frac {\partial L(\beta)}{\partial \beta}=2\beta-2\boldsymbol{X}^T\boldsymbol{y}-\lambda\)</span>. Based on Eq. <a href="chapter-8.-scalability-lasso-pca.html#eq:8-simLASSO-grad">(86)</a>, we have <span class="math inline">\(\beta = \boldsymbol{X}^T\boldsymbol{y}+\lambda/2\)</span>. Note that this estimate of <span class="math inline">\(\beta\)</span> may turn out to be positive. If that happens, it would be a contradiction since we have assumed <span class="math inline">\(\beta&lt;0\)</span> to derive the result. This contradiction points to the only possibility that <span class="math inline">\(\beta=0\)</span>.</p></li>
+<li><p>If <span class="math inline">\(\beta=0\)</span>, then we have had the solution and no longer need to derive the gradient.</p></li>
+</ul>
+<p><!-- end{itemize} --></p>
+<p>In summary, the solution of <span class="math inline">\(\beta\)</span> is</p>
+<p><span class="math display" id="eq:8-simLASSO-sol">\[\begin{equation}
+\small
+    \hat \beta = \begin{cases}
+    \boldsymbol{X}^T\boldsymbol{y}-\lambda/2, &amp;if \, \boldsymbol{X}^T\boldsymbol{y}-\lambda/2&gt;0 \\
+    \boldsymbol{X}^T\boldsymbol{y}+\lambda/2, &amp;if \, \boldsymbol{X}^T\boldsymbol{y}+\lambda/2&lt;0 \\
+    0, &amp; if \, \lambda/2 \geq \lvert\boldsymbol{X}^T\boldsymbol{y}\rvert.
+    \end{cases}\tag{87}
+\end{equation}\]</span></p>
+<p>Now let’s consider the general case as shown in Eq. <a href="chapter-8.-scalability-lasso-pca.html#eq:8-LASSO">(84)</a>. Figure <a href="chapter-8.-scalability-lasso-pca.html#fig:f8-lasso-iter">146</a> illustrates the basic idea: to apply the conclusion (with a slight variation) we have obtained in Eq. <a href="chapter-8.-scalability-lasso-pca.html#eq:8-simLASSO-sol">(87)</a> to solve Eq. <a href="chapter-8.-scalability-lasso-pca.html#eq:8-LASSO">(84)</a>. Each iteration solves for one regression coefficient, assuming that all the other coefficients are fixed (i.e., to their latest values).</p>
+<p></p>
+<p>
+<span class="marginnote shownote">
+<!--
+<div class="figure">--><span style="display:block;" id="fig:f8-lasso-iter"></span>
+<img src="graphics/8_lasso_iter.png" alt="The shooting algorithm iterates through the coefficients" width="60%"  />
+<!--
+<p class="caption marginnote">-->Figure 146: The shooting algorithm iterates through the coefficients<!--</p>-->
+<!--</div>--></span>
+</p>
+<p></p>
+<p>In each iteration, we solve a similar problem with the one-predictor special problem shown in Eq. <a href="chapter-8.-scalability-lasso-pca.html#eq:8-simLR-LASSO">(85)</a>. For instance, denote <span class="math inline">\(\beta_j^{(t)}\)</span> as the estimate of <span class="math inline">\(\beta_j\)</span> in the <span class="math inline">\(t^{th}\)</span> iteration. If we fix the other regression coefficients as their latest estimates, we can rewrite Eq. <a href="chapter-8.-scalability-lasso-pca.html#eq:8-LASSO">(84)</a> as a function of <span class="math inline">\(\beta_j^{(t)}\)</span> only</p>
+<p><span class="math display" id="eq:8-LR-LASSOsim">\[\begin{equation}
+\small
+    l(\beta_j^{(t)}) = \left (\boldsymbol{y}^{(t)}_j - \boldsymbol{X}_{(:,j)}\beta_j^{(t)} \right )^{T} \left (\boldsymbol{y}^{(t)}_j - \boldsymbol{X}_{(:,j)}\beta_j^{(t)}\right ) +
+    \lambda \lvert \beta_j^{(t)} \rvert,
+\tag{88}
+\end{equation}\]</span></p>
+<p>where <span class="math inline">\(\boldsymbol{X}_{(:,j)}\)</span> is the <span class="math inline">\(j^{th}\)</span> column of the matrix <span class="math inline">\(\boldsymbol{X}\)</span>, and</p>
+<p><span class="math display" id="eq:8-yt">\[\begin{equation}
+\small
+    \boldsymbol{y}^{(t)}_j = \boldsymbol{y-} \sum\nolimits_{k\neq j}\boldsymbol{X}_{(:,k)}\hat\beta^{(t)}_{k}.
+\tag{89}
+\end{equation}\]</span></p>
+<p>Eq. <a href="chapter-8.-scalability-lasso-pca.html#eq:8-LR-LASSOsim">(88)</a> has the same structure as Eq. <a href="chapter-8.-scalability-lasso-pca.html#eq:8-simLR-LASSO">(85)</a>. We can readily apply the conclusion in Eq. <a href="chapter-8.-scalability-lasso-pca.html#eq:8-simLASSO-sol">(87)</a> here and obtain</p>
+<p><span class="math display" id="eq:8-LASSO-sol">\[\begin{equation}
+\small
+    \hat\beta_j^{(t)}=\begin{cases}
+    q^{(t)}_j - \lambda / 2, &amp; if \, q^{(t)}_j - \lambda/2 &gt;0 \\
+    q^{(t)}_j + \lambda / 2, &amp; if \, q^{(t)}_j + \lambda/2 &lt;0 \\
+    0, &amp; if \, \lambda/2 \geq \lvert q^{(t)}_j \rvert, \end{cases}
+\tag{90}
+\end{equation}\]</span></p>
+<p>where</p>
+<p><span class="math display" id="eq:8-qj">\[\begin{equation}
+\small
+    q^{(t)}_j=\boldsymbol{X}_{(:, j)}^T \boldsymbol{y}^{(t)}_j.
+\tag{91}
+\end{equation}\]</span></p>
+</div>
+<div id="a-small-data-example" class="section level3 unnumbered">
+<h3>A small data example</h3>
+<p></p>
+<p><!--
+<caption>--><span class="marginnote shownote"><span id="tab:t8-1">Table 34: </span>A dataset example for LASSO</span><!--</caption>--></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left"><span class="math inline">\(x_1\)</span></th>
+<th align="left"><span class="math inline">\(x_2\)</span></th>
+<th align="left"><span class="math inline">\(y\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><span class="math inline">\(-0.707\)</span></td>
+<td align="left"><span class="math inline">\(0\)</span></td>
+<td align="left"><span class="math inline">\(-0.77\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(0\)</span></td>
+<td align="left"><span class="math inline">\(0.707\)</span></td>
+<td align="left"><span class="math inline">\(0.15\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(0.707\)</span></td>
+<td align="left"><span class="math inline">\(-0.707\)</span></td>
+<td align="left"><span class="math inline">\(0.62\)</span></td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<p>Consider a dataset example as shown in Table <a href="chapter-8.-scalability-lasso-pca.html#tab:t8-1">34</a>.<label for="tufte-sn-206" class="margin-toggle sidenote-number">206</label><input type="checkbox" id="tufte-sn-206" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">206</span> To generate this dataset, we sampled the values of <span class="math inline">\(y\)</span> using the model <span class="math display">\[\begin{equation*}  \small      y =0.8x_1+\varepsilon, \text{ where } \varepsilon \sim N(0,0.5).     \end{equation*}\]</span> Only <span class="math inline">\(x_1\)</span> is important.</span></p>
+<p>In matrix form, the dataset is rewritten as</p>
+<p><span class="math display">\[\begin{equation*}
+\small
+  
+\boldsymbol{y}=\left[ \begin{array}{c}{-0.77} \\ {0.15} \\ {0.62}\end{array}\right], \text {     }  \boldsymbol{X}=\left[ \begin{array}{ccccc} {-0.707} &amp; {0} \\ {0} &amp; {0.707} \\ {0.707} &amp; {-0.707}\end{array}\right].
+ 
+\end{equation*}\]</span></p>
+<p>Now let’s implement the <em>Shooting algorithm</em> on this data. The objective function of LASSO on this case is</p>
+<p><span class="math display">\[\begin{equation*}
+\small
+  
+\sum\nolimits_{n=1}\nolimits^3 [y_n-(\beta_1x_{n,1}+\beta_2x_{n,2})]^2+\lambda(\lvert \beta_1 \rvert+\lvert \beta_2 \rvert).
+ 
+\end{equation*}\]</span></p>
+<p>Suppose that <span class="math inline">\(\lambda=1\)</span>, and we initiate the regression coefficients as <span class="math inline">\(\hat \beta_1^{(0)}=0\)</span> and <span class="math inline">\(\hat \beta_2^{(0)}=1\)</span>.</p>
+<p>To update <span class="math inline">\(\hat \beta_1^{(1)}\)</span>, based on Eq. <a href="chapter-8.-scalability-lasso-pca.html#eq:8-LASSO-sol">(90)</a>, we first calculate <span class="math inline">\(\boldsymbol{y}^{(1)}_1\)</span> using Eq. <a href="chapter-8.-scalability-lasso-pca.html#eq:8-yt">(89)</a></p>
+<p><span class="math display">\[\begin{equation*}
+\small
+  
+\boldsymbol{y}^{(1)}_1 = \boldsymbol{y-}\boldsymbol{X}_{(:,2)}\hat\beta_2^{(0)} = \begin{bmatrix}
+-0.7700 \\
+-0.557 \\
+1.3270 \\
+\end{bmatrix}
+. 
+\end{equation*}\]</span></p>
+<p>Then we calculate <span class="math inline">\(q^{(1)}_1\)</span> using Eq. <a href="chapter-8.-scalability-lasso-pca.html#eq:8-qj">(91)</a></p>
+<p><span class="math display">\[\begin{equation*}
+\small
+  
+q^{(1)}_1=\boldsymbol{X}_{(:,1)}^T\boldsymbol{y}^{(1)}_1 = 1.7654.
+ 
+\end{equation*}\]</span>
+As
+<span class="math display">\[\begin{equation*}
+\small
+  
+q^{(1)}_1 - \lambda/2 &gt;0,
+ 
+\end{equation*}\]</span>
+based on Eq. <a href="chapter-8.-scalability-lasso-pca.html#eq:8-LASSO-sol">(90)</a> we know that</p>
+<p><span class="math display">\[\begin{equation*}
+\small
+  \hat\beta_1^{(1)} = q^{(1)}_1 - \lambda/2 = 1.2654.
+ 
+\end{equation*}\]</span></p>
+<p>Then we update <span class="math inline">\(\hat \beta_2^{(1)}\)</span>. We can obtain that
+<span class="math display">\[\begin{equation*}
+\small
+  
+\boldsymbol{y}^{(1)}_2 = \boldsymbol{y-}\boldsymbol{X}_{(:,1)}\hat\beta_1^{(1)} = \begin{bmatrix}
+0.1876 \\
+0.1500 \\
+-0.2746\\
+\end{bmatrix}
+. 
+\end{equation*}\]</span>
+And we can get
+<span class="math display">\[\begin{equation*}
+\small
+  
+q^{(1)}_2=\boldsymbol{X}_{(:,2)}^T\boldsymbol{y}^{(1)}_2 = 0.3002.
+ 
+\end{equation*}\]</span>
+As
+<span class="math display">\[\begin{equation*}
+\small
+  \lambda / 2 \geq \lvert q^{(1)}_2\rvert ,
+ 
+\end{equation*}\]</span>
+we know that
+<span class="math display">\[\begin{equation*}
+\small
+  \hat \beta_2^{(1)} = 0. 
+\end{equation*}\]</span></p>
+<p>Thus, with only one iteration, the <em>Shooting algorithm</em> identified the irrelevant variable.</p>
+</div>
+<div id="r-lab-11" class="section level3 unnumbered">
+<h3>R Lab</h3>
+<p><em>The 7-Step R Pipeline.</em> <strong>Step 1</strong> and <strong>Step 2</strong> get dataset into R and organize the dataset in required format.</p>
+<p></p>
+<div class="sourceCode" id="cb164"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb164-1"><a href="chapter-8.-scalability-lasso-pca.html#cb164-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1 -&gt; Read data into R workstation</span></span>
+<span id="cb164-2"><a href="chapter-8.-scalability-lasso-pca.html#cb164-2" aria-hidden="true" tabindex="-1"></a><span class="do">#### Read data from a CSV file</span></span>
+<span id="cb164-3"><a href="chapter-8.-scalability-lasso-pca.html#cb164-3" aria-hidden="true" tabindex="-1"></a><span class="do">#### Example: Alzheimer&#39;s Disease</span></span>
+<span id="cb164-4"><a href="chapter-8.-scalability-lasso-pca.html#cb164-4" aria-hidden="true" tabindex="-1"></a><span class="co"># RCurl is the R package to read csv file using a link</span></span>
+<span id="cb164-5"><a href="chapter-8.-scalability-lasso-pca.html#cb164-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(RCurl)</span>
+<span id="cb164-6"><a href="chapter-8.-scalability-lasso-pca.html#cb164-6" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;https://raw.githubusercontent.com&quot;</span>,</span>
+<span id="cb164-7"><a href="chapter-8.-scalability-lasso-pca.html#cb164-7" aria-hidden="true" tabindex="-1"></a>              <span class="st">&quot;/analyticsbook/book/main/data/AD_hd.csv&quot;</span>)</span>
+<span id="cb164-8"><a href="chapter-8.-scalability-lasso-pca.html#cb164-8" aria-hidden="true" tabindex="-1"></a>AD <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="at">text=</span><span class="fu">getURL</span>(url))</span>
+<span id="cb164-9"><a href="chapter-8.-scalability-lasso-pca.html#cb164-9" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(AD)</span></code></pre></div>
+<p></p>
+<p></p>
+<div class="sourceCode" id="cb165"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb165-1"><a href="chapter-8.-scalability-lasso-pca.html#cb165-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2 -&gt; Data preprocessing</span></span>
+<span id="cb165-2"><a href="chapter-8.-scalability-lasso-pca.html#cb165-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Create your X matrix (predictors) and Y </span></span>
+<span id="cb165-3"><a href="chapter-8.-scalability-lasso-pca.html#cb165-3" aria-hidden="true" tabindex="-1"></a><span class="co"># vector (outcome variable)</span></span>
+<span id="cb165-4"><a href="chapter-8.-scalability-lasso-pca.html#cb165-4" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> AD[,<span class="sc">-</span><span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>)]</span>
+<span id="cb165-5"><a href="chapter-8.-scalability-lasso-pca.html#cb165-5" aria-hidden="true" tabindex="-1"></a>Y <span class="ot">&lt;-</span> AD<span class="sc">$</span>MMSCORE</span>
+<span id="cb165-6"><a href="chapter-8.-scalability-lasso-pca.html#cb165-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb165-7"><a href="chapter-8.-scalability-lasso-pca.html#cb165-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Then, we integrate everything into a data frame</span></span>
+<span id="cb165-8"><a href="chapter-8.-scalability-lasso-pca.html#cb165-8" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(Y,X)</span>
+<span id="cb165-9"><a href="chapter-8.-scalability-lasso-pca.html#cb165-9" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(data)[<span class="dv">1</span>] <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;MMSCORE&quot;</span>)</span>
+<span id="cb165-10"><a href="chapter-8.-scalability-lasso-pca.html#cb165-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb165-11"><a href="chapter-8.-scalability-lasso-pca.html#cb165-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a training data</span></span>
+<span id="cb165-12"><a href="chapter-8.-scalability-lasso-pca.html#cb165-12" aria-hidden="true" tabindex="-1"></a>train.ix <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">nrow</span>(data),<span class="fu">floor</span>( <span class="fu">nrow</span>(data)) <span class="sc">*</span> <span class="dv">4</span> <span class="sc">/</span> <span class="dv">5</span> )</span>
+<span id="cb165-13"><a href="chapter-8.-scalability-lasso-pca.html#cb165-13" aria-hidden="true" tabindex="-1"></a>data.train <span class="ot">&lt;-</span> data[train.ix,]</span>
+<span id="cb165-14"><a href="chapter-8.-scalability-lasso-pca.html#cb165-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a testing data</span></span>
+<span id="cb165-15"><a href="chapter-8.-scalability-lasso-pca.html#cb165-15" aria-hidden="true" tabindex="-1"></a>data.test <span class="ot">&lt;-</span> data[<span class="sc">-</span>train.ix,]</span>
+<span id="cb165-16"><a href="chapter-8.-scalability-lasso-pca.html#cb165-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb165-17"><a href="chapter-8.-scalability-lasso-pca.html#cb165-17" aria-hidden="true" tabindex="-1"></a><span class="co"># as.matrix is used here, because the package </span></span>
+<span id="cb165-18"><a href="chapter-8.-scalability-lasso-pca.html#cb165-18" aria-hidden="true" tabindex="-1"></a><span class="co"># glmnet requires this data format.</span></span>
+<span id="cb165-19"><a href="chapter-8.-scalability-lasso-pca.html#cb165-19" aria-hidden="true" tabindex="-1"></a>trainX <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(data.train[,<span class="sc">-</span><span class="dv">1</span>])</span>
+<span id="cb165-20"><a href="chapter-8.-scalability-lasso-pca.html#cb165-20" aria-hidden="true" tabindex="-1"></a>testX <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(data.test[,<span class="sc">-</span><span class="dv">1</span>])</span>
+<span id="cb165-21"><a href="chapter-8.-scalability-lasso-pca.html#cb165-21" aria-hidden="true" tabindex="-1"></a>trainY <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(data.train[,<span class="dv">1</span>])</span>
+<span id="cb165-22"><a href="chapter-8.-scalability-lasso-pca.html#cb165-22" aria-hidden="true" tabindex="-1"></a>testY <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(data.test[,<span class="dv">1</span>])</span></code></pre></div>
+<p></p>
+<p></p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:f8-BC-path"></span>
+<p class="caption marginnote shownote">
+Figure 147: Path trajectory of the fitted regression parameters. The figure should be read from right to left (i.e., <span class="math inline">\(\lambda\)</span> from small to large). Variables that become zero later are stronger (i.e., since a larger <span class="math inline">\(\lambda\)</span> is needed to make them become <span class="math inline">\(0\)</span>). The variables that quickly become zero are weak or insignificant variables.
+</p>
+<img src="graphics/8_BC_path.png" alt="Path trajectory of the fitted regression parameters. The figure should be read from right to left (i.e., $\lambda$ from small to large). Variables that become zero later are stronger (i.e., since a larger $\lambda$ is needed to make them become $0$). The variables that quickly become zero are weak or insignificant variables. " width="80%"  />
+</div>
+<p></p>
+<p><strong>Step 3</strong> uses the R package <code>glmnet</code><label for="tufte-sn-207" class="margin-toggle sidenote-number">207</label><input type="checkbox" id="tufte-sn-207" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">207</span> Check out the argument <code>glmnet</code> to learn more.</span> to build a LASSO model.</p>
+<p></p>
+<div class="sourceCode" id="cb166"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb166-1"><a href="chapter-8.-scalability-lasso-pca.html#cb166-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 3 -&gt; Use glmnet to conduct LASSO</span></span>
+<span id="cb166-2"><a href="chapter-8.-scalability-lasso-pca.html#cb166-2" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages(&quot;glmnet&quot;)</span></span>
+<span id="cb166-3"><a href="chapter-8.-scalability-lasso-pca.html#cb166-3" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(glmnet)</span>
+<span id="cb166-4"><a href="chapter-8.-scalability-lasso-pca.html#cb166-4" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">=</span> <span class="fu">glmnet</span>(trainX,trainY, <span class="at">family=</span><span class="fu">c</span>(<span class="st">&quot;gaussian&quot;</span>))</span>
+<span id="cb166-5"><a href="chapter-8.-scalability-lasso-pca.html#cb166-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb166-6"><a href="chapter-8.-scalability-lasso-pca.html#cb166-6" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(fit<span class="sc">$</span>beta) </span>
+<span id="cb166-7"><a href="chapter-8.-scalability-lasso-pca.html#cb166-7" aria-hidden="true" tabindex="-1"></a><span class="co"># The fitted sparse regression parameters under </span></span>
+<span id="cb166-8"><a href="chapter-8.-scalability-lasso-pca.html#cb166-8" aria-hidden="true" tabindex="-1"></a><span class="co"># different lambda values are stored in fit$beta.</span></span></code></pre></div>
+<p></p>
+<p><strong>Step 4</strong> draws the path trajectory of the LASSO models (i.e., as the one shown in Figure <a href="chapter-8.-scalability-lasso-pca.html#fig:f8-1">145</a>). The result is shown in Figure <a href="chapter-8.-scalability-lasso-pca.html#fig:f8-BC-path">147</a>. It displays the information stored in <code>fit$beta</code>. Each curve shows how the estimated regression coefficient of a variable changes according to the value of <span class="math inline">\(\lambda\)</span>.</p>
+<p></p>
+<div class="sourceCode" id="cb167"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb167-1"><a href="chapter-8.-scalability-lasso-pca.html#cb167-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 4 -&gt; visualization of the path trajectory of </span></span>
+<span id="cb167-2"><a href="chapter-8.-scalability-lasso-pca.html#cb167-2" aria-hidden="true" tabindex="-1"></a><span class="co"># the fitted sparse regression parameters</span></span>
+<span id="cb167-3"><a href="chapter-8.-scalability-lasso-pca.html#cb167-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(fit,<span class="at">label =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<p></p>
+<p></p>
+<p>
+<span class="marginnote shownote">
+<!--
+<div class="figure">--><span style="display:block;" id="fig:f8-BC-cv"></span>
+<img src="graphics/8_BC_cv.png" alt="Cross-validation result. It is hoped (because it is not always the case in practice) that it is *U-shaped*, like the one shown here, so that we can spot the optimal value of $\lambda$, i.e., the one that corresponds to the lowest dip point. " width="100%"  />
+<!--
+<p class="caption marginnote">-->Figure 148: Cross-validation result. It is hoped (because it is not always the case in practice) that it is <em>U-shaped</em>, like the one shown here, so that we can spot the optimal value of <span class="math inline">\(\lambda\)</span>, i.e., the one that corresponds to the lowest dip point. <!--</p>-->
+<!--</div>--></span>
+</p>
+<p></p>
+<p><strong>Step 5</strong> uses cross-validation to identify the best <span class="math inline">\(\lambda\)</span> value for the LASSO model. The result is shown in Figure <a href="chapter-8.-scalability-lasso-pca.html#fig:f8-BC-cv">148</a>.</p>
+<p></p>
+<div class="sourceCode" id="cb168"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb168-1"><a href="chapter-8.-scalability-lasso-pca.html#cb168-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 5 -&gt; Use cross-validation to decide which lambda to use</span></span>
+<span id="cb168-2"><a href="chapter-8.-scalability-lasso-pca.html#cb168-2" aria-hidden="true" tabindex="-1"></a>cv.fit <span class="ot">=</span> <span class="fu">cv.glmnet</span>(trainX,trainY)</span>
+<span id="cb168-3"><a href="chapter-8.-scalability-lasso-pca.html#cb168-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(cv.fit) </span>
+<span id="cb168-4"><a href="chapter-8.-scalability-lasso-pca.html#cb168-4" aria-hidden="true" tabindex="-1"></a><span class="co"># look for the u-shape, and identify the lowest </span></span>
+<span id="cb168-5"><a href="chapter-8.-scalability-lasso-pca.html#cb168-5" aria-hidden="true" tabindex="-1"></a><span class="co"># point that corresponds to the best model</span></span></code></pre></div>
+<p></p>
+<p><strong>Step 6</strong> views the best model and evaluates its predictions.</p>
+<p></p>
+<div class="sourceCode" id="cb169"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb169-1"><a href="chapter-8.-scalability-lasso-pca.html#cb169-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 6 -&gt; To view the best model and the </span></span>
+<span id="cb169-2"><a href="chapter-8.-scalability-lasso-pca.html#cb169-2" aria-hidden="true" tabindex="-1"></a><span class="co"># corresponding coefficients</span></span>
+<span id="cb169-3"><a href="chapter-8.-scalability-lasso-pca.html#cb169-3" aria-hidden="true" tabindex="-1"></a>cv.fit<span class="sc">$</span>lambda.min </span>
+<span id="cb169-4"><a href="chapter-8.-scalability-lasso-pca.html#cb169-4" aria-hidden="true" tabindex="-1"></a><span class="co"># cv.fit$lambda.min is the best lambda value that results </span></span>
+<span id="cb169-5"><a href="chapter-8.-scalability-lasso-pca.html#cb169-5" aria-hidden="true" tabindex="-1"></a><span class="co"># in the best model with smallest mean squared error (MSE)</span></span>
+<span id="cb169-6"><a href="chapter-8.-scalability-lasso-pca.html#cb169-6" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(cv.fit, <span class="at">s =</span> <span class="st">&quot;lambda.min&quot;</span>) </span>
+<span id="cb169-7"><a href="chapter-8.-scalability-lasso-pca.html#cb169-7" aria-hidden="true" tabindex="-1"></a><span class="co"># This extracts the fitted regression parameters of </span></span>
+<span id="cb169-8"><a href="chapter-8.-scalability-lasso-pca.html#cb169-8" aria-hidden="true" tabindex="-1"></a><span class="co"># the linear regression model using the given lambda value.</span></span>
+<span id="cb169-9"><a href="chapter-8.-scalability-lasso-pca.html#cb169-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb169-10"><a href="chapter-8.-scalability-lasso-pca.html#cb169-10" aria-hidden="true" tabindex="-1"></a>y_hat <span class="ot">&lt;-</span> <span class="fu">predict</span>(cv.fit, <span class="at">newx =</span> testX, <span class="at">s =</span> <span class="st">&quot;lambda.min&quot;</span>) </span>
+<span id="cb169-11"><a href="chapter-8.-scalability-lasso-pca.html#cb169-11" aria-hidden="true" tabindex="-1"></a><span class="co"># This is to predict using the best model</span></span>
+<span id="cb169-12"><a href="chapter-8.-scalability-lasso-pca.html#cb169-12" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(y_hat, data.test<span class="sc">$</span>MMSCORE)</span>
+<span id="cb169-13"><a href="chapter-8.-scalability-lasso-pca.html#cb169-13" aria-hidden="true" tabindex="-1"></a>mse <span class="ot">&lt;-</span> <span class="fu">mean</span>((y_hat <span class="sc">-</span> data.test<span class="sc">$</span>MMSCORE)<span class="sc">^</span><span class="dv">2</span>) </span>
+<span id="cb169-14"><a href="chapter-8.-scalability-lasso-pca.html#cb169-14" aria-hidden="true" tabindex="-1"></a><span class="co"># The mean squared error (mse)</span></span>
+<span id="cb169-15"><a href="chapter-8.-scalability-lasso-pca.html#cb169-15" aria-hidden="true" tabindex="-1"></a>mse</span></code></pre></div>
+<p></p>
+<p>Results are shown below.</p>
+<p></p>
+<div class="sourceCode" id="cb170"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb170-1"><a href="chapter-8.-scalability-lasso-pca.html#cb170-1" aria-hidden="true" tabindex="-1"></a><span class="do">## 0.2969686 # cor(y_hat, data.test$MMSCORE)</span></span>
+<span id="cb170-2"><a href="chapter-8.-scalability-lasso-pca.html#cb170-2" aria-hidden="true" tabindex="-1"></a><span class="do">## 2.453638  # mse</span></span></code></pre></div>
+<p></p>
+<p><strong>Step 7</strong> re-fits the regression model using the variables selected by LASSO. As LASSO put <span class="math inline">\(L_1\)</span> norm on the regression parameters, it not only penalizes the regression coefficients of the irrelevant variables to be zero, but also penalizes the regression coefficients of the selected variable. Thus, the estimated regression coefficients of a LASSO model tend to be smaller than they are (i.e., this is called <em>bias</em> in machine learning terminology).</p>
+<p></p>
+<div class="sourceCode" id="cb171"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb171-1"><a href="chapter-8.-scalability-lasso-pca.html#cb171-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 7 -&gt; Re-fit the regression model with selected variables </span></span>
+<span id="cb171-2"><a href="chapter-8.-scalability-lasso-pca.html#cb171-2" aria-hidden="true" tabindex="-1"></a><span class="co"># by LASSO</span></span>
+<span id="cb171-3"><a href="chapter-8.-scalability-lasso-pca.html#cb171-3" aria-hidden="true" tabindex="-1"></a>var_idx <span class="ot">&lt;-</span> <span class="fu">which</span>(<span class="fu">coef</span>(cv.fit, <span class="at">s =</span> <span class="st">&quot;lambda.min&quot;</span>) <span class="sc">!=</span> <span class="dv">0</span>)</span>
+<span id="cb171-4"><a href="chapter-8.-scalability-lasso-pca.html#cb171-4" aria-hidden="true" tabindex="-1"></a>lm.AD.reduced <span class="ot">&lt;-</span> <span class="fu">lm</span>(MMSCORE <span class="sc">~</span> ., <span class="at">data =</span> </span>
+<span id="cb171-5"><a href="chapter-8.-scalability-lasso-pca.html#cb171-5" aria-hidden="true" tabindex="-1"></a>                      data.train[,var_idx,<span class="at">drop=</span><span class="cn">FALSE</span>])</span>
+<span id="cb171-6"><a href="chapter-8.-scalability-lasso-pca.html#cb171-6" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm.AD.reduced)</span></code></pre></div>
+<p></p>
+</div>
+</div>
+<div id="principal-component-analysis" class="section level2 unnumbered">
+<h2>Principal component analysis</h2>
+<p></p>
+<div id="rationale-and-formulation-13" class="section level3 unnumbered">
+<h3>Rationale and formulation</h3>
+<!-- % *Our power comes from the perception of our power*^[A line quoted from HBO's Chernobyl]. -->
+<p>A dataset has many variables, but its inherent dimensionality may be smaller than it appears to be. For example, as shown in Figure <a href="chapter-8.-scalability-lasso-pca.html#fig:f8-PCAintro">149</a>, the <span class="math inline">\(10\)</span> variables of the dataset, <span class="math inline">\(x_1\)</span>, <span class="math inline">\(x_2\)</span>, <span class="math inline">\(\ldots\)</span>, <span class="math inline">\(x_{10}\)</span>, are manifestations of three underlying independent variables, <span class="math inline">\(z_1\)</span>, <span class="math inline">\(z_2\)</span>, and <span class="math inline">\(z_3\)</span>. In other words, a dataset of <span class="math inline">\(10\)</span> variables is not necessarily a system of <span class="math inline">\(10\)</span> <em>degrees of freedom</em>.</p>
+<p></p>
+<p>
+<span class="marginnote shownote">
+<!--
+<div class="figure">--><span style="display:block;" id="fig:f8-PCAintro"></span>
+<img src="graphics/8_PCAintro.png" alt="PCA---to uncover the Master of Puppets ($z_1$, $z_2$, and $z_3$) " width="100%"  />
+<!--
+<p class="caption marginnote">-->Figure 149: PCA—to uncover the Master of Puppets (<span class="math inline">\(z_1\)</span>, <span class="math inline">\(z_2\)</span>, and <span class="math inline">\(z_3\)</span>) <!--</p>-->
+<!--</div>--></span>
+</p>
+<p></p>
+<p>The question is how to uncover the “Master of Puppets,” i.e., <span class="math inline">\(z_1\)</span>, <span class="math inline">\(z_2\)</span>, and <span class="math inline">\(z_3\)</span>, based on data of the observed variables, <span class="math inline">\(x_1\)</span>, <span class="math inline">\(x_2\)</span>, <span class="math inline">\(\ldots\)</span>, <span class="math inline">\(x_{10}\)</span>.</p>
+<p>Let’s look at the scattered data points in Figure <a href="chapter-8.-scalability-lasso-pca.html#fig:f8-11">150</a>. If we think of the data points as <em>stars</em>, and this is the universe after the <em>Big Bang</em>, we can identify two potential forces here: a force that stretches the data points towards one direction (i.e., labeled as <em>the <span class="math inline">\(1^{st}\)</span> PC)<label for="tufte-sn-208" class="margin-toggle sidenote-number">208</label><input type="checkbox" id="tufte-sn-208" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">208</span> PC stands for the .</span></em>; and another force (i.e., labeled as <em>the <span class="math inline">\(2^{nd}\)</span> PC</em>) that drags the data points towards another direction. The forces are independent, so in mathematical terms they follow <strong>orthogonal</strong> directions. And it might be possible that the <span class="math inline">\(2^{nd}\)</span> PC only represents noise. If that is the case, calling it a force may not be the best way. Sometimes we say each PC represents a <em>variation source</em>.</p>
+<p></p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:f8-11"></span>
+<p class="caption marginnote shownote">
+Figure 150: Illustration of the principal components in a dataset with 2 variables; the main variation source is represented by th e 1<sup>st</sup> dimension
+</p>
+<img src="graphics/8_11.png" alt="Illustration of the principal components in a dataset with 2 variables; the main variation source is represented by th e 1^st^  dimension" width="60%"  />
+</div>
+<p></p>
+<p>This interpretation of Figure <a href="chapter-8.-scalability-lasso-pca.html#fig:f8-11">150</a> may seem natural. If so, it is only because it makes a tacit assumption that seems too <em>natural</em> to draw our attention: the forces are <em>represented</em> as <em>lines</em><label for="tufte-sn-209" class="margin-toggle sidenote-number">209</label><input type="checkbox" id="tufte-sn-209" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">209</span> Why is a force a line? It could be a wave, a spiral, or anything other than a line. But the challenge is to write up the mathematical form of an idea—like the example of maximum margin in <strong>Chapter 7</strong>.</span>, their mathematical forms are <em>linear models</em> that are defined by the existing variables, i.e., the two lines in Figure <a href="chapter-8.-scalability-lasso-pca.html#fig:f8-11">150</a> could be defined by <span class="math inline">\(x_1\)</span> and <span class="math inline">\(x_2\)</span>. The PCA seeks linear combinations of the original variables to pinpoint the directions towards which the underlying forces push the data points. These directions are called <em>principal components</em> (PCs). In other words, the PCA assumes that the relationship between the underlying PCs and the observed variables is linear. And because they are linear, it takes <em>orthogonality</em> to separate different forces.</p>
+</div>
+<div id="theory-and-method-8" class="section level3 unnumbered">
+<h3>Theory and method</h3>
+<p>The lines in Figure <a href="chapter-8.-scalability-lasso-pca.html#fig:f8-11">150</a> take the form as <span class="math inline">\(w_1x_1 + w_2x_2\)</span>,<label for="tufte-sn-210" class="margin-toggle sidenote-number">210</label><input type="checkbox" id="tufte-sn-210" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">210</span> For simplicity, from now on, we assume that all the variables in the dataset are normalized, i.e., for any variable <span class="math inline">\(x_i\)</span>, its mean is <span class="math inline">\(0\)</span> and its variance is <span class="math inline">\(1\)</span>.</span> where <span class="math inline">\(w_1\)</span> and <span class="math inline">\(w_2\)</span> are free parameters. To estimate <span class="math inline">\(w_1\)</span> and <span class="math inline">\(w_2\)</span> for the lines, we need to write an <em>optimization</em> formulation with an objective function and a constraints structure that carries out the idea outlined in Figure <a href="chapter-8.-scalability-lasso-pca.html#fig:f8-11">150</a>: to identify the two lines.</p>
+<p></p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:f8-PCA-line"></span>
+<p class="caption marginnote shownote">
+Figure 151: Any line <span class="math inline">\(z = w_1x_1 + w_2x_2\)</span> leads to a new one-dimensional space defined by <span class="math inline">\(z\)</span>
+</p>
+<img src="graphics/8_PCA_line.png" alt="Any line $z = w_1x_1 + w_2x_2$ leads to a new one-dimensional space defined by $z$" width="80%"  />
+</div>
+<p></p>
+<p>As shown in Figure <a href="chapter-8.-scalability-lasso-pca.html#fig:f8-PCA-line">151</a>, any line <span class="math inline">\(z = w_1x_1 + w_2x_2\)</span> leads to a new one-dimensional space defined by <span class="math inline">\(z\)</span>. Data points find their projections on this new space, i.e., the white dots on the line. The variance of the white dots provides a quantitative evaluation of the strength of the force that stretched the data points. The PCA seeks the lines that have the largest variances, which are the strongest forces stretching the data and scattering the data points along the PCs. Specifically, as there would be one line that represents the strongest force (a.k.a., as the <span class="math inline">\(1^{st}\)</span> PC), the second line is called the <span class="math inline">\(2^{nd}\)</span> PC, and so on.</p>
+<p>To generalize the idea of Figure <a href="chapter-8.-scalability-lasso-pca.html#fig:f8-PCA-line">151</a>, let’s focus on the identification of the <span class="math inline">\(1^{st}\)</span> PC first. Suppose there are <span class="math inline">\(p\)</span> variables, <span class="math inline">\(x_1\)</span>, <span class="math inline">\(x_2\)</span>, <span class="math inline">\(\ldots\)</span>, <span class="math inline">\(x_{p}\)</span>. The <em>line</em> for the <span class="math inline">\(1^{st}\)</span> PC is <span class="math inline">\(\boldsymbol{w}_{(1)}^T\boldsymbol{x}\)</span>. <span class="math inline">\(\boldsymbol{w}_{(1)}\in \mathbb{R}^{p \times 1}\)</span> is the weight vector of the <span class="math inline">\(1^{st}\)</span> PC<label for="tufte-sn-211" class="margin-toggle sidenote-number">211</label><input type="checkbox" id="tufte-sn-211" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">211</span> It is also called the <strong>loading</strong> of the PC.</span>. The projections of <span class="math inline">\(N\)</span> data points on the line of the <span class="math inline">\(1^{st}\)</span> PC, i.e., the coordinates of the <em>white dots</em>, are</p>
+<p><span class="math display" id="eq:8-PCA-z">\[\begin{equation}
+\small
+    z_{1n} = \boldsymbol{w}_{(1)}^T\boldsymbol{x}_n, \text{ for } n=1, 2, \ldots, N,
+\tag{92}
+\end{equation}\]</span></p>
+<p>where <span class="math inline">\(\boldsymbol{x}_n \in \mathbb{R}^{1 \times p}\)</span> is the <span class="math inline">\(n^{th}\)</span> data point.</p>
+<p>As we mentioned, the <span class="math inline">\(1^{st}\)</span> PC is the line that has the largest variance of <span class="math inline">\(z_1\)</span>. Suppose that the data have been standardized, we have</p>
+<p><span class="math display">\[\begin{equation}
+    var(z_1) = var\left(\boldsymbol{w}_{(1)}^T\boldsymbol{x}\right)=\frac{1}{N}\sum_{n=1}^N\left[\boldsymbol{w}_{(1)}^T\boldsymbol{x}_{n}\right]^2.
+\end{equation}\]</span></p>
+<p>This leads to the following formulation to learn the parameter <span class="math inline">\(\boldsymbol{w}_{(1)}\)</span></p>
+<p><span class="math display" id="eq:8-PC1">\[\begin{equation}
+\small
+    \boldsymbol{w}_{(1)} = \arg\max_{\boldsymbol{w}_{(1)}^T\boldsymbol{w}_{(1)}=1} \left \{ \sum\nolimits_{n=1}\nolimits^{N}\left [ \boldsymbol{w}_{(1)}^T\boldsymbol{x}_{n} \right ]^2\right \},
+\tag{93}
+\end{equation}\]</span></p>
+<p>where the constraint <span class="math inline">\(\boldsymbol{w}_{(1)}^T\boldsymbol{w}_{(1)}=1\)</span> is to normalize the scale of <span class="math inline">\(\boldsymbol{w}\)</span>.<label for="tufte-sn-212" class="margin-toggle sidenote-number">212</label><input type="checkbox" id="tufte-sn-212" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">212</span> Without which the optimization problem in Eq. <a href="chapter-8.-scalability-lasso-pca.html#eq:8-PC1">(93)</a> is unbounded. This also indicates that the absolute magnitudes of <span class="math inline">\(\boldsymbol{w}_{(1)}\)</span> are often misleading. The relative magnitudes are more useful.</span></p>
+<p>A more succinct form of Eq. <a href="chapter-8.-scalability-lasso-pca.html#eq:8-PC1">(93)</a> is</p>
+<p><span class="math display" id="eq:8-PC1-X">\[\begin{equation}
+\small
+    \boldsymbol{w}_{(1)} = \arg\max_{\boldsymbol{w}_{(1)}^T\boldsymbol{w}_{(1)}=1}\left \{ \boldsymbol{w}_{(1)}^T\boldsymbol{X}^T\boldsymbol{X}\boldsymbol{w}_{(1)} \right\},
+\tag{94}
+\end{equation}\]</span></p>
+<p>where <span class="math inline">\(\boldsymbol{X}\in \mathbb{R}^{N \times p}\)</span> is the data matrix that concatenates the <span class="math inline">\(N\)</span> samples into a matrix, i.e., each sample forms a row in <span class="math inline">\(\boldsymbol{X}\)</span>. Eq. <a href="chapter-8.-scalability-lasso-pca.html#eq:8-PC1-X">(94)</a> is also known as the <strong>eigenvalue decomposition</strong> problem of the matrix <span class="math inline">\(\boldsymbol{X}^T\boldsymbol{X}\)</span>.<label for="tufte-sn-213" class="margin-toggle sidenote-number">213</label><input type="checkbox" id="tufte-sn-213" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">213</span> <span class="math inline">\(\frac{\boldsymbol{X}^T\boldsymbol{X}}{N-1}\)</span> is called the <strong>sample covariance matrix</strong> , usually denoted as <span class="math inline">\(\boldsymbol{S}\)</span>. <span class="math inline">\(\boldsymbol{S}\)</span> could be used in Eq. <a href="chapter-8.-scalability-lasso-pca.html#eq:8-PC1-X">(94)</a> to replace <span class="math inline">\(\boldsymbol{X}^T\boldsymbol{X}\)</span>.</span> In this context, <span class="math inline">\(\boldsymbol{w}_{(1)}\)</span> is called the <span class="math inline">\(1^{st}\)</span> <strong>eigenvector</strong>.</p>
+<p>To identify the <span class="math inline">\(2^{nd}\)</span> PC, we again find a way to <em>iterate</em>. The idea is simple: as the <span class="math inline">\(1^{st}\)</span> PC represents a variance source, and the data <span class="math inline">\(\boldsymbol{X}\)</span> contains an aggregation of multiple variance sources, why not remove the first variance source from <span class="math inline">\(\boldsymbol{X}\)</span> and then create a new dataset that contains the remaining variance sources? Then, the procedure for finding <span class="math inline">\(\boldsymbol{w}_{(1)}\)</span> could be used for finding <span class="math inline">\(\boldsymbol{w}_{(2)}\)</span>—with <span class="math inline">\(\boldsymbol{w}_{(1)}\)</span> removed, <span class="math inline">\(\boldsymbol{w}_{(2)}\)</span> is the largest variance source.</p>
+<p>This process could be generalized as:</p>
+<p><!-- begin{itemize} --></p>
+<ul>
+<li>[<em>Create <span class="math inline">\(\boldsymbol{X}_{(k)}\)</span></em>] In order to find the <span class="math inline">\(k^{th}\)</span> PC, we could create a dataset by removing the variation sources from the previous <span class="math inline">\(k-1\)</span> PCs</li>
+</ul>
+<p><span class="math display" id="eq:8-PCA-removePC">\[\begin{equation}
+\small
+        \boldsymbol{X}_{(k)}=\boldsymbol{X}-\sum_{s=1}^{k-1}\boldsymbol{w}_{(s)}\boldsymbol{w}_{(s)}^T.
+\tag{95}
+    \end{equation}\]</span></p>
+<ul>
+<li>[<em>Solve for <span class="math inline">\(\boldsymbol{w}_{(k)}\)</span></em>] Then, we solve</li>
+</ul>
+<p><span class="math display" id="eq:8-PCA-wk">\[\begin{equation}
+\small
+        \boldsymbol{w}_{(k)}=\arg\max_{\boldsymbol{w}_{(k)}^T\boldsymbol{w}_{(k)}=1}\left \{ \boldsymbol{w}_{(k)}^T\boldsymbol{X}_{(k)}^T\boldsymbol{X}_{(k)}\boldsymbol{w}_{(k)} \right \}.
+\tag{96}
+    \end{equation}\]</span>
+We then compute <span class="math inline">\(\lambda_{(k)} = \boldsymbol{w}_{(k)}^T\boldsymbol{X}_{(k)}^T\boldsymbol{X}_{(k)}\boldsymbol{w}_{(k)}.\)</span> <span class="math inline">\(\lambda_{(k)}\)</span> is called the <strong>eigenvalue</strong> of the <span class="math inline">\(k^{th}\)</span> PC.</p>
+<p><!-- end{itemize} --></p>
+<p>So we create <span class="math inline">\(\boldsymbol{X}_{(k)}\)</span> and solve Eq. <a href="chapter-8.-scalability-lasso-pca.html#eq:8-PCA-wk">(96)</a> in multiple iterations. Many R packages have packed all the iterations into one batch. Usually, we only need to calculate <span class="math inline">\(\boldsymbol{X}^T\boldsymbol{X}\)</span> or <span class="math inline">\(\boldsymbol{S}\)</span> and use it as input of these packages, then obtain all the eigenvalues and eigenvectors.</p>
+<p>This iterative algorithm would yield in total <span class="math inline">\(p\)</span> PCs for a dataset with <span class="math inline">\(p\)</span> variables. But usually, not all the PCs are significant. If we apply PCA on the dataset generated by the data-generating mechanism as shown in Figure <a href="chapter-8.-scalability-lasso-pca.html#fig:f8-PCAintro">149</a>, only the first 3 PCs should be significant, and the other 7 PCs, although they <em>computationally exist</em>, statistically do not exist, as they are manifestations of noise.</p>
+<p></p>
+<p>
+<span class="marginnote shownote">
+<!--
+<div class="figure">--><span style="display:block;" id="fig:f8-12"></span>
+<img src="graphics/8_12.png" alt="The scree plot shows that only the first 2 PCs are significant" width="100%"  />
+<!--
+<p class="caption marginnote">-->Figure 152: The scree plot shows that only the first 2 PCs are significant<!--</p>-->
+<!--</div>--></span>
+</p>
+<p></p>
+<p>In practice, we need to decide how many PCs are needed for a dataset. The <strong>scree plot</strong> as shown in Figure <a href="chapter-8.-scalability-lasso-pca.html#fig:f8-12">152</a> is a common tool: it draws the eigenvalues of the PCs, <span class="math inline">\(\lambda_{(1)}, \lambda_{(2)}, \ldots, \lambda_{(p)}\)</span>. Then we look for the change point if it exists. We discard the PCs after the change point as they may be statistically insignificant.</p>
+</div>
+<div id="a-small-data-example-1" class="section level3 unnumbered">
+<h3>A small data example</h3>
+<p>The dataset is shown in Table <a href="chapter-8.-scalability-lasso-pca.html#tab:t8-2">35</a>. It has <span class="math inline">\(3\)</span> variables and <span class="math inline">\(5\)</span> data points.</p>
+<p></p>
+<p><!--
+<caption>--><span class="marginnote shownote"><span id="tab:t8-2">Table 35: </span>A dataset example for PCA</span><!--</caption>--></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left"><span class="math inline">\(x_1\)</span></th>
+<th align="left"><span class="math inline">\(x_2\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><span class="math inline">\(-10\)</span></td>
+<td align="left"><span class="math inline">\(6\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(-4\)</span></td>
+<td align="left"><span class="math inline">\(2\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(2\)</span></td>
+<td align="left"><span class="math inline">\(1\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(8\)</span></td>
+<td align="left"><span class="math inline">\(0\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(14\)</span></td>
+<td align="left"><span class="math inline">\(-4\)</span></td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<p>First, we normalize (or, standardize) the variables<label for="tufte-sn-214" class="margin-toggle sidenote-number">214</label><input type="checkbox" id="tufte-sn-214" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">214</span> Recall that we assumed that all the variables are normalized when we derived the PCA algorithm</span>. I.e., for <span class="math inline">\(x_1\)</span>, we compute its mean and standard derivation first, which are <span class="math inline">\(2\)</span> and <span class="math inline">\(9.48\)</span>,<label for="tufte-sn-215" class="margin-toggle sidenote-number">215</label><input type="checkbox" id="tufte-sn-215" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">215</span> In this example, numbers are rounded to <span class="math inline">\(2\)</span> decimal places.</span> respectively. Then, we distract each measurement of <span class="math inline">\(x_1\)</span> from its mean and further divide it by its standard derivation. For example, for the first measurement of <span class="math inline">\(x_1\)</span>, <span class="math inline">\(-10\)</span>, it is converted as</p>
+<p><span class="math display">\[\begin{equation*}
+\small
+  
+\frac{-10 - 2}{9.48}=-1.26.
+ 
+\end{equation*}\]</span></p>
+<p>The second measurement, <span class="math inline">\(-4\)</span>, is converted as</p>
+<p><span class="math display">\[\begin{equation*}
+\small
+  
+\frac{-4 - 2}{9.48}=-0.63.
+ 
+\end{equation*}\]</span></p>
+<p>And so on.</p>
+<p>Similarly, for <span class="math inline">\(x_2\)</span>, we compute its mean and standard derivation, which are <span class="math inline">\(1\)</span> and <span class="math inline">\(3.61\)</span>, respectively. The standardized dataset is shown in Table <a href="chapter-8.-scalability-lasso-pca.html#tab:t8-standardx">36</a>.</p>
+<p></p>
+<p><!--
+<caption>--><span class="marginnote shownote"><span id="tab:t8-standardx">Table 36: </span>Standardized dataset of Table <a href="chapter-8.-scalability-lasso-pca.html#tab:t8-2">35</a></span><!--</caption>--></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left"><span class="math inline">\(x_1\)</span></th>
+<th align="left"><span class="math inline">\(x_2\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><span class="math inline">\(-1.26\)</span></td>
+<td align="left"><span class="math inline">\(1.39\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(-0.63\)</span></td>
+<td align="left"><span class="math inline">\(0.28\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(0\)</span></td>
+<td align="left"><span class="math inline">\(0\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(0.63\)</span></td>
+<td align="left"><span class="math inline">\(-0.28\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(1.26\)</span></td>
+<td align="left"><span class="math inline">\(-1.39\)</span></td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<p>We calculate <span class="math inline">\(\boldsymbol{S}\)</span> as</p>
+<p><span class="math display">\[\begin{equation*}
+\small
+   \boldsymbol{S}=\boldsymbol{X}^T \boldsymbol{X} / 4 = \begin{bmatrix}
+1 &amp; -0.96 \\
+-0.96 &amp; 1 \\
+\end{bmatrix}
+. 
+\end{equation*}\]</span></p>
+<p>Solving this eigenvalue decomposition problem<label for="tufte-sn-216" class="margin-toggle sidenote-number">216</label><input type="checkbox" id="tufte-sn-216" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">216</span> E.g., using <code>eigen()</code> in R.</span>, for the <span class="math inline">\(1^{st}\)</span> PC, we have</p>
+<p><span class="math display">\[\begin{equation*}
+\small
+  
+\lambda_1=1.96 \, \text{ and } \, \boldsymbol{w}_{(1)}=\left[ -0.71, \, 0.71\right].
+ 
+\end{equation*}\]</span></p>
+<p>Continuing to the <span class="math inline">\(2^{nd}\)</span> PC, we have</p>
+<p><span class="math display">\[\begin{equation*}
+\small
+  
+\lambda_2=0.04 \, \text{ and } \, \boldsymbol{w}_{(2)}=\left[  -0.71, \, -0.71\right].
+ 
+\end{equation*}\]</span></p>
+<p></p>
+<p>
+<span class="marginnote shownote">
+<!--
+<div class="figure">--><span style="display:block;" id="fig:f8-PCA-example1"></span>
+<img src="graphics/8_PCA_example1.png" alt="Gray dots are data points (standardized); the black line is the $1^{st}$ PC" width="100%"  />
+<!--
+<p class="caption marginnote">-->Figure 153: Gray dots are data points (standardized); the black line is the <span class="math inline">\(1^{st}\)</span> PC<!--</p>-->
+<!--</div>--></span>
+</p>
+<p></p>
+<p>We can calculate the cumulative contributions of the <span class="math inline">\(2\)</span> PCs</p>
+<p><span class="math display">\[\begin{equation*}
+\small
+  
+\text{For the } 1^{st} \text{ PC: } 1.96/(1.96+0.04) = 0.98.
+ 
+\end{equation*}\]</span></p>
+<p><span class="math display">\[\begin{equation*}
+\small
+  
+\text{For the } 2^{nd} \text{ PC: } 0.04/(1.96+0.04) = 0.02.
+ 
+\end{equation*}\]</span></p>
+<p>The <span class="math inline">\(2^{nd}\)</span> PC is statistically insignificant.</p>
+<p>We visualize the <span class="math inline">\(1^{st}\)</span> PC in Figure <a href="chapter-8.-scalability-lasso-pca.html#fig:f8-PCA-example1">153</a> (compare it with Figure <a href="chapter-8.-scalability-lasso-pca.html#fig:f8-11">150</a>). The R code to generate Figure <a href="chapter-8.-scalability-lasso-pca.html#fig:f8-PCA-example1">153</a> is shown below.</p>
+<p></p>
+<div class="sourceCode" id="cb172"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb172-1"><a href="chapter-8.-scalability-lasso-pca.html#cb172-1" aria-hidden="true" tabindex="-1"></a>x1 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">10</span>, <span class="sc">-</span><span class="dv">4</span>, <span class="dv">2</span>, <span class="dv">8</span>, <span class="dv">14</span>)</span>
+<span id="cb172-2"><a href="chapter-8.-scalability-lasso-pca.html#cb172-2" aria-hidden="true" tabindex="-1"></a>x2 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">6</span>, <span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="sc">-</span><span class="dv">4</span>)</span>
+<span id="cb172-3"><a href="chapter-8.-scalability-lasso-pca.html#cb172-3" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">cbind</span>(x1,x2)</span>
+<span id="cb172-4"><a href="chapter-8.-scalability-lasso-pca.html#cb172-4" aria-hidden="true" tabindex="-1"></a>x.scale <span class="ot">&lt;-</span> <span class="fu">scale</span>(x) <span class="co">#standardize the data</span></span>
+<span id="cb172-5"><a href="chapter-8.-scalability-lasso-pca.html#cb172-5" aria-hidden="true" tabindex="-1"></a>eigen.x <span class="ot">&lt;-</span> <span class="fu">eigen</span>(<span class="fu">cor</span>(x))</span>
+<span id="cb172-6"><a href="chapter-8.-scalability-lasso-pca.html#cb172-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(x.scale, <span class="at">col =</span> <span class="st">&quot;gray&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb172-7"><a href="chapter-8.-scalability-lasso-pca.html#cb172-7" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="dv">0</span>,eigen.x<span class="sc">$</span>vectors[<span class="dv">2</span>,<span class="dv">1</span>]<span class="sc">/</span>eigen.x<span class="sc">$</span>vectors[<span class="dv">1</span>,<span class="dv">1</span>],</span>
+<span id="cb172-8"><a href="chapter-8.-scalability-lasso-pca.html#cb172-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">lwd =</span> <span class="dv">3</span>, <span class="at">col =</span> <span class="st">&quot;black&quot;</span>)</span></code></pre></div>
+<p></p>
+<p>The coordinates of the <em>white dots</em> (a.k.a., the projections of the data points on the PCs, as shown in Figure <a href="chapter-8.-scalability-lasso-pca.html#fig:f8-PCA-line">151</a>) can be obtained by using Eq. <a href="chapter-8.-scalability-lasso-pca.html#eq:8-PCA-z">(92)</a>. Results are shown in Table <a href="chapter-8.-scalability-lasso-pca.html#tab:t8-example1-PC">37</a>. This is an example of <em>data transformation</em>.</p>
+<p></p>
+<p><!--
+<caption>--><span class="marginnote shownote"><span id="tab:t8-example1-PC">Table 37: </span>The coordinates of the <em>white dots</em>, i.e., a.k.a., the projections of the data points on the PCs</span><!--</caption>--></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left"><span class="math inline">\(z_1\)</span></th>
+<th align="left"><span class="math inline">\(z_2\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><span class="math inline">\(1.88\)</span></td>
+<td align="left"><span class="math inline">\(-0.09\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(0.64\)</span></td>
+<td align="left"><span class="math inline">\(0.25\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(0\)</span></td>
+<td align="left"><span class="math inline">\(0\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(-0.64\)</span></td>
+<td align="left"><span class="math inline">\(-0.25\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(-1.88\)</span></td>
+<td align="left"><span class="math inline">\(0.09\)</span></td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<p>Data transformation is often a data preprocessing step before the use of other methods. For example, in clustering, sometimes we could not discover any clustering structure on the dataset of original variables, but we may discover clusters on the transformed dataset. In a regression model, as we have mentioned the issue of multicollinearity<label for="tufte-sn-217" class="margin-toggle sidenote-number">217</label><input type="checkbox" id="tufte-sn-217" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">217</span> I.e., in <strong>Chapter 6</strong> and <strong>Chapter 2</strong>.</span>, the <strong>Principal Component Regression</strong> (<strong>PCR</strong>) method uses the PCA first to convert the original <span class="math inline">\(x\)</span> variables into the <span class="math inline">\(z\)</span> variables and then applies the linear regression model on the transformed variables. This is because the <span class="math inline">\(z\)</span> variables are PCs and they are orthogonal with each other, without issue of multicollinearity.</p>
+</div>
+<div id="r-lab-12" class="section level3 unnumbered">
+<h3>R Lab</h3>
+<p><em>The 6-Step R Pipeline.</em> <strong>Step 1</strong> and <strong>Step 2</strong> get dataset into R and organize the dataset in the required format.<label for="tufte-sn-218" class="margin-toggle sidenote-number">218</label><input type="checkbox" id="tufte-sn-218" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">218</span> It is not necessary to split the dataset into training and testing datasets before the use of PCA, <em>if</em> the purpose of the analysis is <em>exploratory data analysis</em>. But if the purpose of using PCA is for <em>dimension reduction</em> or <em>feature extraction</em>, which is an intermediate step before building a prediction model, then we should split the dataset into training and testing datasets, and apply PCA only on the training dataset to learn the loadings of the significant PCs. The R lab shows an example of this process.</span></p>
+<p></p>
+<div class="sourceCode" id="cb173"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb173-1"><a href="chapter-8.-scalability-lasso-pca.html#cb173-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1 -&gt; Read data into R</span></span>
+<span id="cb173-2"><a href="chapter-8.-scalability-lasso-pca.html#cb173-2" aria-hidden="true" tabindex="-1"></a><span class="do">#### Read data from a CSV file</span></span>
+<span id="cb173-3"><a href="chapter-8.-scalability-lasso-pca.html#cb173-3" aria-hidden="true" tabindex="-1"></a><span class="do">#### Example: Alzheimer&#39;s Disease</span></span>
+<span id="cb173-4"><a href="chapter-8.-scalability-lasso-pca.html#cb173-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb173-5"><a href="chapter-8.-scalability-lasso-pca.html#cb173-5" aria-hidden="true" tabindex="-1"></a><span class="co"># RCurl is the R package to read csv file using a link</span></span>
+<span id="cb173-6"><a href="chapter-8.-scalability-lasso-pca.html#cb173-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(RCurl)</span>
+<span id="cb173-7"><a href="chapter-8.-scalability-lasso-pca.html#cb173-7" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;https://raw.githubusercontent.com&quot;</span>,</span>
+<span id="cb173-8"><a href="chapter-8.-scalability-lasso-pca.html#cb173-8" aria-hidden="true" tabindex="-1"></a>              <span class="st">&quot;/analyticsbook/book/main/data/AD_hd.csv&quot;</span>)</span>
+<span id="cb173-9"><a href="chapter-8.-scalability-lasso-pca.html#cb173-9" aria-hidden="true" tabindex="-1"></a>AD <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="at">text=</span><span class="fu">getURL</span>(url))</span>
+<span id="cb173-10"><a href="chapter-8.-scalability-lasso-pca.html#cb173-10" aria-hidden="true" tabindex="-1"></a><span class="co"># str(AD)</span></span></code></pre></div>
+<p></p>
+<p></p>
+<div class="sourceCode" id="cb174"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb174-1"><a href="chapter-8.-scalability-lasso-pca.html#cb174-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2 -&gt; Data preprocessing</span></span>
+<span id="cb174-2"><a href="chapter-8.-scalability-lasso-pca.html#cb174-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Create your X matrix (predictors) and Y vector </span></span>
+<span id="cb174-3"><a href="chapter-8.-scalability-lasso-pca.html#cb174-3" aria-hidden="true" tabindex="-1"></a><span class="co"># (outcome variable)</span></span>
+<span id="cb174-4"><a href="chapter-8.-scalability-lasso-pca.html#cb174-4" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> AD[,<span class="sc">-</span><span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">16</span>)]</span>
+<span id="cb174-5"><a href="chapter-8.-scalability-lasso-pca.html#cb174-5" aria-hidden="true" tabindex="-1"></a>Y <span class="ot">&lt;-</span> AD<span class="sc">$</span>MMSCORE</span>
+<span id="cb174-6"><a href="chapter-8.-scalability-lasso-pca.html#cb174-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb174-7"><a href="chapter-8.-scalability-lasso-pca.html#cb174-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Then, we integrate everything into a data frame</span></span>
+<span id="cb174-8"><a href="chapter-8.-scalability-lasso-pca.html#cb174-8" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(Y,X)</span>
+<span id="cb174-9"><a href="chapter-8.-scalability-lasso-pca.html#cb174-9" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(data)[<span class="dv">1</span>] <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;MMSCORE&quot;</span>)</span>
+<span id="cb174-10"><a href="chapter-8.-scalability-lasso-pca.html#cb174-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb174-11"><a href="chapter-8.-scalability-lasso-pca.html#cb174-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a training data </span></span>
+<span id="cb174-12"><a href="chapter-8.-scalability-lasso-pca.html#cb174-12" aria-hidden="true" tabindex="-1"></a>train.ix <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">nrow</span>(data),<span class="fu">floor</span>( <span class="fu">nrow</span>(data)) <span class="sc">*</span> <span class="dv">4</span> <span class="sc">/</span> <span class="dv">5</span> )</span>
+<span id="cb174-13"><a href="chapter-8.-scalability-lasso-pca.html#cb174-13" aria-hidden="true" tabindex="-1"></a>data.train <span class="ot">&lt;-</span> data[train.ix,]</span>
+<span id="cb174-14"><a href="chapter-8.-scalability-lasso-pca.html#cb174-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a testing data </span></span>
+<span id="cb174-15"><a href="chapter-8.-scalability-lasso-pca.html#cb174-15" aria-hidden="true" tabindex="-1"></a>data.test <span class="ot">&lt;-</span> data[<span class="sc">-</span>train.ix,]</span>
+<span id="cb174-16"><a href="chapter-8.-scalability-lasso-pca.html#cb174-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb174-17"><a href="chapter-8.-scalability-lasso-pca.html#cb174-17" aria-hidden="true" tabindex="-1"></a>trainX <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(data.train[,<span class="sc">-</span><span class="dv">1</span>])</span>
+<span id="cb174-18"><a href="chapter-8.-scalability-lasso-pca.html#cb174-18" aria-hidden="true" tabindex="-1"></a>testX <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(data.test[,<span class="sc">-</span><span class="dv">1</span>])</span>
+<span id="cb174-19"><a href="chapter-8.-scalability-lasso-pca.html#cb174-19" aria-hidden="true" tabindex="-1"></a>trainY <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(data.train[,<span class="dv">1</span>])</span>
+<span id="cb174-20"><a href="chapter-8.-scalability-lasso-pca.html#cb174-20" aria-hidden="true" tabindex="-1"></a>testY <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(data.test[,<span class="dv">1</span>])</span></code></pre></div>
+<p></p>
+<p><strong>Step 3</strong> implements the PCA analysis using the <code>FactoMineR</code> package.</p>
+<p></p>
+<div class="sourceCode" id="cb175"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb175-1"><a href="chapter-8.-scalability-lasso-pca.html#cb175-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 3 -&gt; Implement principal component analysis</span></span>
+<span id="cb175-2"><a href="chapter-8.-scalability-lasso-pca.html#cb175-2" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages(&quot;factoextra&quot;)</span></span>
+<span id="cb175-3"><a href="chapter-8.-scalability-lasso-pca.html#cb175-3" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(FactoMineR)</span>
+<span id="cb175-4"><a href="chapter-8.-scalability-lasso-pca.html#cb175-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Conduct the PCA analysis</span></span>
+<span id="cb175-5"><a href="chapter-8.-scalability-lasso-pca.html#cb175-5" aria-hidden="true" tabindex="-1"></a>pca.AD <span class="ot">&lt;-</span> <span class="fu">PCA</span>(trainX,  <span class="at">graph =</span> <span class="cn">FALSE</span>,<span class="at">ncp=</span><span class="dv">10</span>) </span>
+<span id="cb175-6"><a href="chapter-8.-scalability-lasso-pca.html#cb175-6" aria-hidden="true" tabindex="-1"></a><span class="co"># names(pca.AD) will give you the list of variable names in the</span></span>
+<span id="cb175-7"><a href="chapter-8.-scalability-lasso-pca.html#cb175-7" aria-hidden="true" tabindex="-1"></a><span class="co"># object pca.AD created by PCA(). For instance, pca.AD$eig records</span></span>
+<span id="cb175-8"><a href="chapter-8.-scalability-lasso-pca.html#cb175-8" aria-hidden="true" tabindex="-1"></a><span class="co"># the eigenvalues of all the PCs, also the transformed value into </span></span>
+<span id="cb175-9"><a href="chapter-8.-scalability-lasso-pca.html#cb175-9" aria-hidden="true" tabindex="-1"></a><span class="co"># cumulative percentage of variance. pca.AD$var stores the </span></span>
+<span id="cb175-10"><a href="chapter-8.-scalability-lasso-pca.html#cb175-10" aria-hidden="true" tabindex="-1"></a><span class="co"># loadings of the variables in each of the PCs.</span></span></code></pre></div>
+<p></p>
+<p></p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:f8-BC-scree"></span>
+<p class="caption marginnote shownote">
+Figure 154: Scree plot of the PCA analysis on the AD dataset
+</p>
+<img src="graphics/8_BC_scree.png" alt="Scree plot of the PCA analysis on the AD dataset" width="80%"  />
+</div>
+<p></p>
+<p><strong>Step 4</strong> ranks the PCs based on their eigenvalues and identifies the significant ones.</p>
+<p></p>
+<div class="sourceCode" id="cb176"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb176-1"><a href="chapter-8.-scalability-lasso-pca.html#cb176-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 4 -&gt; Examine the contributions of the PCs in explaining </span></span>
+<span id="cb176-2"><a href="chapter-8.-scalability-lasso-pca.html#cb176-2" aria-hidden="true" tabindex="-1"></a><span class="co"># the variation in data.</span></span>
+<span id="cb176-3"><a href="chapter-8.-scalability-lasso-pca.html#cb176-3" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(factoextra ) </span>
+<span id="cb176-4"><a href="chapter-8.-scalability-lasso-pca.html#cb176-4" aria-hidden="true" tabindex="-1"></a><span class="co"># to use the following functions such as get_pca_var() </span></span>
+<span id="cb176-5"><a href="chapter-8.-scalability-lasso-pca.html#cb176-5" aria-hidden="true" tabindex="-1"></a><span class="co"># and fviz_contrib()</span></span>
+<span id="cb176-6"><a href="chapter-8.-scalability-lasso-pca.html#cb176-6" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_screeplot</span>(pca.AD, <span class="at">addlabels =</span> <span class="cn">TRUE</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">50</span>))</span></code></pre></div>
+<p></p>
+<p>The result is shown in Figure <a href="chapter-8.-scalability-lasso-pca.html#fig:f8-BC-scree">154</a>. The <span class="math inline">\(1^{st}\)</span> PC explains away <span class="math inline">\(17.4\%\)</span> of the total variation, and the <span class="math inline">\(2^{nd}\)</span> PC explains away <span class="math inline">\(13\%\)</span> of the total variation. There is a change point at the <span class="math inline">\(3^{rd}\)</span> PC, indicating that the following PCs may be insignificant.</p>
+<p><strong>Step 5</strong> looks into the details of the learned PCA model, e.g., the <em>loadings</em> of the PCs. It leads to Figures <a href="chapter-8.-scalability-lasso-pca.html#fig:f8-14">155</a> and <a href="chapter-8.-scalability-lasso-pca.html#fig:f8-15">156</a> which visualize the contributions of the variables to the <span class="math inline">\(1^{st}\)</span> and <span class="math inline">\(2^{nd}\)</span> PC, respectively.</p>
+<p></p>
+<div class="sourceCode" id="cb177"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb177-1"><a href="chapter-8.-scalability-lasso-pca.html#cb177-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 5 -&gt; Examine the loadings of the PCs.</span></span>
+<span id="cb177-2"><a href="chapter-8.-scalability-lasso-pca.html#cb177-2" aria-hidden="true" tabindex="-1"></a>var <span class="ot">&lt;-</span> <span class="fu">get_pca_var</span>(pca.AD) <span class="co"># to get the loadings of the PCs</span></span>
+<span id="cb177-3"><a href="chapter-8.-scalability-lasso-pca.html#cb177-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(var<span class="sc">$</span>contrib) <span class="co"># to show the first 10 PCs</span></span>
+<span id="cb177-4"><a href="chapter-8.-scalability-lasso-pca.html#cb177-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb177-5"><a href="chapter-8.-scalability-lasso-pca.html#cb177-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualize the contributions of top variables to </span></span>
+<span id="cb177-6"><a href="chapter-8.-scalability-lasso-pca.html#cb177-6" aria-hidden="true" tabindex="-1"></a><span class="co"># PC1 using a bar plot</span></span>
+<span id="cb177-7"><a href="chapter-8.-scalability-lasso-pca.html#cb177-7" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_contrib</span>(pca.AD, <span class="at">choice =</span> <span class="st">&quot;var&quot;</span>, <span class="at">axes =</span> <span class="dv">1</span>, <span class="at">top =</span> <span class="dv">20</span>)</span>
+<span id="cb177-8"><a href="chapter-8.-scalability-lasso-pca.html#cb177-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualize the contributions of top variables to PC2 using </span></span>
+<span id="cb177-9"><a href="chapter-8.-scalability-lasso-pca.html#cb177-9" aria-hidden="true" tabindex="-1"></a><span class="co"># a bar plot</span></span>
+<span id="cb177-10"><a href="chapter-8.-scalability-lasso-pca.html#cb177-10" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_contrib</span>(pca.AD, <span class="at">choice =</span> <span class="st">&quot;var&quot;</span>, <span class="at">axes =</span> <span class="dv">2</span>, <span class="at">top =</span> <span class="dv">20</span>)</span></code></pre></div>
+<p></p>
+<p></p>
+<p>
+<span class="marginnote shownote">
+<!--
+<div class="figure">--><span style="display:block;" id="fig:f8-14"></span>
+<img src="graphics/8_BC_varimp1.png" alt="Loading of the $1^{st}$ PC, i.e., coefficients are ranked in terms of their absolute magnitude and only the top 20 are shown" width="100%"  />
+<!--
+<p class="caption marginnote">-->Figure 155: Loading of the <span class="math inline">\(1^{st}\)</span> PC, i.e., coefficients are ranked in terms of their absolute magnitude and only the top 20 are shown<!--</p>-->
+<!--</div>--></span>
+</p>
+<p></p>
+<p><strong>Step 6</strong> implements linear regression model using the transformed data.</p>
+<p></p>
+<div class="sourceCode" id="cb178"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb178-1"><a href="chapter-8.-scalability-lasso-pca.html#cb178-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 6 -&gt; use the transformed data fit a line regression model</span></span>
+<span id="cb178-2"><a href="chapter-8.-scalability-lasso-pca.html#cb178-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb178-3"><a href="chapter-8.-scalability-lasso-pca.html#cb178-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Data pre-processing</span></span>
+<span id="cb178-4"><a href="chapter-8.-scalability-lasso-pca.html#cb178-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Transformation of the X matrix of the training data</span></span>
+<span id="cb178-5"><a href="chapter-8.-scalability-lasso-pca.html#cb178-5" aria-hidden="true" tabindex="-1"></a>trainX <span class="ot">&lt;-</span> pca.AD<span class="sc">$</span>ind<span class="sc">$</span>coord </span>
+<span id="cb178-6"><a href="chapter-8.-scalability-lasso-pca.html#cb178-6" aria-hidden="true" tabindex="-1"></a>trainX <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(trainX)</span>
+<span id="cb178-7"><a href="chapter-8.-scalability-lasso-pca.html#cb178-7" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(trainX) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;PC1&quot;</span>,<span class="st">&quot;PC2&quot;</span>,<span class="st">&quot;PC3&quot;</span>,<span class="st">&quot;PC4&quot;</span>,<span class="st">&quot;PC5&quot;</span>,<span class="st">&quot;PC6&quot;</span>,<span class="st">&quot;PC7&quot;</span>,</span>
+<span id="cb178-8"><a href="chapter-8.-scalability-lasso-pca.html#cb178-8" aria-hidden="true" tabindex="-1"></a>                   <span class="st">&quot;PC8&quot;</span>,<span class="st">&quot;PC9&quot;</span>,<span class="st">&quot;PC10&quot;</span>)</span>
+<span id="cb178-9"><a href="chapter-8.-scalability-lasso-pca.html#cb178-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Transformation of the X matrix of the testing data</span></span>
+<span id="cb178-10"><a href="chapter-8.-scalability-lasso-pca.html#cb178-10" aria-hidden="true" tabindex="-1"></a>testX <span class="ot">&lt;-</span> <span class="fu">predict</span>(pca.AD , <span class="at">newdata =</span> testX) </span>
+<span id="cb178-11"><a href="chapter-8.-scalability-lasso-pca.html#cb178-11" aria-hidden="true" tabindex="-1"></a>testX <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(testX<span class="sc">$</span>coord)</span>
+<span id="cb178-12"><a href="chapter-8.-scalability-lasso-pca.html#cb178-12" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(testX) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;PC1&quot;</span>,<span class="st">&quot;PC2&quot;</span>,<span class="st">&quot;PC3&quot;</span>,<span class="st">&quot;PC4&quot;</span>,<span class="st">&quot;PC5&quot;</span>,<span class="st">&quot;PC6&quot;</span>,</span>
+<span id="cb178-13"><a href="chapter-8.-scalability-lasso-pca.html#cb178-13" aria-hidden="true" tabindex="-1"></a>                  <span class="st">&quot;PC7&quot;</span>,<span class="st">&quot;PC8&quot;</span>,<span class="st">&quot;PC9&quot;</span>,<span class="st">&quot;PC10&quot;</span>)</span>
+<span id="cb178-14"><a href="chapter-8.-scalability-lasso-pca.html#cb178-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb178-15"><a href="chapter-8.-scalability-lasso-pca.html#cb178-15" aria-hidden="true" tabindex="-1"></a>tempData <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(trainY,trainX)</span>
+<span id="cb178-16"><a href="chapter-8.-scalability-lasso-pca.html#cb178-16" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(tempData)[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;MMSCORE&quot;</span>)</span>
+<span id="cb178-17"><a href="chapter-8.-scalability-lasso-pca.html#cb178-17" aria-hidden="true" tabindex="-1"></a>lm.AD <span class="ot">&lt;-</span> <span class="fu">lm</span>(MMSCORE <span class="sc">~</span> ., <span class="at">data =</span> tempData)</span>
+<span id="cb178-18"><a href="chapter-8.-scalability-lasso-pca.html#cb178-18" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm.AD)</span>
+<span id="cb178-19"><a href="chapter-8.-scalability-lasso-pca.html#cb178-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb178-20"><a href="chapter-8.-scalability-lasso-pca.html#cb178-20" aria-hidden="true" tabindex="-1"></a>y_hat <span class="ot">&lt;-</span> <span class="fu">predict</span>(lm.AD, testX)</span>
+<span id="cb178-21"><a href="chapter-8.-scalability-lasso-pca.html#cb178-21" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(y_hat, testY)</span>
+<span id="cb178-22"><a href="chapter-8.-scalability-lasso-pca.html#cb178-22" aria-hidden="true" tabindex="-1"></a>mse <span class="ot">&lt;-</span> <span class="fu">mean</span>((y_hat <span class="sc">-</span> testY)<span class="sc">^</span><span class="dv">2</span>) <span class="co"># The mean squared error (mse)</span></span>
+<span id="cb178-23"><a href="chapter-8.-scalability-lasso-pca.html#cb178-23" aria-hidden="true" tabindex="-1"></a>mse</span></code></pre></div>
+<p></p>
+<p></p>
+<p>
+<span class="marginnote shownote">
+<!--
+<div class="figure">--><span style="display:block;" id="fig:f8-15"></span>
+<img src="graphics/8_BC_varimp2.png" alt="Loading of the $2^{nd}$ PC, i.e., coefficients are ranked in terms of their absolute magnitude and only the top 20 are shown" width="100%"  />
+<!--
+<p class="caption marginnote">-->Figure 156: Loading of the <span class="math inline">\(2^{nd}\)</span> PC, i.e., coefficients are ranked in terms of their absolute magnitude and only the top 20 are shown<!--</p>-->
+<!--</div>--></span>
+</p>
+<p></p>
+<p>The result is shown below.</p>
+<p></p>
+<div class="sourceCode" id="cb179"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb179-1"><a href="chapter-8.-scalability-lasso-pca.html#cb179-1" aria-hidden="true" tabindex="-1"></a><span class="do">##</span></span>
+<span id="cb179-2"><a href="chapter-8.-scalability-lasso-pca.html#cb179-2" aria-hidden="true" tabindex="-1"></a><span class="do">## Call:</span></span>
+<span id="cb179-3"><a href="chapter-8.-scalability-lasso-pca.html#cb179-3" aria-hidden="true" tabindex="-1"></a><span class="do">## lm(formula = AGE ~ ., data = tempData)</span></span>
+<span id="cb179-4"><a href="chapter-8.-scalability-lasso-pca.html#cb179-4" aria-hidden="true" tabindex="-1"></a><span class="do">##</span></span>
+<span id="cb179-5"><a href="chapter-8.-scalability-lasso-pca.html#cb179-5" aria-hidden="true" tabindex="-1"></a><span class="do">## Residuals:</span></span>
+<span id="cb179-6"><a href="chapter-8.-scalability-lasso-pca.html#cb179-6" aria-hidden="true" tabindex="-1"></a><span class="do">##      Min       1Q   Median       3Q      Max</span></span>
+<span id="cb179-7"><a href="chapter-8.-scalability-lasso-pca.html#cb179-7" aria-hidden="true" tabindex="-1"></a><span class="do">## -17.3377  -2.5627   0.0518   2.6820  11.1772</span></span>
+<span id="cb179-8"><a href="chapter-8.-scalability-lasso-pca.html#cb179-8" aria-hidden="true" tabindex="-1"></a><span class="do">##</span></span>
+<span id="cb179-9"><a href="chapter-8.-scalability-lasso-pca.html#cb179-9" aria-hidden="true" tabindex="-1"></a><span class="do">## Coefficients:</span></span>
+<span id="cb179-10"><a href="chapter-8.-scalability-lasso-pca.html#cb179-10" aria-hidden="true" tabindex="-1"></a><span class="do">##             Estimate Std. Error t value Pr(&gt;|t|)</span></span>
+<span id="cb179-11"><a href="chapter-8.-scalability-lasso-pca.html#cb179-11" aria-hidden="true" tabindex="-1"></a><span class="do">## (Intercept) 73.68767    0.59939 122.938  &lt; 2e-16 ***</span></span>
+<span id="cb179-12"><a href="chapter-8.-scalability-lasso-pca.html#cb179-12" aria-hidden="true" tabindex="-1"></a><span class="do">## PC1          0.04011    0.08275   0.485 0.629580</span></span>
+<span id="cb179-13"><a href="chapter-8.-scalability-lasso-pca.html#cb179-13" aria-hidden="true" tabindex="-1"></a><span class="do">## PC2         -0.31556    0.09490  -3.325 0.001488 **</span></span>
+<span id="cb179-14"><a href="chapter-8.-scalability-lasso-pca.html#cb179-14" aria-hidden="true" tabindex="-1"></a><span class="do">## PC3          0.50022    0.13510   3.702 0.000456 ***</span></span>
+<span id="cb179-15"><a href="chapter-8.-scalability-lasso-pca.html#cb179-15" aria-hidden="true" tabindex="-1"></a><span class="do">## PC4          0.14812    0.17462   0.848 0.399578</span></span>
+<span id="cb179-16"><a href="chapter-8.-scalability-lasso-pca.html#cb179-16" aria-hidden="true" tabindex="-1"></a><span class="do">## PC5          0.47954    0.19404   2.471 0.016219 *</span></span>
+<span id="cb179-17"><a href="chapter-8.-scalability-lasso-pca.html#cb179-17" aria-hidden="true" tabindex="-1"></a><span class="do">## PC6         -0.29760    0.20134  -1.478 0.144444</span></span>
+<span id="cb179-18"><a href="chapter-8.-scalability-lasso-pca.html#cb179-18" aria-hidden="true" tabindex="-1"></a><span class="do">## PC7          0.10160    0.21388   0.475 0.636440</span></span>
+<span id="cb179-19"><a href="chapter-8.-scalability-lasso-pca.html#cb179-19" aria-hidden="true" tabindex="-1"></a><span class="do">## PC8         -0.25015    0.22527  -1.110 0.271100</span></span>
+<span id="cb179-20"><a href="chapter-8.-scalability-lasso-pca.html#cb179-20" aria-hidden="true" tabindex="-1"></a><span class="do">## PC9         -0.02837    0.22932  -0.124 0.901949</span></span>
+<span id="cb179-21"><a href="chapter-8.-scalability-lasso-pca.html#cb179-21" aria-hidden="true" tabindex="-1"></a><span class="do">## PC10         0.16326    0.23282   0.701 0.485794</span></span>
+<span id="cb179-22"><a href="chapter-8.-scalability-lasso-pca.html#cb179-22" aria-hidden="true" tabindex="-1"></a><span class="do">## ---</span></span>
+<span id="cb179-23"><a href="chapter-8.-scalability-lasso-pca.html#cb179-23" aria-hidden="true" tabindex="-1"></a><span class="do">## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span></span>
+<span id="cb179-24"><a href="chapter-8.-scalability-lasso-pca.html#cb179-24" aria-hidden="true" tabindex="-1"></a><span class="do">##</span></span>
+<span id="cb179-25"><a href="chapter-8.-scalability-lasso-pca.html#cb179-25" aria-hidden="true" tabindex="-1"></a><span class="do">## Residual standard error: 5.121 on 62 degrees of freedom</span></span>
+<span id="cb179-26"><a href="chapter-8.-scalability-lasso-pca.html#cb179-26" aria-hidden="true" tabindex="-1"></a><span class="do">## Multiple R-squared:  0.3672, Adjusted R-squared:  0.2651</span></span>
+<span id="cb179-27"><a href="chapter-8.-scalability-lasso-pca.html#cb179-27" aria-hidden="true" tabindex="-1"></a><span class="do">## F-statistic: 3.598 on 10 and 62 DF,  p-value: 0.0008235</span></span></code></pre></div>
+<p></p>
+<p>It is not uncommon to see that the <span class="math inline">\(1^{st}\)</span> PC is insignificant in a prediction model. The <span class="math inline">\(1^{st}\)</span> PC is the largest <em>force</em> or <em>variation source</em> in <span class="math inline">\(\boldsymbol{X}\)</span> by definition, but not necessarily the one that correlates with any outcome variable <span class="math inline">\(y\)</span> with the strongest correlation.</p>
+<p>On the other hand, the <em>R-squared</em> of this model is <span class="math inline">\(0.3672\)</span>, and the <em>p-value</em> is <span class="math inline">\(0.0008235\)</span>. Overall, the data transformation by PCA yielded an effective linear regression model.</p>
+<p><em>Beyond the 6-Step R Pipeline.</em> PCA is a popular tool for <em>EDA</em>. For example, we can visualize the distribution of the data points in the new space spanned by a few selected PCs<label for="tufte-sn-219" class="margin-toggle sidenote-number">219</label><input type="checkbox" id="tufte-sn-219" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">219</span> It may reveal some structures of the dataset. For example, for a classification problem, it is hoped that in the space spanned by the selected PCs the data points from different classes would cluster around different centers.</span>. We use the following R script to draw a visualization figure.</p>
+<p></p>
+<div class="sourceCode" id="cb180"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb180-1"><a href="chapter-8.-scalability-lasso-pca.html#cb180-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Projection of data points in the new space defined by </span></span>
+<span id="cb180-2"><a href="chapter-8.-scalability-lasso-pca.html#cb180-2" aria-hidden="true" tabindex="-1"></a><span class="co"># the first two PCs</span></span>
+<span id="cb180-3"><a href="chapter-8.-scalability-lasso-pca.html#cb180-3" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_pca_ind</span>(pca.AD, <span class="at">label=</span><span class="st">&quot;none&quot;</span>, </span>
+<span id="cb180-4"><a href="chapter-8.-scalability-lasso-pca.html#cb180-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">habillage=</span><span class="fu">as.factor</span>(AD[train.ix,]<span class="sc">$</span>DX_bl),</span>
+<span id="cb180-5"><a href="chapter-8.-scalability-lasso-pca.html#cb180-5" aria-hidden="true" tabindex="-1"></a>             <span class="at">addEllipses=</span><span class="cn">TRUE</span>, <span class="at">ellipse.level=</span><span class="fl">0.95</span>)</span></code></pre></div>
+<p></p>
+<p>The result is shown in Figure <a href="chapter-8.-scalability-lasso-pca.html#fig:f8-17">157</a>. Two clusters are identified, which overlap significantly. One group is the <em>LMCI</em> (i.e., mild cognitive impairment) and the other one is <em>NC</em> (i.e., normal aging). The result is consistent with the fact that the clinical difference between the two groups is not as significant as <em>NC</em> versus <em>Diseased</em>.</p>
+<p></p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:f8-17"></span>
+<p class="caption marginnote shownote">
+Figure 157: Scatterplot of the subjects in the space defined by the <span class="math inline">\(1^{st}\)</span> and <span class="math inline">\(2^{nd}\)</span> PCs
+</p>
+<img src="graphics/8_17.png" alt="Scatterplot of the subjects in the space defined by the $1^{st}$ and $2^{nd}$ PCs" width="80%"  />
+</div>
+<p></p>
+</div>
+</div>
+<div id="remarks-6" class="section level2 unnumbered">
+<h2>Remarks</h2>
+<div id="why-lasso-uses-the-l1-norm" class="section level3 unnumbered">
+<h3>Why LASSO uses the L<sub>1</sub> norm</h3>
+<p>LASSO is often compared with another model, the <strong>Ridge regression</strong> that was developed about <span class="math inline">\(30\)</span> years before LASSO<label for="tufte-sn-220" class="margin-toggle sidenote-number">220</label><input type="checkbox" id="tufte-sn-220" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">220</span> Hoerl, A.E. and Kennard, R.W. <em>Ridge regression: biased estimation for nonorthogonal problems</em>, Technometrics, Volume 12, Issue 1, Pages 55-67, 1970.</span>.</p>
+<p>The formulation of Ridge regression is</p>
+<p><span class="math display" id="eq:8-RIDGE">\[\begin{equation}
+\small
+        \boldsymbol{\hat \beta} = \arg\min_{\boldsymbol \beta} \left \{   \underbrace{(\boldsymbol{y}-\boldsymbol{X} \boldsymbol{\beta})^{T}(\boldsymbol{y}-\boldsymbol{X} \boldsymbol{\beta})}_{\text{Least squares}} + \underbrace{\lambda \lVert \boldsymbol{\beta}\rVert^2_2}_{L_2 \text{ norm penalty}} \right \}
+\tag{97}
+\end{equation}\]</span></p>
+<p>where <span class="math inline">\(\lVert \boldsymbol \beta \rVert^2_2=\sum_{i=1}^p \lvert\beta_i\rvert^2\)</span>.</p>
+<p>Ridge regression seems to bear the same spirit of LASSO—they both penalize the magnitudes of the regression parameters. However, it has been noticed that in the Ridge regression model the estimated regression parameters are less likely to be <span class="math inline">\(0\)</span>. Even with a very large <span class="math inline">\(\lambda\)</span>, many elements in <span class="math inline">\(\boldsymbol{\beta}\)</span> may be close to zero (i.e., with a tiny numerical magnitude), but not zero<label for="tufte-sn-221" class="margin-toggle sidenote-number">221</label><input type="checkbox" id="tufte-sn-221" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">221</span> If they are not zero, these variables can still generate impact on the estimation of other regression parameters.</span>. This may not be entirely a surprise, as the Ridge regression is often used as a <em>stabilization</em> strategy to handle the <em>multicollinearity</em> issue or other issues that result in numerical instability of parameter estimation in linear regression, while LASSO is mainly used as a <em>variable selection</em> strategy.</p>
+<p></p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:f8-10"></span>
+<p class="caption marginnote shownote">
+Figure 158: Why LASSO (left) generates sparse estimates, while Ridge regression (right) does not
+</p>
+<img src="graphics/8_10.png" alt="Why LASSO (left) generates sparse estimates, while Ridge regression (right) does not" width="80%"  />
+</div>
+<p></p>
+<p>To reveal why the <span class="math inline">\(L_1\)</span> norm in LASSO regression differs from the <span class="math inline">\(L_2\)</span> norm used in the Ridge regression, we adopt an explanation<label for="tufte-sn-222" class="margin-toggle sidenote-number">222</label><input type="checkbox" id="tufte-sn-222" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">222</span> Hastie, T., Tibshirani, R. and Friedman, J. <em>The Elements of Statistical Learning</em>, <span class="math inline">\(2^{nd}\)</span> edition. Springer, 2009.</span> as shown in Figure <a href="chapter-8.-scalability-lasso-pca.html#fig:f8-10">158</a>. There are <span class="math inline">\(2\)</span> predictors, thus, two regression coefficients <span class="math inline">\(\beta_1\)</span> and <span class="math inline">\(\beta_2\)</span>. The contour plot corresponds to the least squares loss function which is shared by both the LASSO and the Ridge regression models. And the least squares estimator, <span class="math inline">\(\boldsymbol{\hat\beta}\)</span>, is in the center of the contour plots. The shadowed rhombus in Figure <a href="chapter-8.-scalability-lasso-pca.html#fig:f8-10">158</a> (left) corresponds to the <span class="math inline">\(L_1\)</span> norm, and the shadowed circle in Figure <a href="chapter-8.-scalability-lasso-pca.html#fig:f8-10">158</a> (right) corresponds to the <span class="math inline">\(L_2\)</span> norm. For either model, the optimal solution happens at the <em>contact point</em> of the two shapes.</p>
+<p>Figure <a href="chapter-8.-scalability-lasso-pca.html#fig:f8-10">158</a> shows that the contact point of the elliptic contour plot with the shadowed rhombus is likely to be one of the <em>sharp</em> corner points. A feature of these corner points is that some variables are zero, e.g., in Figure <a href="chapter-8.-scalability-lasso-pca.html#fig:f8-10">158</a> (left), the point of contact implies that <span class="math inline">\(\beta_1 = 0\)</span>.</p>
+<p>As a comparison, in Ridge regression, the shadowed circle has no such sharp corner points. Given the infinite number of potential contact points of the elliptic contour plot with the shadowed circle, it is expected that the Ridge regression will not result in sparse solutions with exact zeros in the estimated regression coefficients.</p>
+<p>Following this idea<label for="tufte-sn-223" class="margin-toggle sidenote-number">223</label><input type="checkbox" id="tufte-sn-223" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">223</span> I.e., to create sharp contact points between the elliptical contour with the shape representing the norm.</span>, the <span class="math inline">\(L_1\)</span> norm is extended to the <span class="math inline">\(L_q\)</span> norm, where <span class="math inline">\(q \leq 1\)</span>. For any <span class="math inline">\(q\leq 1\)</span>, we could generate sharp corner points to enable sparse solutions. The advantage of using <span class="math inline">\(q&lt;1\)</span> is to reduce bias in the model<label for="tufte-sn-224" class="margin-toggle sidenote-number">224</label><input type="checkbox" id="tufte-sn-224" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">224</span> I.e., the <span class="math inline">\(L_1\)</span> norm not only penalizes the regression coefficients of the irrelevant variables to be zero, it also penalizes the regression coefficients of the relevant variables. This is a <em>bias</em> in the model.</span>. The cost of using <span class="math inline">\(q&lt;1\)</span> is that it will result in <em>non-convex</em> penalty terms, creating a more challenging optimization problem than LASSO. Considerable amounts of efforts have been devoted to two main directions: development of new norms, and development of new algorithms (i.e., which are usually iterative procedures with closed-form solution in each iteration, like the Shooting algorithm). Interested readers can read more of these works<label for="tufte-sn-225" class="margin-toggle sidenote-number">225</label><input type="checkbox" id="tufte-sn-225" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">225</span> A good place to start with: <a href="https://github.com/jiayuzhou/SLEP">https://github.com/jiayuzhou/SLEP</a> and its manual (in PDF).</span>.</p>
+<!-- % The shooting algorithm ^[Fu, WJ. Penalized regressions: the bridge versus the lasso. *Journal of Computational and Graphical Statistics* , 1998.]  has been widely used in many extension models of LASSO in the statistics community. The shooting algorithm is easy to use and has nice interpretation of each iteration. But it could be slow in very high-dimensional situations. Also, with more complex penalty terms such as those $L_21$-norm regularization or group regularization terms, the shooting algorithm may not work anymore. In machine learning community where the computational efficiency is of particular interest, many scalable algorithms such as the projection operator based methods have been developed. Interested readers can read more of these works^[[https://github.com/jiayuzhou/SLEP](https://github.com/jiayuzhou/SLEP)] in this direction that provided closed form iterative updating rules by projection operator on a variety of regularization terms. -->
+</div>
+<div id="the-myth-of-pca" class="section level3 unnumbered">
+<h3>The myth of PCA</h3>
+<p>While PCA has been widely used, it is often criticized as a <em>black box</em> model that lacks <em>interpretability</em>. It depends on the circumstances where the PCA is used. Sometimes, it is not easy to connect the identified principal components with physical entities. The applications of PCA in many areas have formed a convention, or a myth—some statisticians may say—such that formulistic rubrics have been invented to convert their data into patterns, then further convert these patterns into formulated sentences such as, “the variables that have larger magnitudes in the first <span class="math inline">\(3\)</span> PCs correspond to the brain regions in the hippocampus area, indicating that these brain regions manifest significant functional connectivity to deliver the verbal function,” or “we have identified <span class="math inline">\(5\)</span> significant PCs, and the genes that show dominant magnitudes in the loading of the <span class="math inline">\(1^{st}\)</span> PC are all related to T-cell production and immune functions … each of the PC indicates a biological pathway that consists of these constitutional genes working together to produce specific types of proteins.” Then hear what had been said by financial analysts: “using PCA on <span class="math inline">\(100\)</span> stocks<label for="tufte-sn-226" class="margin-toggle sidenote-number">226</label><input type="checkbox" id="tufte-sn-226" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">226</span> Each stock is a variable.</span>, we found that the <span class="math inline">\(1^{st}\)</span> PC consists of <span class="math inline">\(10\)</span> stocks as their weights in the loading are significantly larger than the other stocks. This may indicate that there is strong correlation between these <span class="math inline">\(10\)</span> stocks … consider this fact when you come up with your investment strategy…”</p>
+<p>Having said that, sometimes there is magic in PCA.</p>
+<p>Consider another small data example that is shown in Table <a href="chapter-8.-scalability-lasso-pca.html#tab:t8-PCAnet">38</a>. It has <span class="math inline">\(3\)</span> variables and <span class="math inline">\(8\)</span> data points.</p>
+<p></p>
+<p><!--
+<caption>--><span class="marginnote shownote"><span id="tab:t8-PCAnet">Table 38: </span>A dataset example for PCA</span><!--</caption>--></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left"><span class="math inline">\(x_1\)</span></th>
+<th align="left"><span class="math inline">\(x_2\)</span></th>
+<th align="left"><span class="math inline">\(x_3\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><span class="math inline">\(-1\)</span></td>
+<td align="left"><span class="math inline">\(0\)</span></td>
+<td align="left"><span class="math inline">\(1\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(3\)</span></td>
+<td align="left"><span class="math inline">\(3\)</span></td>
+<td align="left"><span class="math inline">\(1\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(3\)</span></td>
+<td align="left"><span class="math inline">\(5\)</span></td>
+<td align="left"><span class="math inline">\(1\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(-3\)</span></td>
+<td align="left"><span class="math inline">\(-2\)</span></td>
+<td align="left"><span class="math inline">\(1\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(3\)</span></td>
+<td align="left"><span class="math inline">\(4\)</span></td>
+<td align="left"><span class="math inline">\(1\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(5\)</span></td>
+<td align="left"><span class="math inline">\(6\)</span></td>
+<td align="left"><span class="math inline">\(1\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(7\)</span></td>
+<td align="left"><span class="math inline">\(6\)</span></td>
+<td align="left"><span class="math inline">\(1\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(2\)</span></td>
+<td align="left"><span class="math inline">\(2\)</span></td>
+<td align="left"><span class="math inline">\(0\)</span></td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<p>First, we normalize the variables, i.e., for <span class="math inline">\(x_1\)</span>, we compute its mean and standard derivation first, which are <span class="math inline">\(2.375\)</span> and <span class="math inline">\(3.159\)</span>, respectively. Then, we distract each measurement of <span class="math inline">\(x_1\)</span> from its mean and further divide it by its standard derivation. For example, for the first measurement of <span class="math inline">\(x_1\)</span>, <span class="math inline">\(-1\)</span>, it is converted as</p>
+<p><span class="math display">\[\begin{equation*}
+\small
+  
+\frac{-1-2.375}{3.159}=-1.07.
+ 
+\end{equation*}\]</span></p>
+<p>The second measurement, <span class="math inline">\(3\)</span>, is converted as</p>
+<p><span class="math display">\[\begin{equation*}
+\small
+  
+\frac{3-2.375}{3.159}=0.20.
+ 
+\end{equation*}\]</span></p>
+<p>And so on.</p>
+<p>Similarly, for <span class="math inline">\(x_2\)</span>, we compute its mean and standard derivation, which are <span class="math inline">\(3\)</span> and <span class="math inline">\(2.88\)</span>, respectively. For <span class="math inline">\(x_3\)</span>, we compute its mean and standard derivation, which are <span class="math inline">\(0.88\)</span> and <span class="math inline">\(0.35\)</span>, respectively …. Then the standardized dataset is shown in Table <a href="chapter-8.-scalability-lasso-pca.html#tab:t8-standardx2">39</a>.<label for="tufte-sn-227" class="margin-toggle sidenote-number">227</label><input type="checkbox" id="tufte-sn-227" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">227</span> In this example, numbers are rounded to <span class="math inline">\(2\)</span> decimal places.</span></p>
+<p></p>
+<p><!--
+<caption>--><span class="marginnote shownote"><span id="tab:t8-standardx2">Table 39: </span>Standardized dataset of Table <a href="chapter-8.-scalability-lasso-pca.html#tab:t8-PCAnet">38</a></span><!--</caption>--></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left"><span class="math inline">\(x_1\)</span></th>
+<th align="left"><span class="math inline">\(x_2\)</span></th>
+<th align="left"><span class="math inline">\(x_3\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><span class="math inline">\(-1.07\)</span></td>
+<td align="left"><span class="math inline">\(-1.04\)</span></td>
+<td align="left"><span class="math inline">\(0.35\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(0.2\)</span></td>
+<td align="left"><span class="math inline">\(0.00\)</span></td>
+<td align="left"><span class="math inline">\(0.35\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(0.2\)</span></td>
+<td align="left"><span class="math inline">\(0.69\)</span></td>
+<td align="left"><span class="math inline">\(0.35\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(-1.70\)</span></td>
+<td align="left"><span class="math inline">\(-1.73\)</span></td>
+<td align="left"><span class="math inline">\(0.35\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(0.20\)</span></td>
+<td align="left"><span class="math inline">\(0.35\)</span></td>
+<td align="left"><span class="math inline">\(0.35\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(0.83\)</span></td>
+<td align="left"><span class="math inline">\(1.04\)</span></td>
+<td align="left"><span class="math inline">\(0.35\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(1.46\)</span></td>
+<td align="left"><span class="math inline">\(1.04\)</span></td>
+<td align="left"><span class="math inline">\(0.35\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(-0.11\)</span></td>
+<td align="left"><span class="math inline">\(-0.35\)</span></td>
+<td align="left"><span class="math inline">\(-2.48\)</span></td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<p>We calculate the sample covariance matrix<label for="tufte-sn-228" class="margin-toggle sidenote-number">228</label><input type="checkbox" id="tufte-sn-228" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">228</span> From <span class="math inline">\(\boldsymbol{S}\)</span> we see that the correlation between <span class="math inline">\(x_1\)</span> and <span class="math inline">\(x_2\)</span> is quite large, while the correlation between them with <span class="math inline">\(x_3\)</span> is very small. Figure <a href="chapter-8.-scalability-lasso-pca.html#fig:f8-PCAnet">159</a> visualizes this relationship of the three variables.</span> <span class="math inline">\(\boldsymbol{S}\)</span> as</p>
+<p></p>
+<p>
+<span class="marginnote shownote">
+<!--
+<div class="figure">--><span style="display:block;" id="fig:f8-PCAnet"></span>
+<img src="graphics/8_PCAnet.png" alt="Visualization of the relationship between the three variables" width="60%"  />
+<!--
+<p class="caption marginnote">-->Figure 159: Visualization of the relationship between the three variables<!--</p>-->
+<!--</div>--></span>
+</p>
+<p></p>
+<p><span class="math display">\[\begin{equation*}
+\small
+   \boldsymbol{S}=\frac{\boldsymbol{X}^T \boldsymbol{X}}{N-1} = \begin{bmatrix}
+1 &amp; 0.96 &amp; 0.05 \\
+0.96 &amp; 1 &amp; 0.14 \\
+0.05 &amp; 0.14 &amp; 1\\
+\end{bmatrix}.
+ 
+\end{equation*}\]</span></p>
+<p>By solving the eigenvalue decomposition problem of the matrix <span class="math inline">\(\boldsymbol{S}\)</span>, we obtain the PCs and their loadings.</p>
+<p>For the <span class="math inline">\(1^{st}\)</span> PC, we get</p>
+<p><span class="math display">\[\begin{equation*}
+\small
+  
+\lambda_1=1.98 \, \text{ and } \, \boldsymbol{w}_{(1)}=\left[ -0.69, \, -0.70, \, -0.14\right].
+ 
+\end{equation*}\]</span></p>
+<p>For the <span class="math inline">\(2^{nd}\)</span> PC, we get</p>
+<p><span class="math display">\[\begin{equation*}
+\small
+  
+\lambda_2=0.98 \, \text{ and } \, \boldsymbol{w}_{(2)}=\left[  0.14, \,0.05, \, -0.99\right].
+ 
+\end{equation*}\]</span></p>
+<p>For the <span class="math inline">\(3^{rd}\)</span> PC, we get</p>
+<p><span class="math display">\[\begin{equation*}
+\small
+  
+\lambda_3=0.04 \, \text{ and } \, \boldsymbol{w}_{(3)}=\left[  0.70, \, -0.71, \, 0.07\right].
+ 
+\end{equation*}\]</span></p>
+<p>We can calculate the cumulative contributions of the three PCs</p>
+<p></p>
+<p>
+<span class="marginnote shownote">
+<!--
+<div class="figure">--><span style="display:block;" id="fig:f8-PCA3net-scree"></span>
+<img src="graphics/8_PCA3net_scree.png" alt="Scree plot of the PCA analysis on data in Table \@ref(tab:t8-standardx2)" width="100%"  />
+<!--
+<p class="caption marginnote">-->Figure 160: Scree plot of the PCA analysis on data in Table <a href="chapter-8.-scalability-lasso-pca.html#tab:t8-standardx2">39</a><!--</p>-->
+<!--</div>--></span>
+</p>
+<p></p>
+<p><span class="math display">\[\begin{equation*}
+\small
+  
+\text{For the } 1^{st} \text{ PC: } 1.98/(1.98+0.98+0.04) = 0.66.
+ 
+\end{equation*}\]</span></p>
+<p><span class="math display">\[\begin{equation*}
+\small
+  
+\text{For the } 2^{nd} \text{ PC: } 0.98/(1.98+0.98+0.04) = 0.33.
+ 
+\end{equation*}\]</span></p>
+<p><span class="math display">\[\begin{equation*}
+\small
+  
+\text{For the } 3^{rd} \text{ PC: } 0.04/(1.98+0.98+0.04) = 0.01.
+ 
+\end{equation*}\]</span></p>
+<p>The <span class="math inline">\(3^{rd}\)</span> PC is statistically insignificant. The scree plot is shown in Figure <a href="chapter-8.-scalability-lasso-pca.html#fig:f8-PCA3net-scree">160</a>.</p>
+<p>We look into the details of the learned PCA model, e.g., the <em>loadings</em> of the PCs. It leads to Figure <a href="chapter-8.-scalability-lasso-pca.html#fig:f8-PCAnet-pc">161</a>.</p>
+<p></p>
+<div class="figure"><span style="display:block;" id="fig:f8-PCAnet-pc"></span>
+<p class="caption marginnote shownote">
+Figure 161: Loadings of the <span class="math inline">\(1^{st}\)</span> PC (left), <span class="math inline">\(2^{nd}\)</span> PC (middle), and <span class="math inline">\(3^{rd}\)</span> PC (right)
+</p>
+<img src="graphics/8_PCAnet_pc1.png" alt="Loadings of the $1^{st}$ PC (left), $2^{nd}$ PC (middle), and $3^{rd}$ PC (right)" width="30%"  /><img src="graphics/8_PCAnet_pc2.png" alt="Loadings of the $1^{st}$ PC (left), $2^{nd}$ PC (middle), and $3^{rd}$ PC (right)" width="30%"  /><img src="graphics/8_PCAnet_pc3.png" alt="Loadings of the $1^{st}$ PC (left), $2^{nd}$ PC (middle), and $3^{rd}$ PC (right)" width="30%"  />
+</div>
+<p></p>
+<p>Figure <a href="chapter-8.-scalability-lasso-pca.html#fig:f8-PCAnet-pc">161</a> shows that the <span class="math inline">\(1^{st}\)</span> PC is mainly defined by <span class="math inline">\(x_1\)</span> and <span class="math inline">\(x_2\)</span>, the <span class="math inline">\(2^{nd}\)</span> PC is mainly defined by <span class="math inline">\(x_3\)</span>, and the <span class="math inline">\(3^{rd}\)</span> PC, despite its small proportion of importance, mainly consists of <span class="math inline">\(x_1\)</span> and <span class="math inline">\(x_2\)</span> as well<label for="tufte-sn-229" class="margin-toggle sidenote-number">229</label><input type="checkbox" id="tufte-sn-229" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">229</span> Readers may compare Figure <a href="chapter-8.-scalability-lasso-pca.html#fig:f8-PCAnet-pc">161</a> with Figure <a href="chapter-8.-scalability-lasso-pca.html#fig:f8-PCAnet">159</a>—Is this a coincidence?</span>.</p>
+<p>The R code for generating Figure <a href="chapter-8.-scalability-lasso-pca.html#fig:f8-PCAnet-pc">161</a> is shown below.</p>
+<p></p>
+<div class="sourceCode" id="cb181"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb181-1"><a href="chapter-8.-scalability-lasso-pca.html#cb181-1" aria-hidden="true" tabindex="-1"></a><span class="co"># PCA example</span></span>
+<span id="cb181-2"><a href="chapter-8.-scalability-lasso-pca.html#cb181-2" aria-hidden="true" tabindex="-1"></a>x1 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">3</span>,<span class="sc">-</span><span class="dv">3</span>,<span class="dv">3</span>,<span class="dv">5</span>,<span class="dv">7</span>,<span class="dv">2</span>)</span>
+<span id="cb181-3"><a href="chapter-8.-scalability-lasso-pca.html#cb181-3" aria-hidden="true" tabindex="-1"></a>x2 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">3</span>,<span class="dv">5</span>,<span class="sc">-</span><span class="dv">2</span>,<span class="dv">4</span>,<span class="dv">6</span>,<span class="dv">6</span>,<span class="dv">2</span>)</span>
+<span id="cb181-4"><a href="chapter-8.-scalability-lasso-pca.html#cb181-4" aria-hidden="true" tabindex="-1"></a>x3 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">0</span>)</span>
+<span id="cb181-5"><a href="chapter-8.-scalability-lasso-pca.html#cb181-5" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">cbind</span>(x1,x2,x3)</span>
+<span id="cb181-6"><a href="chapter-8.-scalability-lasso-pca.html#cb181-6" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(FactoMineR)</span>
+<span id="cb181-7"><a href="chapter-8.-scalability-lasso-pca.html#cb181-7" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(factoextra)</span>
+<span id="cb181-8"><a href="chapter-8.-scalability-lasso-pca.html#cb181-8" aria-hidden="true" tabindex="-1"></a>t <span class="ot">&lt;-</span> <span class="fu">PCA</span>(X)</span>
+<span id="cb181-9"><a href="chapter-8.-scalability-lasso-pca.html#cb181-9" aria-hidden="true" tabindex="-1"></a>t<span class="sc">$</span>eig</span>
+<span id="cb181-10"><a href="chapter-8.-scalability-lasso-pca.html#cb181-10" aria-hidden="true" tabindex="-1"></a>t<span class="sc">$</span>var<span class="sc">$</span>coord</span>
+<span id="cb181-11"><a href="chapter-8.-scalability-lasso-pca.html#cb181-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb181-12"><a href="chapter-8.-scalability-lasso-pca.html#cb181-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Draw the screeplot</span></span>
+<span id="cb181-13"><a href="chapter-8.-scalability-lasso-pca.html#cb181-13" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_screeplot</span>(t, <span class="at">addlabels =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb181-14"><a href="chapter-8.-scalability-lasso-pca.html#cb181-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb181-15"><a href="chapter-8.-scalability-lasso-pca.html#cb181-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Draw the variable loadings plot</span></span>
+<span id="cb181-16"><a href="chapter-8.-scalability-lasso-pca.html#cb181-16" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_contrib</span>(t, <span class="at">choice =</span> <span class="st">&quot;var&quot;</span>, <span class="at">axes =</span> <span class="dv">1</span>, <span class="at">top =</span> <span class="dv">20</span>,</span>
+<span id="cb181-17"><a href="chapter-8.-scalability-lasso-pca.html#cb181-17" aria-hidden="true" tabindex="-1"></a>             <span class="at">sort.val =</span> <span class="st">&quot;none&quot;</span>) <span class="sc">+</span></span>
+<span id="cb181-18"><a href="chapter-8.-scalability-lasso-pca.html#cb181-18" aria-hidden="true" tabindex="-1"></a>            <span class="fu">theme</span>(<span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">20</span>))</span>
+<span id="cb181-19"><a href="chapter-8.-scalability-lasso-pca.html#cb181-19" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_contrib</span>(t, <span class="at">choice =</span> <span class="st">&quot;var&quot;</span>, <span class="at">axes =</span> <span class="dv">2</span>, <span class="at">top =</span> <span class="dv">20</span>,</span>
+<span id="cb181-20"><a href="chapter-8.-scalability-lasso-pca.html#cb181-20" aria-hidden="true" tabindex="-1"></a>             <span class="at">sort.val =</span> <span class="st">&quot;none&quot;</span>) <span class="sc">+</span></span>
+<span id="cb181-21"><a href="chapter-8.-scalability-lasso-pca.html#cb181-21" aria-hidden="true" tabindex="-1"></a>            <span class="fu">theme</span>(<span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">20</span>))</span>
+<span id="cb181-22"><a href="chapter-8.-scalability-lasso-pca.html#cb181-22" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_contrib</span>(t, <span class="at">choice =</span> <span class="st">&quot;var&quot;</span>, <span class="at">axes =</span> <span class="dv">3</span>, <span class="at">top =</span> <span class="dv">20</span>,</span>
+<span id="cb181-23"><a href="chapter-8.-scalability-lasso-pca.html#cb181-23" aria-hidden="true" tabindex="-1"></a>             <span class="at">sort.val =</span> <span class="st">&quot;none&quot;</span>) <span class="sc">+</span></span>
+<span id="cb181-24"><a href="chapter-8.-scalability-lasso-pca.html#cb181-24" aria-hidden="true" tabindex="-1"></a>            <span class="fu">theme</span>(<span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">20</span>))</span></code></pre></div>
+<p></p>
+<p>Now, suppose that there is an outcome variable <span class="math inline">\(y\)</span>. Data in Table <a href="chapter-8.-scalability-lasso-pca.html#tab:t8-PCAnet">38</a> is augmented with a new column, as shown in Table <a href="chapter-8.-scalability-lasso-pca.html#tab:t8-PCAnet2">40</a>.</p>
+<p></p>
+<p><!--
+<caption>--><span class="marginnote shownote"><span id="tab:t8-PCAnet2">Table 40: </span>Table <a href="chapter-8.-scalability-lasso-pca.html#tab:t8-PCAnet">38</a> is augmented with an outcome variable</span><!--</caption>--></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left"><span class="math inline">\(x_1\)</span></th>
+<th align="left"><span class="math inline">\(x_2\)</span></th>
+<th align="left"><span class="math inline">\(x_3\)</span></th>
+<th align="left"><span class="math inline">\(y\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><span class="math inline">\(-1\)</span></td>
+<td align="left"><span class="math inline">\(0\)</span></td>
+<td align="left"><span class="math inline">\(1\)</span></td>
+<td align="left"><span class="math inline">\(1.33\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(3\)</span></td>
+<td align="left"><span class="math inline">\(3\)</span></td>
+<td align="left"><span class="math inline">\(1\)</span></td>
+<td align="left"><span class="math inline">\(0.70\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(3\)</span></td>
+<td align="left"><span class="math inline">\(5\)</span></td>
+<td align="left"><span class="math inline">\(1\)</span></td>
+<td align="left"><span class="math inline">\(2.99\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(-3\)</span></td>
+<td align="left"><span class="math inline">\(-2\)</span></td>
+<td align="left"><span class="math inline">\(1\)</span></td>
+<td align="left"><span class="math inline">\(-1.78\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(3\)</span></td>
+<td align="left"><span class="math inline">\(4\)</span></td>
+<td align="left"><span class="math inline">\(1\)</span></td>
+<td align="left"><span class="math inline">\(0.07\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(5\)</span></td>
+<td align="left"><span class="math inline">\(6\)</span></td>
+<td align="left"><span class="math inline">\(1\)</span></td>
+<td align="left"><span class="math inline">\(4.62\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(7\)</span></td>
+<td align="left"><span class="math inline">\(6\)</span></td>
+<td align="left"><span class="math inline">\(1\)</span></td>
+<td align="left"><span class="math inline">\(3.87\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(2\)</span></td>
+<td align="left"><span class="math inline">\(2\)</span></td>
+<td align="left"><span class="math inline">\(0\)</span></td>
+<td align="left"><span class="math inline">\(0.58\)</span></td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<p>The goal is to build a linear regression model to predict <span class="math inline">\(y\)</span>.</p>
+<p></p>
+<div class="sourceCode" id="cb182"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb182-1"><a href="chapter-8.-scalability-lasso-pca.html#cb182-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Build a linear regression model</span></span>
+<span id="cb182-2"><a href="chapter-8.-scalability-lasso-pca.html#cb182-2" aria-hidden="true" tabindex="-1"></a>x1 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">3</span>,<span class="sc">-</span><span class="dv">3</span>,<span class="dv">3</span>,<span class="dv">5</span>,<span class="dv">7</span>,<span class="dv">2</span>)</span>
+<span id="cb182-3"><a href="chapter-8.-scalability-lasso-pca.html#cb182-3" aria-hidden="true" tabindex="-1"></a>x2 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">3</span>,<span class="dv">5</span>,<span class="sc">-</span><span class="dv">2</span>,<span class="dv">4</span>,<span class="dv">6</span>,<span class="dv">6</span>,<span class="dv">2</span>)</span>
+<span id="cb182-4"><a href="chapter-8.-scalability-lasso-pca.html#cb182-4" aria-hidden="true" tabindex="-1"></a>x3 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">0</span>)</span>
+<span id="cb182-5"><a href="chapter-8.-scalability-lasso-pca.html#cb182-5" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">cbind</span>(x1,x2,x3)</span>
+<span id="cb182-6"><a href="chapter-8.-scalability-lasso-pca.html#cb182-6" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">1.33</span>,<span class="fl">0.7</span>,<span class="fl">2.99</span>,<span class="sc">-</span><span class="fl">1.78</span>,<span class="fl">0.07</span>,<span class="fl">4.62</span>,<span class="fl">3.87</span>,<span class="fl">0.58</span>)</span>
+<span id="cb182-7"><a href="chapter-8.-scalability-lasso-pca.html#cb182-7" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="fu">cbind</span>(y,X))</span>
+<span id="cb182-8"><a href="chapter-8.-scalability-lasso-pca.html#cb182-8" aria-hidden="true" tabindex="-1"></a>lm.fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(y<span class="sc">~</span>., <span class="at">data =</span> data)</span>
+<span id="cb182-9"><a href="chapter-8.-scalability-lasso-pca.html#cb182-9" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm.fit)</span></code></pre></div>
+<p></p>
+<p>The result is shown below.</p>
+<p></p>
+<div class="sourceCode" id="cb183"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb183-1"><a href="chapter-8.-scalability-lasso-pca.html#cb183-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Call:</span></span>
+<span id="cb183-2"><a href="chapter-8.-scalability-lasso-pca.html#cb183-2" aria-hidden="true" tabindex="-1"></a><span class="do">## lm(formula = y ~ ., data = data)</span></span>
+<span id="cb183-3"><a href="chapter-8.-scalability-lasso-pca.html#cb183-3" aria-hidden="true" tabindex="-1"></a><span class="do">## Coefficients:</span></span>
+<span id="cb183-4"><a href="chapter-8.-scalability-lasso-pca.html#cb183-4" aria-hidden="true" tabindex="-1"></a><span class="do">##             Estimate Std. Error t value Pr(&gt;|t|)</span></span>
+<span id="cb183-5"><a href="chapter-8.-scalability-lasso-pca.html#cb183-5" aria-hidden="true" tabindex="-1"></a><span class="do">## (Intercept) -0.64698    1.60218  -0.404    0.707</span></span>
+<span id="cb183-6"><a href="chapter-8.-scalability-lasso-pca.html#cb183-6" aria-hidden="true" tabindex="-1"></a><span class="do">## x1          -0.03686    0.67900  -0.054    0.959</span></span>
+<span id="cb183-7"><a href="chapter-8.-scalability-lasso-pca.html#cb183-7" aria-hidden="true" tabindex="-1"></a><span class="do">## x2           0.65035    0.75186   0.865    0.436</span></span>
+<span id="cb183-8"><a href="chapter-8.-scalability-lasso-pca.html#cb183-8" aria-hidden="true" tabindex="-1"></a><span class="do">## x3           0.37826    1.75338   0.216    0.840</span></span>
+<span id="cb183-9"><a href="chapter-8.-scalability-lasso-pca.html#cb183-9" aria-hidden="true" tabindex="-1"></a><span class="do">##</span></span>
+<span id="cb183-10"><a href="chapter-8.-scalability-lasso-pca.html#cb183-10" aria-hidden="true" tabindex="-1"></a><span class="do">## Residual standard error: 1.546 on 4 degrees of freedom</span></span>
+<span id="cb183-11"><a href="chapter-8.-scalability-lasso-pca.html#cb183-11" aria-hidden="true" tabindex="-1"></a><span class="do">## Multiple R-squared:  0.6999, Adjusted R-squared:  0.4749</span></span>
+<span id="cb183-12"><a href="chapter-8.-scalability-lasso-pca.html#cb183-12" aria-hidden="true" tabindex="-1"></a><span class="do">## F-statistic:  3.11 on 3 and 4 DF,  p-value: 0.1508</span></span></code></pre></div>
+<p>
+The <em>R-squared</em> is <span class="math inline">\(0.6999\)</span>, but the three variables are not significant. This is unusual. Recall that <span class="math inline">\(x_1\)</span> and <span class="math inline">\(x_2\)</span> are highly correlated—there is an issue of <em>multicollinearity</em> in this dataset.</p>
+<p>Try a linear regression model with <span class="math inline">\(x_1\)</span> and <span class="math inline">\(x_3\)</span>.</p>
+<p></p>
+<div class="sourceCode" id="cb184"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb184-1"><a href="chapter-8.-scalability-lasso-pca.html#cb184-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Build a linear regression model</span></span>
+<span id="cb184-2"><a href="chapter-8.-scalability-lasso-pca.html#cb184-2" aria-hidden="true" tabindex="-1"></a>lm.fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(y<span class="sc">~</span> x1 <span class="sc">+</span> x3, <span class="at">data =</span> data)</span>
+<span id="cb184-3"><a href="chapter-8.-scalability-lasso-pca.html#cb184-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm.fit)</span></code></pre></div>
+<p></p>
+<p>The result is shown below.</p>
+<p></p>
+<div class="sourceCode" id="cb185"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb185-1"><a href="chapter-8.-scalability-lasso-pca.html#cb185-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Call:</span></span>
+<span id="cb185-2"><a href="chapter-8.-scalability-lasso-pca.html#cb185-2" aria-hidden="true" tabindex="-1"></a><span class="do">## lm(formula = y ~ x1 + x3, data = data)</span></span>
+<span id="cb185-3"><a href="chapter-8.-scalability-lasso-pca.html#cb185-3" aria-hidden="true" tabindex="-1"></a><span class="do">## Coefficients:</span></span>
+<span id="cb185-4"><a href="chapter-8.-scalability-lasso-pca.html#cb185-4" aria-hidden="true" tabindex="-1"></a><span class="do">##             Estimate Std. Error t value Pr(&gt;|t|)</span></span>
+<span id="cb185-5"><a href="chapter-8.-scalability-lasso-pca.html#cb185-5" aria-hidden="true" tabindex="-1"></a><span class="do">## (Intercept)  -0.4764     1.5494  -0.307   0.7709</span></span>
+<span id="cb185-6"><a href="chapter-8.-scalability-lasso-pca.html#cb185-6" aria-hidden="true" tabindex="-1"></a><span class="do">## x1            0.5282     0.1805   2.927   0.0328 *</span></span>
+<span id="cb185-7"><a href="chapter-8.-scalability-lasso-pca.html#cb185-7" aria-hidden="true" tabindex="-1"></a><span class="do">## x3            0.8793     1.6127   0.545   0.6090</span></span>
+<span id="cb185-8"><a href="chapter-8.-scalability-lasso-pca.html#cb185-8" aria-hidden="true" tabindex="-1"></a><span class="do">##</span></span>
+<span id="cb185-9"><a href="chapter-8.-scalability-lasso-pca.html#cb185-9" aria-hidden="true" tabindex="-1"></a><span class="do">## Residual standard error: 1.507 on 5 degrees of freedom</span></span>
+<span id="cb185-10"><a href="chapter-8.-scalability-lasso-pca.html#cb185-10" aria-hidden="true" tabindex="-1"></a><span class="do">## Multiple R-squared:  0.6438, Adjusted R-squared:  0.5013</span></span>
+<span id="cb185-11"><a href="chapter-8.-scalability-lasso-pca.html#cb185-11" aria-hidden="true" tabindex="-1"></a><span class="do">## F-statistic: 4.519 on 2 and 5 DF,  p-value: 0.07572</span></span></code></pre></div>
+<p></p>
+<p>Now <span class="math inline">\(x_1\)</span> is significant. Without fitting another model, we know that <span class="math inline">\(x_2\)</span> has to be significant as well, i.e., as shown in Figure <a href="chapter-8.-scalability-lasso-pca.html#fig:f8-PCAnet">159</a>, <span class="math inline">\(x_1\)</span> and <span class="math inline">\(x_2\)</span> are two highly correlated variables that are just like one variable. But because of the multicollinearity, when both are included in the model, neither turns out to be significant.</p>
+<p>To overcome the multicollinearity, we have mentioned that the Principal Component Regression (PCR) method is a good approach. First, we calculate the transformed data (i.e., the projections of the data points on the PCs, as shown in Figure <a href="chapter-8.-scalability-lasso-pca.html#fig:f8-PCA-line">151</a>) using Eq. <a href="chapter-8.-scalability-lasso-pca.html#eq:8-PCA-z">(92)</a>. The R code is shown below.</p>
+<p></p>
+<div class="sourceCode" id="cb186"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb186-1"><a href="chapter-8.-scalability-lasso-pca.html#cb186-1" aria-hidden="true" tabindex="-1"></a>X.scale <span class="ot">&lt;-</span> <span class="fu">cbind</span>(<span class="fu">scale</span>(x1),<span class="fu">scale</span>(x2),<span class="fu">scale</span>(x3))</span>
+<span id="cb186-2"><a href="chapter-8.-scalability-lasso-pca.html#cb186-2" aria-hidden="true" tabindex="-1"></a>model.pca <span class="ot">&lt;-</span> <span class="fu">eigen</span>(<span class="fu">cov</span>(X.scale))</span>
+<span id="cb186-3"><a href="chapter-8.-scalability-lasso-pca.html#cb186-3" aria-hidden="true" tabindex="-1"></a>X.pca <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(X.scale <span class="sc">%*%</span> model.pca <span class="sc">$</span>vectors)</span>
+<span id="cb186-4"><a href="chapter-8.-scalability-lasso-pca.html#cb186-4" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(X.pca) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;PC1&quot;</span>,<span class="st">&quot;PC2&quot;</span>,<span class="st">&quot;PC3&quot;</span>)</span></code></pre></div>
+<p></p>
+<p>Results are shown in Table <a href="chapter-8.-scalability-lasso-pca.html#tab:t8-PCAnet-PC">41</a>. An important characteristic of the new variables, <span class="math inline">\(\text{PC}_1\)</span>, <span class="math inline">\(\text{PC}_2\)</span>, and <span class="math inline">\(\text{PC}_3\)</span>, is that they are orthogonal to each other, and thus, their correlations are <span class="math inline">\(0\)</span>.</p>
+<p></p>
+<p><!--
+<caption>--><span class="marginnote shownote"><span id="tab:t8-PCAnet-PC">Table 41: </span>The coordinates of the <em>white dots</em>, i.e., aka, the projections of the data points on the PCs</span><!--</caption>--></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left"><span class="math inline">\(\text{PC}_1\)</span></th>
+<th align="left"><span class="math inline">\(\text{PC}_2\)</span></th>
+<th align="left"><span class="math inline">\(\text{PC}_3\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><span class="math inline">\(1.43\)</span></td>
+<td align="left"><span class="math inline">\(-0.55\)</span></td>
+<td align="left"><span class="math inline">\(0.01\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(-0.18\)</span></td>
+<td align="left"><span class="math inline">\(-0.32\)</span></td>
+<td align="left"><span class="math inline">\(0.16\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(-0.67\)</span></td>
+<td align="left"><span class="math inline">\(-0.29\)</span></td>
+<td align="left"><span class="math inline">\(-0.33\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(2.36\)</span></td>
+<td align="left"><span class="math inline">\(-0.68\)</span></td>
+<td align="left"><span class="math inline">\(0.06\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(-0.43\)</span></td>
+<td align="left"><span class="math inline">\(-0.30\)</span></td>
+<td align="left"><span class="math inline">\(-0.08\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(-1.36\)</span></td>
+<td align="left"><span class="math inline">\(-0.18\)</span></td>
+<td align="left"><span class="math inline">\(-0.13\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(-1.80\)</span></td>
+<td align="left"><span class="math inline">\(-0.09\)</span></td>
+<td align="left"><span class="math inline">\(0.31\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(0.66\)</span></td>
+<td align="left"><span class="math inline">\(2.41\)</span></td>
+<td align="left"><span class="math inline">\(-0.01\)</span></td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<p>Then we can build a linear regression model of <span class="math inline">\(y\)</span> using the three new predictors, <span class="math inline">\(\text{PC}_1\)</span>, <span class="math inline">\(\text{PC}_2\)</span>, and <span class="math inline">\(\text{PC}_3\)</span>.</p>
+<p></p>
+<div class="sourceCode" id="cb187"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb187-1"><a href="chapter-8.-scalability-lasso-pca.html#cb187-1" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="fu">cbind</span>(y,X.pca))</span>
+<span id="cb187-2"><a href="chapter-8.-scalability-lasso-pca.html#cb187-2" aria-hidden="true" tabindex="-1"></a>lm.fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(y<span class="sc">~</span>., <span class="at">data =</span> data)</span>
+<span id="cb187-3"><a href="chapter-8.-scalability-lasso-pca.html#cb187-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm.fit)</span></code></pre></div>
+<p></p>
+<p>The result is shown below.</p>
+<p></p>
+<div class="sourceCode" id="cb188"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb188-1"><a href="chapter-8.-scalability-lasso-pca.html#cb188-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Call:</span></span>
+<span id="cb188-2"><a href="chapter-8.-scalability-lasso-pca.html#cb188-2" aria-hidden="true" tabindex="-1"></a><span class="do">## lm(formula = y ~ ., data = data)</span></span>
+<span id="cb188-3"><a href="chapter-8.-scalability-lasso-pca.html#cb188-3" aria-hidden="true" tabindex="-1"></a><span class="do">## Coefficients:</span></span>
+<span id="cb188-4"><a href="chapter-8.-scalability-lasso-pca.html#cb188-4" aria-hidden="true" tabindex="-1"></a><span class="do">##             Estimate Std. Error t value Pr(&gt;|t|)</span></span>
+<span id="cb188-5"><a href="chapter-8.-scalability-lasso-pca.html#cb188-5" aria-hidden="true" tabindex="-1"></a><span class="do">## (Intercept)  1.54750    0.54668   2.831   0.0473 *</span></span>
+<span id="cb188-6"><a href="chapter-8.-scalability-lasso-pca.html#cb188-6" aria-hidden="true" tabindex="-1"></a><span class="do">## PC1         -1.25447    0.41571  -3.018   0.0393 *</span></span>
+<span id="cb188-7"><a href="chapter-8.-scalability-lasso-pca.html#cb188-7" aria-hidden="true" tabindex="-1"></a><span class="do">## PC2         -0.06022    0.58848  -0.102   0.9234</span></span>
+<span id="cb188-8"><a href="chapter-8.-scalability-lasso-pca.html#cb188-8" aria-hidden="true" tabindex="-1"></a><span class="do">## PC3         -1.39950    3.02508  -0.463   0.6677</span></span>
+<span id="cb188-9"><a href="chapter-8.-scalability-lasso-pca.html#cb188-9" aria-hidden="true" tabindex="-1"></a><span class="do">##</span></span>
+<span id="cb188-10"><a href="chapter-8.-scalability-lasso-pca.html#cb188-10" aria-hidden="true" tabindex="-1"></a><span class="do">## Residual standard error: 1.546 on 4 degrees of freedom</span></span>
+<span id="cb188-11"><a href="chapter-8.-scalability-lasso-pca.html#cb188-11" aria-hidden="true" tabindex="-1"></a><span class="do">## Multiple R-squared:  0.6999, Adjusted R-squared:  0.4749</span></span>
+<span id="cb188-12"><a href="chapter-8.-scalability-lasso-pca.html#cb188-12" aria-hidden="true" tabindex="-1"></a><span class="do">## F-statistic:  3.11 on 3 and 4 DF,  p-value: 0.1508</span></span></code></pre></div>
+<p></p>
+<p></p>
+<p>
+<span class="marginnote shownote">
+<!--
+<div class="figure">--><span style="display:block;" id="fig:f8-PCAnetY"></span>
+<img src="graphics/8_PCAnetY.png" alt="Visualization of the relationship between all the variables" width="60%"  />
+<!--
+<p class="caption marginnote">-->Figure 162: Visualization of the relationship between all the variables<!--</p>-->
+<!--</div>--></span>
+</p>
+<p></p>
+<p><span class="math inline">\(\text{PC}_1\)</span> is significant. Since <span class="math inline">\(\text{PC}_1\)</span> is mainly defined by <span class="math inline">\(x_1\)</span> and <span class="math inline">\(x_2\)</span>, this is consistent with all the analysis done so far, and a structure of the relationships between the variables is revealed in Figure <a href="chapter-8.-scalability-lasso-pca.html#fig:f8-PCAnetY">162</a>.</p>
+</div>
+</div>
+<div id="exercises-6" class="section level2 unnumbered">
+<h2>Exercises</h2>
+<p></p>
+<p>
+<span class="marginnote shownote">
+<!--
+<div class="figure">--><span style="display:block;" id="fig:f8-hw-solutionpath"></span>
+<img src="graphics/8_hw_solutionpath.png" alt="The path trajectory of a LASSO model" width="100%"  />
+<!--
+<p class="caption marginnote">-->Figure 163: The path trajectory of a LASSO model<!--</p>-->
+<!--</div>--></span>
+</p>
+<p></p>
+<p><!-- begin{enumerate} --></p>
+<p>1. Figure <a href="chapter-8.-scalability-lasso-pca.html#fig:f8-hw-solutionpath">163</a> shows the path trajectory generated by applying <code>glmnet()</code> on a dataset with <span class="math inline">\(10\)</span> predictors. Which two variables are the top two significant variables (note the index of the variables is shown in the right end of the figure)?</p>
+<p>2. Consider the dataset shown in Table <a href="chapter-8.-scalability-lasso-pca.html#tab:t8-hw-lasso">42</a>. Set <span class="math inline">\(\lambda = 1\)</span> and initial values for <span class="math inline">\(\beta_1 = 0\)</span>, and <span class="math inline">\(\beta_2 = 1\)</span>. Implement the Shooting algorithm by manual operation. Do one iteration. Report <span class="math inline">\(\beta_1\)</span> and <span class="math inline">\(\beta_2\)</span>.</p>
+<p></p>
+<p><!--
+<caption>--><span class="marginnote shownote"><span id="tab:t8-hw-lasso">Table 42: </span>Dataset for Q2</span><!--</caption>--></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left"><span class="math inline">\(x_1\)</span></th>
+<th align="left"><span class="math inline">\(x_2\)</span></th>
+<th align="left"><span class="math inline">\(y\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><span class="math inline">\(-0.15\)</span></td>
+<td align="left"><span class="math inline">\(-0.48\)</span></td>
+<td align="left"><span class="math inline">\(0.46\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(-0.72\)</span></td>
+<td align="left"><span class="math inline">\(-0.54\)</span></td>
+<td align="left"><span class="math inline">\(-0.37\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(1.36\)</span></td>
+<td align="left"><span class="math inline">\(-0.91\)</span></td>
+<td align="left"><span class="math inline">\(-0.27\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(0.61\)</span></td>
+<td align="left"><span class="math inline">\(1.59\)</span></td>
+<td align="left"><span class="math inline">\(1.35\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(-1.11\)</span></td>
+<td align="left"><span class="math inline">\(0.34\)</span></td>
+<td align="left"><span class="math inline">\(-0.11\)</span></td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<p>3. Follow up on the dataset in Q2. Use the R pipeline for LASSO on this data. Compare the result from R and the result by your manual calculation.</p>
+<p>4. Conduct a principal component analysis for the dataset shown in Table <a href="chapter-8.-scalability-lasso-pca.html#tab:t8-hw-pca">43</a>. Show details of the process.</p>
+<p></p>
+<p><!--
+<caption>--><span class="marginnote shownote"><span id="tab:t8-hw-pca">Table 43: </span>Dataset for Q4</span><!--</caption>--></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left"><span class="math inline">\(x_1\)</span></th>
+<th align="left"><span class="math inline">\(x_2\)</span></th>
+<th align="left"><span class="math inline">\(x_3\)</span></th>
+<th align="left"><span class="math inline">\(x_4\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><span class="math inline">\(1\)</span></td>
+<td align="left"><span class="math inline">\(1.8\)</span></td>
+<td align="left"><span class="math inline">\(2.08\)</span></td>
+<td align="left"><span class="math inline">\(-0.28\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(2\)</span></td>
+<td align="left"><span class="math inline">\(3.6\)</span></td>
+<td align="left"><span class="math inline">\(-0.78\)</span></td>
+<td align="left"><span class="math inline">\(0.79\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(1\)</span></td>
+<td align="left"><span class="math inline">\(2.2\)</span></td>
+<td align="left"><span class="math inline">\(-0.08\)</span></td>
+<td align="left"><span class="math inline">\(-0.52\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(2\)</span></td>
+<td align="left"><span class="math inline">\(4.3\)</span></td>
+<td align="left"><span class="math inline">\(0.38\)</span></td>
+<td align="left"><span class="math inline">\(-0.47\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(1\)</span></td>
+<td align="left"><span class="math inline">\(2.1\)</span></td>
+<td align="left"><span class="math inline">\(0.71\)</span></td>
+<td align="left"><span class="math inline">\(1.03\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(2\)</span></td>
+<td align="left"><span class="math inline">\(3.6\)</span></td>
+<td align="left"><span class="math inline">\(1.29\)</span></td>
+<td align="left"><span class="math inline">\(0.67\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(1\)</span></td>
+<td align="left"><span class="math inline">\(2.2\)</span></td>
+<td align="left"><span class="math inline">\(0.57\)</span></td>
+<td align="left"><span class="math inline">\(0.15\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(2\)</span></td>
+<td align="left"><span class="math inline">\(4.0\)</span></td>
+<td align="left"><span class="math inline">\(1.12\)</span></td>
+<td align="left"><span class="math inline">\(1.18\)</span></td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<p>(a) Standardize the dataset (i.e., by making the means of the variables to be zero, and the standard derivations of the variables to be <span class="math inline">\(1\)</span>). (b) Calculate the sample covariance matrix (i.e., <span class="math inline">\(\boldsymbol{S} =(\boldsymbol{X}^T\boldsymbol{X})/(N-1))\)</span>. (c) Conduct eigenvalue decomposition on the sample covariance matrix, obtain the four eigenvectors and their eigenvalues. (d) Report the percentage of variances that could be explained by the four PCs, respectively. Draw the screeplot. How many PCs are sufficient to represent the dataset? In other words, which PCs are significant? (e) Interpret the PCs you have selected, i.e., which variables define which PCs? (f) Convert the original data into the space spanned by the four PCs, by filling in Table <a href="chapter-8.-scalability-lasso-pca.html#tab:t8-hw-pca2">44</a>.</p>
+<p></p>
+<p><!--
+<caption>--><span class="marginnote shownote"><span id="tab:t8-hw-pca2">Table 44: </span>Dataset for Q4</span><!--</caption>--></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left"><span class="math inline">\(\text{PC}_1\)</span></th>
+<th align="left"><span class="math inline">\(\text{PC}_2\)</span></th>
+<th align="left"><span class="math inline">\(\text{PC}_3\)</span></th>
+<th align="left"><span class="math inline">\(\text{PC}_4\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<p>5. Follow up on the dataset in Q2 from Chapter 7. (a) Conduct the PCA analysis on the three predictors to identify the three principal components and their contributions on explaining the variance in data; and (b) use the R pipeline for PCA to do the PCA analysis and compare with your manual calculation.</p>
+<p>6. Suppose that we have an outcome variable that could be augmented into the dataset in Q4, as shown in Table <a href="chapter-8.-scalability-lasso-pca.html#tab:t8-hw-pca-lr">45</a>. Apply the shooting algorithm for LASSO on this dataset to identify important variables. Use the following initial values for the parameters, <span class="math inline">\(\lambda=1, \beta_1=0, \beta_2=1, \beta_3=1, \beta_4=1\)</span>, and just do one iteration of the shooting algorithm. Show details of manual calculation.</p>
+<p></p>
+<p><!--
+<caption>--><span class="marginnote shownote"><span id="tab:t8-hw-pca-lr">Table 45: </span>Dataset for Q6</span><!--</caption>--></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left"><span class="math inline">\(x_1\)</span></th>
+<th align="left"><span class="math inline">\(x_2\)</span></th>
+<th align="left"><span class="math inline">\(x_3\)</span></th>
+<th align="left"><span class="math inline">\(x_4\)</span></th>
+<th align="left"><span class="math inline">\(y\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><span class="math inline">\(1\)</span></td>
+<td align="left"><span class="math inline">\(1.8\)</span></td>
+<td align="left"><span class="math inline">\(2.08\)</span></td>
+<td align="left"><span class="math inline">\(-0.28\)</span></td>
+<td align="left"><span class="math inline">\(1.2\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(2\)</span></td>
+<td align="left"><span class="math inline">\(3.6\)</span></td>
+<td align="left"><span class="math inline">\(-0.78\)</span></td>
+<td align="left"><span class="math inline">\(0.79\)</span></td>
+<td align="left"><span class="math inline">\(2.1\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(1\)</span></td>
+<td align="left"><span class="math inline">\(2.2\)</span></td>
+<td align="left"><span class="math inline">\(-0.08\)</span></td>
+<td align="left"><span class="math inline">\(-0.52\)</span></td>
+<td align="left"><span class="math inline">\(0.8\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(2\)</span></td>
+<td align="left"><span class="math inline">\(4.3\)</span></td>
+<td align="left"><span class="math inline">\(0.38\)</span></td>
+<td align="left"><span class="math inline">\(-0.47\)</span></td>
+<td align="left"><span class="math inline">\(1.5\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(1\)</span></td>
+<td align="left"><span class="math inline">\(2.1\)</span></td>
+<td align="left"><span class="math inline">\(0.71\)</span></td>
+<td align="left"><span class="math inline">\(1.03\)</span></td>
+<td align="left"><span class="math inline">\(0.8\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(2\)</span></td>
+<td align="left"><span class="math inline">\(3.6\)</span></td>
+<td align="left"><span class="math inline">\(1.29\)</span></td>
+<td align="left"><span class="math inline">\(0.67\)</span></td>
+<td align="left"><span class="math inline">\(1.6\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(1\)</span></td>
+<td align="left"><span class="math inline">\(2.2\)</span></td>
+<td align="left"><span class="math inline">\(0.57\)</span></td>
+<td align="left"><span class="math inline">\(0.15\)</span></td>
+<td align="left"><span class="math inline">\(1.2\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(2\)</span></td>
+<td align="left"><span class="math inline">\(4.0\)</span></td>
+<td align="left"><span class="math inline">\(1.12\)</span></td>
+<td align="left"><span class="math inline">\(1.18\)</span></td>
+<td align="left"><span class="math inline">\(1.6\)</span></td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<p>7. After extraction of the four PCs from Q4, use <code>lm()</code> in R to build a linear regression model with the outcome variable (as shown in Table <a href="chapter-8.-scalability-lasso-pca.html#tab:t8-hw-pca-lr">45</a>) and the four PCs as the predictors. (a) Report the summary of your linear regression model with the four PCs; and (b) which PCs significantly affect the outcome variable?</p>
+<p>8. Revisit Q1 in <strong>Chapter 3</strong>. Derive the shooting algorithm for weighted least squares regression with <span class="math inline">\(L_1\)</span> norm penalty.</p>
+<p>9. Design a simulated experiment to evaluate the effectiveness of the <code>glmet()</code> in the R package <code>glmnet</code>. (a) For instance, you can simulate <span class="math inline">\(20\)</span> samples from a linear regression model with <span class="math inline">\(10\)</span> variables, where only <span class="math inline">\(2\)</span> out of the <span class="math inline">\(10\)</span> variables are truly significant, e.g., the true model is
+<span class="math display">\[\begin{equation*}
+\small
+  
+    y = \beta_{1}x_1 +\beta_{2}x_2 + \epsilon,
+     
+\end{equation*}\]</span>
+where <span class="math inline">\(\beta_{1} = 1\)</span>, <span class="math inline">\(\beta_{2} = 1\)</span>, and
+<span class="math display">\[\begin{equation*}
+\small
+  
+    \epsilon \sim N\left(0, 1\right).
+     
+\end{equation*}\]</span>
+You can simulate <span class="math inline">\(x_1\)</span> and <span class="math inline">\(x_2\)</span> using the standard normal distribution <span class="math inline">\(N\left(0, 1\right)\)</span>. For the other <span class="math inline">\(8\)</span> variables, <span class="math inline">\(x_3\)</span> to <span class="math inline">\(x_{10}\)</span>, you can simulate each from <span class="math inline">\(N\left(0, 1\right)\)</span>. In data analysis, we will use all <span class="math inline">\(10\)</span> variables as predictors, since we won’t know the true model. (b) Run <code>lm()</code> on the simulated data and comment on the results. (c) Run <code>glmnet()</code> on the simulated data, and check the path trajectory plot to see if the true significant variables could be detected. (d) Use the cross-validation process integrated into the <code>glmnet</code> package to see if the true significant variables could be detected. (e) Use <code>rpart()</code> to build a decision tree and extract the variable importance score to see if the true significant variables could be detected. (f) Use <code>randomforest()</code> to build a random forest model and extract the variable importance score, to see if the true significant variables could be detected.</p>
+<p><!-- end{enumerate} --></p>
+<!-- \begin{figure*} -->
+<!--    \centering -->
+<!--    \checkoddpage \ifoddpage \forcerectofloat \else \forceversofloat \fi -->
+<!--    \includegraphics[width = 0.05\textwidth]{graphics/9points_4lines2.png} -->
+<!-- \end{figure*} -->
+
+</div>
+</div>
+<p style="text-align: center;">
+<a href="chapter-7.-learning-ii-svm-ensemble-learning.html"><button class="btn btn-default">Previous</button></a>
+<a href="chapter-9.-pragmatism-experience-experimental.html"><button class="btn btn-default">Next</button></a>
+</p>
+</div>
+</div>
+
+<script src="js/jquery.js"></script>
+<script src="js/tablesaw-stackonly.js"></script>
+<script src="js/nudge.min.js"></script>
+
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+</body>
+</html>

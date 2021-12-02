@@ -1,0 +1,11 @@
+
+# Acknowledgments {-}
+
+The first draft of this book was written in the summer of 2017 to be used as the textbook for a new course about Data Analytics (IND E 498) in the Department of Industrial & Systems Engineering of the University of Washington-Seattle. The course participants were mostly senior undergraduate students and first-year graduate students who provided invaluable comments and feedback to improve the book. The authors also thank Ameer Hamza Shakur, Jingshuo Feng, Prof. Xiangyu Chang and his students for their generous help on some figures, R code, and a range of R/LaTex tools. We also thank the Alzheimer's Disease Neuroimaging Initiative (ADNI, [https://adni.loni.usc.edu/](https://adni.loni.usc.edu/)) for the data used in this book.
+
+In writing this book, we owe great debt to many people who generously share their materials and codes online. During the three-year writing process, we tried our best to acknowledge and cite all the specific resources we have used, and we may still have missed a few. In online communities such as [GitHub.com](GitHub.com) and [stackoverflow.com](stackoverflow.com) and numerous personal websites/blogs, you can find free resources which can help you quickly start a new project. Most importantly, this book in its current form wouldn't be possible without R and RStudio ([https://www.rstudio.com](https://www.rstudio.com)), `bookdown` ([https://bookdown.org/](https://bookdown.org/))^[Xie, Y., *Bookdown: Authoring Books and Technical Documents with R Markdown*, CRC Press, 2019.], and the Tufte-LaTeX Developers.
+
+Last, but not least, the authors would like to take this opportunity to thank their editor, John Kimmel, for his support and encouragement throughout the development of this book. The authors also would like to thank the anonymous reviewers who have given great comments and the project editor Michele Dimont and the copyeditor's remarkable work to improve the book. 
+
+\cleardoublepage
+\pagenumbering{arabic}

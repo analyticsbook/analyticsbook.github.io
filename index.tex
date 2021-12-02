@@ -1,0 +1,242 @@
+\documentclass[]{tufte-book}
+
+% ams
+\usepackage{amssymb,amsmath}
+
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \makeatletter
+  \@ifpackageloaded{fontspec}{}{\usepackage{fontspec}}
+  \makeatother
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+  \makeatletter
+  \@ifpackageloaded{soul}{
+     \renewcommand\allcapsspacing[1]{{\addfontfeature{LetterSpace=15}#1}}
+     \renewcommand\smallcapsspacing[1]{{\addfontfeature{LetterSpace=10}#1}}
+   }{}
+  \makeatother
+
+\fi
+
+% graphix
+\usepackage{graphicx}
+\setkeys{Gin}{width=\linewidth,totalheight=\textheight,keepaspectratio}
+
+% booktabs
+\usepackage{booktabs}
+
+% url
+\usepackage{url}
+
+% hyperref
+\usepackage{hyperref}
+
+% units.
+\usepackage{units}
+
+
+\setcounter{secnumdepth}{-1}
+
+% citations
+\usepackage{natbib}
+\bibliographystyle{plainnat}
+
+
+% pandoc syntax highlighting
+
+% longtable
+
+% multiplecol
+\usepackage{multicol}
+
+% strikeout
+\usepackage[normalem]{ulem}
+
+% morefloats
+\usepackage{morefloats}
+
+
+% tightlist macro required by pandoc >= 1.14
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+% title / author / date
+\title{Data Analytics}
+\author{Shuai Huang \& Houtao Deng}
+\date{A Small Data Approach}
+
+\usepackage{listings}
+\usepackage{multirow}
+\usepackage{multicol}
+\usepackage[caption=false]{subfig}
+\usepackage{makecell}
+\usepackage[10pt]{moresize} % otherwise code size is too large and change lines
+% change listing color and layout
+
+% added for resumed items
+\usepackage{enumitem}
+
+\usepackage{afterpage}
+\newcommand\blankpage{%
+    \null
+    \thispagestyle{empty}%
+    \newpage}
+
+%     \addtocounter{page}{-1}%
+\lstset{
+  frame=shadowbox,
+  basicstyle=\small,
+  upquote=true,
+  numbers=left,
+  numberstyle=\small,
+  numbersep=5pt,
+  backgroundcolor=\color[rgb]{0.9, 0.9, 0.9},
+  columns=fixed,
+  extendedchars=true,
+  identifierstyle=\ttfamily,
+  captionpos=b,
+  keywordstyle=\color[rgb]{0, 0, 1},
+  commentstyle=\color[rgb]{0.133, 0.545, 0.133},
+  stringstyle=\color[rgb]{0.627, 0.126, 0.941},
+  frame=single,
+  breaklines=true,
+  escapeinside=``,
+  xleftmargin=2em, 
+  xrightmargin=2em, 
+  aboveskip=1em,
+  tabsize=4,
+  showspaces=false
+}
+
+%\definecolor{bgcolor}{HTML}{E0E0E0}
+\definecolor{bgcolor}{RGB}{240,240,240}
+\let\oldtexttt\texttt
+
+\renewcommand{\texttt}[1]{
+	\colorbox{bgcolor}{\oldtexttt{#1}} 
+}
+
+
+\usepackage{marginfix} %fix issues where margin figure and/or its caption out of page
+
+%%%% Kevin Godny's code for title page and contents from https://groups.google.com/forum/#!topic/tufte-latex/ujdzrktC1BQ
+\makeatletter
+\renewcommand{\maketitlepage}{%
+\begingroup%
+\setlength{\parindent}{0pt}
+\doublespacing
+
+%HS change the font size of title
+{\fontsize{22}{22}\selectfont\textit{\@author}\par}
+
+\vspace{1.75in}{\fontsize{36}{36}\selectfont\mbox{\textbf{\@title}}\par}
+
+\vspace{0.5in}{\fontsize{24}{24}\selectfont\textsf{\sc{\@date}}\par}
+
+\vfill{\fontsize{24}{24}\selectfont\textit{\@publisher}\par}
+
+\thispagestyle{empty}
+\endgroup
+}
+\makeatother
+
+
+\usepackage{imakeidx}
+\makeindex[intoc]
+
+% HS: set font size of chapter title
+\titleformat{\chapter}{\huge\bfseries}{\thechapter}{0pt}{\huge\bfseries\raggedright}
+\usepackage[normalem]{ulem}
+
+% added font for tufte
+% Palatino for main text and math
+\usepackage[osf,sc]{mathpazo}
+% Helvetica for sans serif
+% (scaled to match size of Palatino)
+\usepackage[scaled=0.90]{helvet}
+% Bera Mono for monospaced
+% (scaled to match size of Palatino)
+\usepackage[scaled=0.85]{beramono}
+
+% avoid single line overflow
+% \clubpenalty = 10000
+% \widowpenalty = 10000
+% \displaywidowpenalty = 10000
+
+\cleardoublepage
+\pagenumbering{roman}
+
+\begin{document}
+
+\maketitle
+
+
+
+
+\newpage
+\thispagestyle{empty}
+\textbf{Series}
+\newpage
+\thispagestyle{empty}
+\textbf{Title pg}
+\newpage
+\thispagestyle{empty}
+\textbf{disclaimer}
+
+\newpage
+\thispagestyle{empty}
+\afterpage{\blankpage}
+
+%\pagebreak
+\hspace{0pt}
+\vfill
+
+\begin{equation*}
+\text{"We know} \underbrace{\text{the sound of two hands clapping}}_{Data}. 
+\end{equation*}
+
+\begin{equation*}
+\text{But what is} \underbrace{\text{the sound of one hand clapping?"}}_{ Analytics}
+\end{equation*}
+\marginnote[8.2cm]{\textup{J.D. Salinger}, \textit{Nine Stories}}
+
+\vfill
+\hspace{0pt}
+
+%\pagebreak
+
+
+\newpage
+\thispagestyle{empty}
+\afterpage{\blankpage}
+
+
+\hspace{0pt}
+\vfill
+\begin{equation*}
+\textit{To Our Families}. 
+\end{equation*}
+\vfill
+\hspace{0pt}
+
+% \textbf{Dedication Page}
+
+{
+\setcounter{tocdepth}{1}
+\tableofcontents
+}
+
+
+
+
+
+\bibliography{skeleton.bib}
+
+
+\printindex
+
+\end{document}

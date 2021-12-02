@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta property="og:title" content="Chapter 9. Pragmatism: Experience &amp; Experimental | Data Analytics: A Small Data Approach" />
+<meta property="og:type" content="book" />
+
+
+<meta property="og:description" content="This book is suitable for an introductory course of data analytics to help students understand some main statistical learning models, such as linear regression, logistic regression, tree models and random forests, ensemble learning, sparse learning, principal component analysis, kernel methods including the support vector machine and kernel regression, etc. Data science practice is a process that should be told as a story, rather than a one-time implementation of one single model. This process is a main focus of this book, with many course materials about exploratory data analysis, residual analysis, and flowcharts to develop and validate models and data pipelines." />
+
+
+<meta name="author" content="Shuai Huang &amp; Houtao Deng" />
+
+<meta name="date" content="2021-12-02" />
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  TeX: { equationNumbers: { autoNumber: "AMS" } }
+});
+</script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<meta name="description" content="This book is suitable for an introductory course of data analytics to help students understand some main statistical learning models, such as linear regression, logistic regression, tree models and random forests, ensemble learning, sparse learning, principal component analysis, kernel methods including the support vector machine and kernel regression, etc. Data science practice is a process that should be told as a story, rather than a one-time implementation of one single model. This process is a main focus of this book, with many course materials about exploratory data analysis, residual analysis, and flowcharts to develop and validate models and data pipelines.">
+
+<title>Chapter 9. Pragmatism: Experience &amp; Experimental | Data Analytics: A Small Data Approach</title>
+
+<script src="libs/header-attrs-2.11/header-attrs.js"></script>
+<link href="libs/tufte-css-2015.12.29/tufte.css" rel="stylesheet" />
+<link href="libs/tufte-css-2015.12.29/envisioned.css" rel="stylesheet" />
+<meta name="description" content="My awesome presentation"/>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-194836795-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-194836795-1');
+</script>
+<script src="https://use.typekit.net/ajy6rnl.js"></script>
+<script>try{Typekit.load({ async: true });}catch(e){}</script>
+<!-- <link rel="stylesheet" href="css/normalize.css"> -->
+<!-- <link rel="stylesheet" href="css/envisioned.css"/> -->
+<link rel="stylesheet" href="css/tablesaw-stackonly.css"/>
+<link rel="stylesheet" href="css/nudge.css"/>
+<link rel="stylesheet" href="css/sourcesans.css"/>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+
+
+</head>
+
+<body>
+
+<!--bookdown:toc:start-->
+
+<nav class="pushy pushy-left" id="TOC">
+<ul>
+<li><a href="#cover">Cover</a></li>
+<li><a href="#preface">Preface</a></li>
+<li><a href="#acknowledgments">Acknowledgments</a></li>
+<li><a href="#chapter-1.-introduction">Chapter 1. Introduction</a></li>
+<li><a href="#chapter-2.-abstraction-regression-tree-models">Chapter 2. Abstraction: Regression &amp; Tree Models</a></li>
+<li><a href="#chapter-3.-recognition-logistic-regression-ranking">Chapter 3. Recognition: Logistic Regression &amp; Ranking</a></li>
+<li><a href="#chapter-4.-resonance-bootstrap-random-forests">Chapter 4. Resonance: Bootstrap &amp; Random Forests</a></li>
+<li><a href="#chapter-5.-learning-i-cross-validation-oob">Chapter 5. Learning (I): Cross-validation &amp; OOB</a></li>
+<li><a href="#chapter-6.-diagnosis-residuals-heterogeneity">Chapter 6. Diagnosis: Residuals &amp; Heterogeneity</a></li>
+<li><a href="#chapter-7.-learning-ii-svm-ensemble-learning">Chapter 7. Learning (II): SVM &amp; Ensemble Learning</a></li>
+<li><a href="#chapter-8.-scalability-lasso-pca">Chapter 8. Scalability: LASSO &amp; PCA</a></li>
+<li><a href="#chapter-9.-pragmatism-experience-experimental">Chapter 9. Pragmatism: Experience &amp; Experimental</a></li>
+<li><a href="#chapter-10.-synthesis-architecture-pipeline">Chapter 10. Synthesis: Architecture &amp; Pipeline</a></li>
+<li><a href="#conclusion">Conclusion</a></li>
+<li><a href="#appendix-a-brief-review-of-background-knowledge">Appendix: A Brief Review of Background Knowledge</a></li>
+</ul>
+</nav>
+
+<!--bookdown:toc:end-->
+
+<div class="menu-btn"><h3>☰ Menu</h3></div>
+
+<div class="site-overlay"></div>
+
+
+<div class="row">
+<div class="col-sm-12">
+
+<nav class="pushy pushy-left" id="TOC">
+<ul>
+<li><a href="index.html#cover">Cover</a></li>
+<li><a href="preface.html#preface">Preface</a></li>
+<li><a href="acknowledgments.html#acknowledgments">Acknowledgments</a></li>
+<li><a href="chapter-1.-introduction.html#chapter-1.-introduction">Chapter 1. Introduction</a></li>
+<li><a href="chapter-2.-abstraction-regression-tree-models.html#chapter-2.-abstraction-regression-tree-models">Chapter 2. Abstraction: Regression &amp; Tree Models</a></li>
+<li><a href="chapter-3.-recognition-logistic-regression-ranking.html#chapter-3.-recognition-logistic-regression-ranking">Chapter 3. Recognition: Logistic Regression &amp; Ranking</a></li>
+<li><a href="chapter-4.-resonance-bootstrap-random-forests.html#chapter-4.-resonance-bootstrap-random-forests">Chapter 4. Resonance: Bootstrap &amp; Random Forests</a></li>
+<li><a href="chapter-5.-learning-i-cross-validation-oob.html#chapter-5.-learning-i-cross-validation-oob">Chapter 5. Learning (I): Cross-validation &amp; OOB</a></li>
+<li><a href="chapter-6.-diagnosis-residuals-heterogeneity.html#chapter-6.-diagnosis-residuals-heterogeneity">Chapter 6. Diagnosis: Residuals &amp; Heterogeneity</a></li>
+<li><a href="chapter-7.-learning-ii-svm-ensemble-learning.html#chapter-7.-learning-ii-svm-ensemble-learning">Chapter 7. Learning (II): SVM &amp; Ensemble Learning</a></li>
+<li><a href="chapter-8.-scalability-lasso-pca.html#chapter-8.-scalability-lasso-pca">Chapter 8. Scalability: LASSO &amp; PCA</a></li>
+<li><a href="chapter-9.-pragmatism-experience-experimental.html#chapter-9.-pragmatism-experience-experimental">Chapter 9. Pragmatism: Experience &amp; Experimental</a></li>
+<li><a href="chapter-10.-synthesis-architecture-pipeline.html#chapter-10.-synthesis-architecture-pipeline">Chapter 10. Synthesis: Architecture &amp; Pipeline</a></li>
+<li><a href="conclusion.html#conclusion">Conclusion</a></li>
+<li><a href="appendix-a-brief-review-of-background-knowledge.html#appendix-a-brief-review-of-background-knowledge">Appendix: A Brief Review of Background Knowledge</a></li>
+</ul>
+</nav>
+
+</div>
+</div>
+<div class="row">
+<div class="col-sm-12">
+<div id="chapter-9.-pragmatism-experience-experimental" class="section level1 unnumbered">
+<h1>Chapter 9. Pragmatism: Experience &amp; Experimental</h1>
+<div id="overview-7" class="section level2 unnumbered">
+<h2>Overview</h2>
+<p>Chapter 9 is about <em>pragmatism</em>. Pragmatism is an interesting word because, sometimes, being pragmatic means the opposite of “<em>-ism</em>.” Read what was said about pragmatism: “<em>Consider the practical effects of the objects of your conception. Then, your conception of those effects is the whole of your conception of the object”.<label for="tufte-sn-230" class="margin-toggle sidenote-number">230</label><input type="checkbox" id="tufte-sn-230" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">230</span> Peirce, C. S., , Popular Science Monthly, v. 12, 286–302, 1878.</span></em> In a sense, this resonates with”<em>why by their fruits you shall know them</em>.”<label for="tufte-sn-231" class="margin-toggle sidenote-number">231</label><input type="checkbox" id="tufte-sn-231" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">231</span> Matthew 7:20.</span> To analyze a dataset, we shall be aware of a tendency that we often apply concepts before we see the dataset. EDA has provided a practical way to help us see our preconceptions. In this chapter, two more methods are presented, including the <strong>kernel regression model</strong> that generalizes the idea of linear regression, and the <strong>conditional variance regression model</strong> that creates a convolution by using regression twice.</p>
+</div>
+<div id="kernel-regression-model" class="section level2 unnumbered">
+<h2>Kernel regression model</h2>
+<div id="rationale-and-formulation-14" class="section level3 unnumbered">
+<h3>Rationale and formulation</h3>
+<p>Simple models, similar to the linear regression model, are like <em>parents who tell white lies</em>. A model is simple, not only in the sense that it looks simple, but also because it builds on assumptions that simplify reality. Among all the simple models, the linear regression model is particularly good at disguising its simplicity—it seems so natural that we often forget that its simplicity is its assumption. Simple in its cosmology, not necessary in its terminology—that is what the phrase <em>simple model</em> means<label for="tufte-sn-232" class="margin-toggle sidenote-number">232</label><input type="checkbox" id="tufte-sn-232" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">232</span> In this sense, a model, regardless of how sophisticated its mathematical representation is, is a simple model if its assumptions simplify reality to such an extent that demands our leap of faith.</span>.</p>
+<p></p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:f9-1"></span>
+<p class="caption marginnote shownote">
+Figure 164: (Left) A single outlier (a local pattern) could impact the regression model as a whole; (right) a <em>localized</em> regression model (i.e., the curvature adapts to the locality instead of following a prescribed global form such as a straight line)
+</p>
+<img src="graphics/9_1_left.png" alt="(Left) A single outlier (a local pattern) could impact the regression model as a whole; (right) a *localized* regression model (i.e., the curvature adapts to the locality instead of following a prescribed global form such as a straight line) " width="49%" height="49%"  /><img src="graphics/9_1_right.png" alt="(Left) A single outlier (a local pattern) could impact the regression model as a whole; (right) a *localized* regression model (i.e., the curvature adapts to the locality instead of following a prescribed global form such as a straight line) " width="49%" height="49%"  />
+</div>
+<p></p>
+<p>“<em>Simple, but not simpler</em>” said Albert Einstein.</p>
+<p>One such assumption the linear regression model has made, obviously, is <em>linearity</em>. It would be OK in practice, as Figure <a href="chapter-2.-abstraction-regression-tree-models.html#fig:f2-2">7</a> in <strong>Chapter 2</strong> assures us: it is not perfect but it is a good approximation.</p>
+<p>Now let’s look at Figure <a href="chapter-9.-pragmatism-experience-experimental.html#fig:f9-1">164</a> (left). The <em>true model</em>, represented by the black line, is truly a line. But the fitted model, the orange line, deviates from the black line. In other words, even if the linearity assumption is correct, the consequence is not what we hope for.</p>
+<p>The troublemaker appears to be the outlier located on the upper right corner of the figure. As discernible data scientists, we should be aware that the <em>model</em> is general, while the <em>dataset</em> at hand is particular. It is OK to say the outlier is the troublemaker, but note that this outlier is accidental. The real troublemaker is what <em>enables</em> the possibility of outlier to be a troublemaker. The real troublemaker lies deeper.</p>
+<p>A common theme of the methods in this book is to establish certainty in a world of uncertainty. The linearity assumption is an assumption, since real data rarely give you a perfect straight line. The way it deals with uncertainty is to use the least squares principle for model estimation. It aims to look for a line that could pierce through <em>all</em> the data points. This makes each data point have a <em>global</em> impact: mentally move any data point in Figure <a href="chapter-9.-pragmatism-experience-experimental.html#fig:f9-1">164</a> (left) up and down and imagine how the fitted orange line would move up and down accordingly. In other words, as a data point in any location could change the line dramatically, the linear regression model, together with its least squares estimation method, has imposed an even stronger assumption than merely linearity: it assumes that knowledge learned from one location would be universally useful to all other locations. This implicit assumption<label for="tufte-sn-233" class="margin-toggle sidenote-number">233</label><input type="checkbox" id="tufte-sn-233" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">233</span> I.e., models that have made this assumption are often termed as <em>global models</em>.</span> could be irrational in some applications, where the data points collected in one location may only tell information about that local area, not easily generalizable to the whole space. Thus, when the global models fail, we need <em>local models</em><label for="tufte-sn-234" class="margin-toggle sidenote-number">234</label><input type="checkbox" id="tufte-sn-234" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">234</span> A <em>local model</em> more relies on the data points in a neighborhood to build up the part of the curve that comes through that particular neighborhood.</span> to fit the data, as shown in Figure <a href="chapter-9.-pragmatism-experience-experimental.html#fig:f9-1">164</a> (right).</p>
+</div>
+<div id="theory-and-method-9" class="section level3 unnumbered">
+<h3>Theory and method</h3>
+<p>Suppose there are <span class="math inline">\(N\)</span> data points, denoted as, <span class="math inline">\(\left(x_{n}, y_{n}\right)\)</span> for <span class="math inline">\(n=1,2, \dots, N\)</span>. To predict on a point <span class="math inline">\(x^*\)</span>, a <em>local model</em> assumes the following structure</p>
+<p><span class="math display" id="eq:9-kr">\[\begin{equation}
+\small
+    y^* = \sum_{n=1}^{N} y_n w(x_n, x^*).
+\tag{98}
+\end{equation}\]</span></p>
+<p>Here, <span class="math inline">\(w(x_n,x^*)\)</span> is the <strong>weight function</strong> that characterizes the <em>similarity</em> between <span class="math inline">\(x^*\)</span> and the training data points, <span class="math inline">\(x_n\)</span>, for <span class="math inline">\(n=1,2,\dots,N\)</span>. The idea is to predict on a data point based on the data points that are nearby. Methods differ from each other in terms of how they define <span class="math inline">\(w(x_n,x^*)\)</span>.</p>
+<p>Roughly speaking, there are two main methods. One is the <strong>K-nearest neighbor</strong> (<strong>KNN</strong>) smoother, and another is the <strong>kernel</strong> smoother.</p>
+<p><em>The KNN smoother.</em> The KNN smoother defines <span class="math inline">\(w(x_n,x^*)\)</span> as</p>
+<p><span class="math display">\[\begin{equation*}
+\small
+  w\left(x_{n}, x^{*}\right)=\left\{\begin{array}{l}{\frac{1}{k}, \text { if } x_{n} \text { is one of the } k \text { nearest neighbors of } x^{*}}; \\ {0, \text { if } x_{n} \text { is NOT among the } k \text{ nearest neighbors of } x^{*}}.\end{array}\right. 
+\end{equation*}\]</span></p>
+<p>Here, to define the <em>nearest neighbors</em> of a data point, a <em>distance function</em> is needed. Examples include the <em>Euclidean</em><label for="tufte-sn-235" class="margin-toggle sidenote-number">235</label><input type="checkbox" id="tufte-sn-235" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">235</span> E.g., <span class="math inline">\(d\left(\boldsymbol{x}_n, \boldsymbol{x}_m\right) = \sqrt {\sum _{i=1}^{p} \left( x_{ni}-x_{mi}\right)^2 }\)</span>.</span>, <em>Mahalanobis</em>, and <em>Cosine</em> distance functions. What distance function to use depends on the characteristics of the data. Model selection methods such as the cross-validation can be used to select the best distance function for a dataset.</p>
+<p></p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:f9-knn"></span>
+<p class="caption marginnote shownote">
+Figure 165: Three KNN smoother models (<span class="math inline">\(k=1\)</span>, <span class="math inline">\(k=2\)</span>, and <span class="math inline">\(k=6\)</span>)
+</p>
+<img src="graphics/9_knn_illu.png" alt="Three KNN smoother models ($k=1$, $k=2$, and $k=6$)" width="80%"  />
+</div>
+<p></p>
+<p>Consider a data example as shown in Table <a href="chapter-9.-pragmatism-experience-experimental.html#tab:t9-knn">46</a>. A visualization of the data points is shown in Figure <a href="chapter-9.-pragmatism-experience-experimental.html#fig:f9-knn">165</a>, i.e., the gray data points.</p>
+<p></p>
+<p><!--
+<caption>--><span class="marginnote shownote"><span id="tab:t9-knn">Table 46: </span>Example of a dataset with <span class="math inline">\(6\)</span> data points</span><!--</caption>--></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">ID</th>
+<th align="left"><span class="math inline">\(x\)</span></th>
+<th align="left"><span class="math inline">\(y\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><span class="math inline">\(1\)</span></td>
+<td align="left"><span class="math inline">\(0\)</span></td>
+<td align="left"><span class="math inline">\(1\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(2\)</span></td>
+<td align="left"><span class="math inline">\(1\)</span></td>
+<td align="left"><span class="math inline">\(3\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(3\)</span></td>
+<td align="left"><span class="math inline">\(2\)</span></td>
+<td align="left"><span class="math inline">\(5\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(4\)</span></td>
+<td align="left"><span class="math inline">\(3\)</span></td>
+<td align="left"><span class="math inline">\(6\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(5\)</span></td>
+<td align="left"><span class="math inline">\(4\)</span></td>
+<td align="left"><span class="math inline">\(9\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(6\)</span></td>
+<td align="left"><span class="math inline">\(5\)</span></td>
+<td align="left"><span class="math inline">\(10\)</span></td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<p>Let’s build <span class="math inline">\(3\)</span> KNN smoother models (e.g., <span class="math inline">\(k=1\)</span>, <span class="math inline">\(k=2\)</span>, and <span class="math inline">\(k=6\)</span>) and use the Euclidean distance function to identify the <em>nearest neighbors</em> of a data point. Results are presented in Tables <a href="chapter-9.-pragmatism-experience-experimental.html#tab:t9-knnK1">47</a>, <a href="chapter-9.-pragmatism-experience-experimental.html#tab:t9-knnK2">48</a>, and <a href="chapter-9.-pragmatism-experience-experimental.html#tab:t9-knnK6">49</a>, respectively. Note that, in this dataset, as there are in total <span class="math inline">\(6\)</span> data points, the KNN model with <span class="math inline">\(k=6\)</span> is the same as the trivial model that uses the average of <span class="math inline">\(y\)</span> as predictions for all data points.</p>
+<p></p>
+<p><!--
+<caption>--><span class="marginnote shownote"><span id="tab:t9-knnK1">Table 47: </span>Predictions by a KNN smoother model with <span class="math inline">\(k=1\)</span> on some locations of <span class="math inline">\(x^*\)</span></span><!--</caption>--></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left"><span class="math inline">\(x^*\)</span></th>
+<th align="left">KNN</th>
+<th align="left"><span class="math inline">\(y^*\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><span class="math inline">\(0.4\)</span></td>
+<td align="left"><span class="math inline">\(x_1\)</span></td>
+<td align="left"><span class="math inline">\(y_1\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(1.6\)</span></td>
+<td align="left"><span class="math inline">\(x_3\)</span></td>
+<td align="left"><span class="math inline">\(y_3\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(3.2\)</span></td>
+<td align="left"><span class="math inline">\(x_4\)</span></td>
+<td align="left"><span class="math inline">\(y_4\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(4.8\)</span></td>
+<td align="left"><span class="math inline">\(x_6\)</span></td>
+<td align="left"><span class="math inline">\(y_6\)</span></td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<p></p>
+<p><!--
+<caption>--><span class="marginnote shownote"><span id="tab:t9-knnK2">Table 48: </span>Predictions by a KNN smoother model with <span class="math inline">\(k=2\)</span> on some locations of <span class="math inline">\(x^*\)</span></span><!--</caption>--></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left"><span class="math inline">\(x^*\)</span></th>
+<th align="left">KNN</th>
+<th align="left"><span class="math inline">\(y^*\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><span class="math inline">\(0.4\)</span></td>
+<td align="left"><span class="math inline">\(x_1\)</span>, <span class="math inline">\(x_2\)</span></td>
+<td align="left"><span class="math inline">\((y_1 + y_2)/2\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(1.6\)</span></td>
+<td align="left"><span class="math inline">\(x_2\)</span>, <span class="math inline">\(x_3\)</span></td>
+<td align="left"><span class="math inline">\((y_2 + y_3)/2\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(3.2\)</span></td>
+<td align="left"><span class="math inline">\(x_4\)</span>, <span class="math inline">\(x_5\)</span></td>
+<td align="left"><span class="math inline">\((y_4 + y_5)/2\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(4.8\)</span></td>
+<td align="left"><span class="math inline">\(x_5\)</span>, <span class="math inline">\(x_6\)</span></td>
+<td align="left"><span class="math inline">\((y_5 + y_6)/2\)</span></td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<p></p>
+<p><!--
+<caption>--><span class="marginnote shownote"><span id="tab:t9-knnK6">Table 49: </span>Predictions by a KNN smoother model with <span class="math inline">\(k=6\)</span> on some locations of <span class="math inline">\(x^*\)</span></span><!--</caption>--></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left"><span class="math inline">\(x^*\)</span></th>
+<th align="left">KNN</th>
+<th align="left"><span class="math inline">\(y^*\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><span class="math inline">\(0.4\)</span></td>
+<td align="left"><span class="math inline">\(x_1\)</span>-<span class="math inline">\(x_6\)</span></td>
+<td align="left"><span class="math inline">\(\sum_{n=1}^{6} y_n/6\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(1.6\)</span></td>
+<td align="left"><span class="math inline">\(x_1\)</span>-<span class="math inline">\(x_6\)</span></td>
+<td align="left"><span class="math inline">\(\sum_{n=1}^{6} y_n/6\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(3.2\)</span></td>
+<td align="left"><span class="math inline">\(x_1\)</span>-<span class="math inline">\(x_6\)</span></td>
+<td align="left"><span class="math inline">\(\sum_{n=1}^{6} y_n/6\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(4.8\)</span></td>
+<td align="left"><span class="math inline">\(x_1\)</span>-<span class="math inline">\(x_6\)</span></td>
+<td align="left"><span class="math inline">\(\sum_{n=1}^{6} y_n/6\)</span></td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<p>The <span class="math inline">\(3\)</span> KNN smoother models are also shown in Figure <a href="chapter-9.-pragmatism-experience-experimental.html#fig:f9-knn">165</a>.</p>
+<p>A distinct feature of the <strong>KNN smoother</strong> is the <em>discrete</em> manner to define the similarity between data points, which is, for any data point <span class="math inline">\(x^*\)</span>, the data point <span class="math inline">\(x_n\)</span> is either a neighbor or not. The KNN smoother only uses the <span class="math inline">\(k\)</span> nearest neighbors of <span class="math inline">\(x^*\)</span> to predict <span class="math inline">\(y^*\)</span>. This discrete manner of the KNN smoother results in the serrated curves shown in Figure <a href="chapter-9.-pragmatism-experience-experimental.html#fig:f9-knn">165</a>. This is obviously artificial, pointing out a systematic <em>bias</em> imposed by the KNN smoother model.</p>
+<p><em>The kernel smoother.</em> To remove this bias, the <strong>kernel smoother</strong> creates <em>continuity</em> in the similarity between data points. A kernel smoother defines <span class="math inline">\(w(x_n,x^* )\)</span> in the following manner</p>
+<p><span class="math display">\[\begin{equation*}
+\small
+  w\left(x_{n}, x^{*}\right)=\frac{K\left(x_{n}, x^{*}\right)}{\sum_{n=1}^{N} K\left(x_{n}, x^{*}\right)}. 
+\end{equation*}\]</span></p>
+<p>Here, <span class="math inline">\(K\left(x_{n}, x^{*}\right)\)</span> is a <em>kernel function</em> as we have discussed in <strong>Chapter 7</strong>. There have been many kernel functions developed, for example, as shown in Table <a href="chapter-9.-pragmatism-experience-experimental.html#tab:t9-1">50</a>.</p>
+<p></p>
+<p><!--
+<caption>--><span class="marginnote shownote"><span id="tab:t9-1">Table 50: </span>Some kernel functions used in machine learning</span><!--</caption>--></p>
+<table>
+<colgroup>
+<col width="9%" />
+<col width="83%" />
+<col width="7%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left"><strong>Kernel Function</strong></th>
+<th align="left"><strong>Mathematical Form</strong></th>
+<th align="left"><strong>Parameters</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Line</td>
+<td align="left"><span class="math inline">\(K(\boldsymbol{x}_i, \boldsymbol{x}_j) = \boldsymbol{x}_i^T\boldsymbol{x}_j\)</span></td>
+<td align="left"><em>null</em></td>
+</tr>
+<tr class="even">
+<td align="left">Polynomial</td>
+<td align="left"><span class="math inline">\(K(\boldsymbol{x}_i, \boldsymbol{x}_j)= \left(\boldsymbol{x}_i^T\boldsymbol{x}_j + 1\right)^q\)</span></td>
+<td align="left"><span class="math inline">\(q\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left">Gaussian radial basis</td>
+<td align="left"><span class="math inline">\(K(\boldsymbol{x}_i, \boldsymbol{x}_j) = e^{-\gamma\Vert \boldsymbol{x}_i - \boldsymbol{x}_j\Vert^2}\)</span></td>
+<td align="left"><span class="math inline">\(\gamma \geq 0\)</span></td>
+</tr>
+<tr class="even">
+<td align="left">Laplace radial basis</td>
+<td align="left"><span class="math inline">\(K(\boldsymbol{x}_i, \boldsymbol{x}_j) = e^{-\gamma\Vert \boldsymbol{x}_i - \boldsymbol{x}_j\Vert}\)</span></td>
+<td align="left"><span class="math inline">\(\gamma \geq 0\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left">Hyperbolic tangent</td>
+<td align="left"><span class="math inline">\(K(\boldsymbol{x}_i, \boldsymbol{x}_j) = tanh(\boldsymbol{x}_i^T\boldsymbol{x}_j+b)\)</span></td>
+<td align="left">b</td>
+</tr>
+<tr class="even">
+<td align="left">Sigmoid</td>
+<td align="left"><span class="math inline">\(K(\boldsymbol{x}_i, \boldsymbol{x}_j) = tanh(a\boldsymbol{x}_i^T\boldsymbol{x}_j+b)\)</span></td>
+<td align="left">a,b</td>
+</tr>
+<tr class="odd">
+<td align="left">Bessel function</td>
+<td align="left"><span class="math inline">\(K(\boldsymbol{x}_i, \boldsymbol{x}_j) = \frac{bessel_{v+1}^n(\sigma\Vert \boldsymbol{x}_i - \boldsymbol{x}_j \Vert)}{\left(\Vert \boldsymbol{x}_i -\boldsymbol{x}_j \Vert\right)^{-n(v+1)}}\)</span></td>
+<td align="left"><span class="math inline">\(\sigma, n,v\)</span></td>
+</tr>
+<tr class="even">
+<td align="left">ANOVA radial basis</td>
+<td align="left"><span class="math inline">\(K(\boldsymbol{x}_i, \boldsymbol{x}_j) = \left( \sum_{k=1}^n e^{-\sigma\left(x_i^k - x_j^k\right)}\right)^d\)</span></td>
+<td align="left"><span class="math inline">\(\sigma, d\)</span></td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<p>Many kernel functions are smooth functions. To understand a kernel function, using R to draw it is a good approach. For example, the following R code draws a few instances of the <em>Gaussian radial basis</em> kernel function and shows them in Figure <a href="chapter-9.-pragmatism-experience-experimental.html#fig:f9-gauss">166</a>. The curve illustrates how the similarity <em>smoothly</em> decreases when the distance between the two data points increases. And the <em>bandwidth</em> parameter <span class="math inline">\(\gamma\)</span> controls the rate of decrease, i.e., the smaller the <span class="math inline">\(\gamma\)</span>, the less sensitive the kernel function to the <em>Euclidean</em> distance of the data points (measured by <span class="math inline">\(\Vert \boldsymbol{x}_i - \boldsymbol{x}_j\Vert^2\)</span>).</p>
+<p></p>
+<p>
+<span class="marginnote shownote">
+<!--
+<div class="figure">--><span style="display:block;" id="fig:f9-gauss"></span>
+<img src="graphics/9_gauss.png" alt="Three instances of the *Gaussian radial basis* kernel function ($\gamma=0.2$, $\gamma=0.5$, and $\gamma=1$)" width="100%"  />
+<!--
+<p class="caption marginnote">-->Figure 166: Three instances of the <em>Gaussian radial basis</em> kernel function (<span class="math inline">\(\gamma=0.2\)</span>, <span class="math inline">\(\gamma=0.5\)</span>, and <span class="math inline">\(\gamma=1\)</span>)<!--</p>-->
+<!--</div>--></span>
+</p>
+<p></p>
+<p></p>
+<div class="sourceCode" id="cb189"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb189-1"><a href="chapter-9.-pragmatism-experience-experimental.html#cb189-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Use R to visualize a kernel function</span></span>
+<span id="cb189-2"><a href="chapter-9.-pragmatism-experience-experimental.html#cb189-2" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(latex2exp) <span class="co"># enable the use of latex in R graphics</span></span>
+<span id="cb189-3"><a href="chapter-9.-pragmatism-experience-experimental.html#cb189-3" aria-hidden="true" tabindex="-1"></a><span class="co"># write a function for the kernel function</span></span>
+<span id="cb189-4"><a href="chapter-9.-pragmatism-experience-experimental.html#cb189-4" aria-hidden="true" tabindex="-1"></a>gauss <span class="ot">&lt;-</span> <span class="cf">function</span>(x,gamma) <span class="fu">exp</span>(<span class="sc">-</span> gamma <span class="sc">*</span> x<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb189-5"><a href="chapter-9.-pragmatism-experience-experimental.html#cb189-5" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="at">from =</span> <span class="sc">-</span><span class="dv">3</span>, <span class="at">to =</span> <span class="dv">3</span>, <span class="at">by =</span> <span class="fl">0.001</span>) </span>
+<span id="cb189-6"><a href="chapter-9.-pragmatism-experience-experimental.html#cb189-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(x, <span class="fu">gauss</span>(x,<span class="fl">0.2</span>), <span class="at">lwd =</span> <span class="dv">1</span>, <span class="at">xlab =</span> <span class="fu">TeX</span>(<span class="st">&#39;$x_i  - x_j$&#39;</span>),</span>
+<span id="cb189-7"><a href="chapter-9.-pragmatism-experience-experimental.html#cb189-7" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab=</span><span class="st">&quot;Gaussian radial basis kernel&quot;</span>, <span class="at">col =</span> <span class="st">&quot;black&quot;</span>)</span>
+<span id="cb189-8"><a href="chapter-9.-pragmatism-experience-experimental.html#cb189-8" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(x, <span class="fu">gauss</span>(x,<span class="fl">0.5</span>), <span class="at">lwd =</span> <span class="dv">1</span>, <span class="at">col =</span> <span class="st">&quot;forestgreen&quot;</span>)</span>
+<span id="cb189-9"><a href="chapter-9.-pragmatism-experience-experimental.html#cb189-9" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(x, <span class="fu">gauss</span>(x,<span class="dv">1</span>), <span class="at">lwd =</span> <span class="dv">1</span>, <span class="at">col =</span> <span class="st">&quot;darkorange&quot;</span>)</span>
+<span id="cb189-10"><a href="chapter-9.-pragmatism-experience-experimental.html#cb189-10" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="at">x =</span> <span class="st">&quot;topleft&quot;</span>, </span>
+<span id="cb189-11"><a href="chapter-9.-pragmatism-experience-experimental.html#cb189-11" aria-hidden="true" tabindex="-1"></a>       <span class="at">legend =</span> <span class="fu">c</span>(<span class="fu">TeX</span>(<span class="st">&#39;$</span><span class="sc">\\</span><span class="st">gamma = 0.2$&#39;</span>), <span class="fu">TeX</span>(<span class="st">&#39;$</span><span class="sc">\\</span><span class="st">gamma = 0.5$&#39;</span>),</span>
+<span id="cb189-12"><a href="chapter-9.-pragmatism-experience-experimental.html#cb189-12" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">TeX</span>(<span class="st">&#39;$</span><span class="sc">\\</span><span class="st">gamma = 1$&#39;</span>)), </span>
+<span id="cb189-13"><a href="chapter-9.-pragmatism-experience-experimental.html#cb189-13" aria-hidden="true" tabindex="-1"></a>       <span class="at">lwd =</span> <span class="fu">rep</span>(<span class="dv">4</span>, <span class="dv">4</span>), <span class="at">col =</span> <span class="fu">c</span>(<span class="st">&quot;black&quot;</span>,</span>
+<span id="cb189-14"><a href="chapter-9.-pragmatism-experience-experimental.html#cb189-14" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;darkorange&quot;</span>,<span class="st">&quot;forestgreen&quot;</span>))</span></code></pre></div>
+<p></p>
+</div>
+<div id="r-lab-13" class="section level3 unnumbered">
+<h3>R Lab</h3>
+<p><em>The 6-Step R Pipeline.</em> <strong>Step 1</strong> and <strong>Step 2</strong> get the dataset into R and organize it in required format.</p>
+<p></p>
+<div class="sourceCode" id="cb190"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb190-1"><a href="chapter-9.-pragmatism-experience-experimental.html#cb190-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1 -&gt; Read data into R workstation</span></span>
+<span id="cb190-2"><a href="chapter-9.-pragmatism-experience-experimental.html#cb190-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb190-3"><a href="chapter-9.-pragmatism-experience-experimental.html#cb190-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(RCurl)</span>
+<span id="cb190-4"><a href="chapter-9.-pragmatism-experience-experimental.html#cb190-4" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;https://raw.githubusercontent.com&quot;</span>,</span>
+<span id="cb190-5"><a href="chapter-9.-pragmatism-experience-experimental.html#cb190-5" aria-hidden="true" tabindex="-1"></a>              <span class="st">&quot;/analyticsbook/book/main/data/KR.csv&quot;</span>)</span>
+<span id="cb190-6"><a href="chapter-9.-pragmatism-experience-experimental.html#cb190-6" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="at">text=</span><span class="fu">getURL</span>(url))</span>
+<span id="cb190-7"><a href="chapter-9.-pragmatism-experience-experimental.html#cb190-7" aria-hidden="true" tabindex="-1"></a><span class="co"># str(data)</span></span>
+<span id="cb190-8"><a href="chapter-9.-pragmatism-experience-experimental.html#cb190-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb190-9"><a href="chapter-9.-pragmatism-experience-experimental.html#cb190-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2 -&gt; Data preprocessing</span></span>
+<span id="cb190-10"><a href="chapter-9.-pragmatism-experience-experimental.html#cb190-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Create X matrix (predictors) and Y vector (outcome variable)</span></span>
+<span id="cb190-11"><a href="chapter-9.-pragmatism-experience-experimental.html#cb190-11" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> data<span class="sc">$</span>x</span>
+<span id="cb190-12"><a href="chapter-9.-pragmatism-experience-experimental.html#cb190-12" aria-hidden="true" tabindex="-1"></a>Y <span class="ot">&lt;-</span> data<span class="sc">$</span>y</span>
+<span id="cb190-13"><a href="chapter-9.-pragmatism-experience-experimental.html#cb190-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb190-14"><a href="chapter-9.-pragmatism-experience-experimental.html#cb190-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a training data </span></span>
+<span id="cb190-15"><a href="chapter-9.-pragmatism-experience-experimental.html#cb190-15" aria-hidden="true" tabindex="-1"></a>train.ix <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">nrow</span>(data),<span class="fu">floor</span>( <span class="fu">nrow</span>(data) <span class="sc">*</span> <span class="dv">4</span><span class="sc">/</span><span class="dv">5</span>) )</span>
+<span id="cb190-16"><a href="chapter-9.-pragmatism-experience-experimental.html#cb190-16" aria-hidden="true" tabindex="-1"></a>data.train <span class="ot">&lt;-</span> data[train.ix,]</span>
+<span id="cb190-17"><a href="chapter-9.-pragmatism-experience-experimental.html#cb190-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a testing data </span></span>
+<span id="cb190-18"><a href="chapter-9.-pragmatism-experience-experimental.html#cb190-18" aria-hidden="true" tabindex="-1"></a>data.test <span class="ot">&lt;-</span> data[<span class="sc">-</span>train.ix,]</span></code></pre></div>
+<p></p>
+<p><strong>Step 3</strong> creates a list of models. For a kernel regression model, important decisions are made on the kernel function and its parameter(s). For example, here, we create two models with two kernel functions and their parameters:</p>
+<p></p>
+<div class="sourceCode" id="cb191"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb191-1"><a href="chapter-9.-pragmatism-experience-experimental.html#cb191-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 3 -&gt; gather a list of candidate models</span></span>
+<span id="cb191-2"><a href="chapter-9.-pragmatism-experience-experimental.html#cb191-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb191-3"><a href="chapter-9.-pragmatism-experience-experimental.html#cb191-3" aria-hidden="true" tabindex="-1"></a><span class="co"># model1: ksmooth(x,y, kernel = &quot;normal&quot;, bandwidth=10)</span></span>
+<span id="cb191-4"><a href="chapter-9.-pragmatism-experience-experimental.html#cb191-4" aria-hidden="true" tabindex="-1"></a><span class="co"># model2: ksmooth(x,y, kernel = &quot;box&quot;, bandwidth=5)</span></span>
+<span id="cb191-5"><a href="chapter-9.-pragmatism-experience-experimental.html#cb191-5" aria-hidden="true" tabindex="-1"></a><span class="co"># model3: ...</span></span></code></pre></div>
+<p></p>
+<p><strong>Step 4</strong> uses cross-validation to evaluate the candidate models to identify the best model.</p>
+<p></p>
+<div class="sourceCode" id="cb192"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb192-1"><a href="chapter-9.-pragmatism-experience-experimental.html#cb192-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 4 -&gt; Use 5-fold cross-validation to evaluate the models</span></span>
+<span id="cb192-2"><a href="chapter-9.-pragmatism-experience-experimental.html#cb192-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb192-3"><a href="chapter-9.-pragmatism-experience-experimental.html#cb192-3" aria-hidden="true" tabindex="-1"></a>n_folds <span class="ot">=</span> <span class="dv">10</span> <span class="co"># number of fold </span></span>
+<span id="cb192-4"><a href="chapter-9.-pragmatism-experience-experimental.html#cb192-4" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="fu">dim</span>(data.train)[<span class="dv">1</span>] </span>
+<span id="cb192-5"><a href="chapter-9.-pragmatism-experience-experimental.html#cb192-5" aria-hidden="true" tabindex="-1"></a>folds_i <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span>n_folds, <span class="at">length.out =</span> N)) </span>
+<span id="cb192-6"><a href="chapter-9.-pragmatism-experience-experimental.html#cb192-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb192-7"><a href="chapter-9.-pragmatism-experience-experimental.html#cb192-7" aria-hidden="true" tabindex="-1"></a><span class="co"># evaluate model1</span></span>
+<span id="cb192-8"><a href="chapter-9.-pragmatism-experience-experimental.html#cb192-8" aria-hidden="true" tabindex="-1"></a>cv_mse <span class="ot">&lt;-</span> <span class="cn">NULL</span> </span>
+<span id="cb192-9"><a href="chapter-9.-pragmatism-experience-experimental.html#cb192-9" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (k <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_folds) {</span>
+<span id="cb192-10"><a href="chapter-9.-pragmatism-experience-experimental.html#cb192-10" aria-hidden="true" tabindex="-1"></a>  test_i <span class="ot">&lt;-</span> <span class="fu">which</span>(folds_i <span class="sc">==</span> k) </span>
+<span id="cb192-11"><a href="chapter-9.-pragmatism-experience-experimental.html#cb192-11" aria-hidden="true" tabindex="-1"></a>  data.train.cv <span class="ot">&lt;-</span> data.train[<span class="sc">-</span>test_i, ] </span>
+<span id="cb192-12"><a href="chapter-9.-pragmatism-experience-experimental.html#cb192-12" aria-hidden="true" tabindex="-1"></a>  data.test.cv <span class="ot">&lt;-</span> data.train[test_i, ]  </span>
+<span id="cb192-13"><a href="chapter-9.-pragmatism-experience-experimental.html#cb192-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">require</span>( <span class="st">&#39;kernlab&#39;</span> )</span>
+<span id="cb192-14"><a href="chapter-9.-pragmatism-experience-experimental.html#cb192-14" aria-hidden="true" tabindex="-1"></a>  model1 <span class="ot">&lt;-</span> <span class="fu">ksmooth</span>(data.train.cv<span class="sc">$</span>x, data.train.cv<span class="sc">$</span>y, </span>
+<span id="cb192-15"><a href="chapter-9.-pragmatism-experience-experimental.html#cb192-15" aria-hidden="true" tabindex="-1"></a>                    <span class="at">kernel =</span> <span class="st">&quot;normal&quot;</span>, <span class="at">bandwidth =</span> <span class="dv">10</span>,</span>
+<span id="cb192-16"><a href="chapter-9.-pragmatism-experience-experimental.html#cb192-16" aria-hidden="true" tabindex="-1"></a>                    <span class="at">x.points=</span>data.test.cv[,<span class="dv">1</span>]) </span>
+<span id="cb192-17"><a href="chapter-9.-pragmatism-experience-experimental.html#cb192-17" aria-hidden="true" tabindex="-1"></a>  <span class="co"># (1) Fit the kernel regression model with Gaussian kernel</span></span>
+<span id="cb192-18"><a href="chapter-9.-pragmatism-experience-experimental.html#cb192-18" aria-hidden="true" tabindex="-1"></a>  <span class="co"># (argument: kernel = &quot;normal&quot;) and bandwidth = 0.5; (2) There is</span></span>
+<span id="cb192-19"><a href="chapter-9.-pragmatism-experience-experimental.html#cb192-19" aria-hidden="true" tabindex="-1"></a>  <span class="co"># no predict() for ksmooth. Use the argument</span></span>
+<span id="cb192-20"><a href="chapter-9.-pragmatism-experience-experimental.html#cb192-20" aria-hidden="true" tabindex="-1"></a>  <span class="co"># &quot;x.points=data.test.cv&quot; instead. </span></span>
+<span id="cb192-21"><a href="chapter-9.-pragmatism-experience-experimental.html#cb192-21" aria-hidden="true" tabindex="-1"></a>  y_hat <span class="ot">&lt;-</span> model1<span class="sc">$</span>y  </span>
+<span id="cb192-22"><a href="chapter-9.-pragmatism-experience-experimental.html#cb192-22" aria-hidden="true" tabindex="-1"></a>  true_y <span class="ot">&lt;-</span> data.test.cv<span class="sc">$</span>y  </span>
+<span id="cb192-23"><a href="chapter-9.-pragmatism-experience-experimental.html#cb192-23" aria-hidden="true" tabindex="-1"></a>  cv_mse[k] <span class="ot">&lt;-</span> <span class="fu">mean</span>((true_y <span class="sc">-</span> y_hat)<span class="sc">^</span><span class="dv">2</span>) </span>
+<span id="cb192-24"><a href="chapter-9.-pragmatism-experience-experimental.html#cb192-24" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb192-25"><a href="chapter-9.-pragmatism-experience-experimental.html#cb192-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb192-26"><a href="chapter-9.-pragmatism-experience-experimental.html#cb192-26" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(cv_mse)</span>
+<span id="cb192-27"><a href="chapter-9.-pragmatism-experience-experimental.html#cb192-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb192-28"><a href="chapter-9.-pragmatism-experience-experimental.html#cb192-28" aria-hidden="true" tabindex="-1"></a><span class="co"># evaluate model2 using the same script above</span></span>
+<span id="cb192-29"><a href="chapter-9.-pragmatism-experience-experimental.html#cb192-29" aria-hidden="true" tabindex="-1"></a><span class="co"># ... </span></span></code></pre></div>
+<p></p>
+<p>The result is shown below</p>
+<p></p>
+<div class="sourceCode" id="cb193"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb193-1"><a href="chapter-9.-pragmatism-experience-experimental.html#cb193-1" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] 0.2605955  # Model1</span></span>
+<span id="cb193-2"><a href="chapter-9.-pragmatism-experience-experimental.html#cb193-2" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] 0.2662046  # Model2</span></span></code></pre></div>
+<p>
+<strong>Step 5</strong> builds the final model.</p>
+<p></p>
+<div class="sourceCode" id="cb194"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb194-1"><a href="chapter-9.-pragmatism-experience-experimental.html#cb194-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 5 -&gt; After model selection, use ksmooth() function to </span></span>
+<span id="cb194-2"><a href="chapter-9.-pragmatism-experience-experimental.html#cb194-2" aria-hidden="true" tabindex="-1"></a><span class="co"># build your final model</span></span>
+<span id="cb194-3"><a href="chapter-9.-pragmatism-experience-experimental.html#cb194-3" aria-hidden="true" tabindex="-1"></a>kr.final <span class="ot">&lt;-</span> <span class="fu">ksmooth</span>(data.train<span class="sc">$</span>x, data.train<span class="sc">$</span>y, <span class="at">kernel =</span> <span class="st">&quot;normal&quot;</span>,</span>
+<span id="cb194-4"><a href="chapter-9.-pragmatism-experience-experimental.html#cb194-4" aria-hidden="true" tabindex="-1"></a>                    <span class="at">bandwidth =</span> <span class="dv">10</span>, <span class="at">x.points=</span>data.test[,<span class="dv">1</span>]) <span class="co"># </span></span></code></pre></div>
+<p></p>
+<p><strong>Step 6</strong> uses the final model for prediction.</p>
+<p></p>
+<div class="sourceCode" id="cb195"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb195-1"><a href="chapter-9.-pragmatism-experience-experimental.html#cb195-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 6 -&gt; Evaluate the prediction performance of your model</span></span>
+<span id="cb195-2"><a href="chapter-9.-pragmatism-experience-experimental.html#cb195-2" aria-hidden="true" tabindex="-1"></a>y_hat <span class="ot">&lt;-</span> kr.final<span class="sc">$</span>y  </span>
+<span id="cb195-3"><a href="chapter-9.-pragmatism-experience-experimental.html#cb195-3" aria-hidden="true" tabindex="-1"></a>true_y <span class="ot">&lt;-</span> data.test<span class="sc">$</span>y   </span>
+<span id="cb195-4"><a href="chapter-9.-pragmatism-experience-experimental.html#cb195-4" aria-hidden="true" tabindex="-1"></a>mse <span class="ot">&lt;-</span> <span class="fu">mean</span>((true_y <span class="sc">-</span> y_hat)<span class="sc">^</span><span class="dv">2</span>)    </span>
+<span id="cb195-5"><a href="chapter-9.-pragmatism-experience-experimental.html#cb195-5" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(mse)</span></code></pre></div>
+<p></p>
+<p>This pipeline could be easily extended to KNN smoother model, i.e., using the <code>knn.reg</code> in the <code>FNN</code> package.</p>
+<p><em>Simulation Experiment.</em> We have created a R script in <strong>Chapter 5</strong> to simulate data from nonlinear regression models. Here, we use the same R script as shown below.</p>
+<p></p>
+<div class="sourceCode" id="cb196"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb196-1"><a href="chapter-9.-pragmatism-experience-experimental.html#cb196-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulate one batch of data</span></span>
+<span id="cb196-2"><a href="chapter-9.-pragmatism-experience-experimental.html#cb196-2" aria-hidden="true" tabindex="-1"></a>n_train <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb196-3"><a href="chapter-9.-pragmatism-experience-experimental.html#cb196-3" aria-hidden="true" tabindex="-1"></a><span class="co"># coefficients of the true model</span></span>
+<span id="cb196-4"><a href="chapter-9.-pragmatism-experience-experimental.html#cb196-4" aria-hidden="true" tabindex="-1"></a>coef <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.68</span>,<span class="fl">0.82</span>,<span class="sc">-</span><span class="fl">0.417</span>,<span class="fl">0.32</span>,<span class="sc">-</span><span class="fl">0.68</span>) </span>
+<span id="cb196-5"><a href="chapter-9.-pragmatism-experience-experimental.html#cb196-5" aria-hidden="true" tabindex="-1"></a>v_noise <span class="ot">&lt;-</span> <span class="fl">0.2</span></span>
+<span id="cb196-6"><a href="chapter-9.-pragmatism-experience-experimental.html#cb196-6" aria-hidden="true" tabindex="-1"></a>n_df <span class="ot">&lt;-</span> <span class="dv">20</span></span>
+<span id="cb196-7"><a href="chapter-9.-pragmatism-experience-experimental.html#cb196-7" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span>n_df</span>
+<span id="cb196-8"><a href="chapter-9.-pragmatism-experience-experimental.html#cb196-8" aria-hidden="true" tabindex="-1"></a>tempData <span class="ot">&lt;-</span> <span class="fu">gen_data</span>(n_train, coef, v_noise)</span></code></pre></div>
+<p></p>
+<p>The simulated data are shown in Figure <a href="chapter-9.-pragmatism-experience-experimental.html#fig:f9-3">167</a> (i.e., the gray data points).</p>
+<p></p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:f9-3"></span>
+<p class="caption marginnote shownote">
+Figure 167: Kernel regression models with different choices on the <em>bandwidth</em> parameter (<span class="math inline">\(\gamma\)</span>) of the Gaussian radial basis kernel function
+</p>
+<img src="graphics/9_3.png" alt="Kernel regression models with different choices on the *bandwidth* parameter ($\gamma$) of the Gaussian radial basis kernel function" width="80%"  />
+</div>
+<p></p>
+<p>The following R code overlays the <em>true</em> model, i.e., as the black curve, in Figure <a href="chapter-9.-pragmatism-experience-experimental.html#fig:f9-3">167</a>.</p>
+<p></p>
+<div class="sourceCode" id="cb197"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb197-1"><a href="chapter-9.-pragmatism-experience-experimental.html#cb197-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the true model</span></span>
+<span id="cb197-2"><a href="chapter-9.-pragmatism-experience-experimental.html#cb197-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(y <span class="sc">~</span> x, <span class="at">col =</span> <span class="st">&quot;gray&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb197-3"><a href="chapter-9.-pragmatism-experience-experimental.html#cb197-3" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(x, X <span class="sc">%*%</span> coef, <span class="at">lwd =</span> <span class="dv">3</span>, <span class="at">col =</span> <span class="st">&quot;black&quot;</span>)</span></code></pre></div>
+<p></p>
+<p>Let’s use the kernel regression model to fit the data. We use the <em>Gaussian radial basis</em> kernel function, with three different choices of the <em>bandwidth</em> parameter (<span class="math inline">\(\gamma\)</span>), i.e., (<span class="math inline">\(\gamma = 2\)</span>, <span class="math inline">\(\gamma = 5\)</span>, <span class="math inline">\(\gamma = 15\)</span>). Then we overlay the three fitted kernel regression models in Figure <a href="chapter-9.-pragmatism-experience-experimental.html#fig:f9-3">167</a> using the following R code.</p>
+<p></p>
+<div class="sourceCode" id="cb198"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb198-1"><a href="chapter-9.-pragmatism-experience-experimental.html#cb198-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(<span class="fu">ksmooth</span>(x,y, <span class="st">&quot;normal&quot;</span>, <span class="at">bandwidth=</span><span class="dv">2</span>),<span class="at">lwd =</span> <span class="dv">3</span>,</span>
+<span id="cb198-2"><a href="chapter-9.-pragmatism-experience-experimental.html#cb198-2" aria-hidden="true" tabindex="-1"></a>      <span class="at">col =</span> <span class="st">&quot;darkorange&quot;</span>)</span>
+<span id="cb198-3"><a href="chapter-9.-pragmatism-experience-experimental.html#cb198-3" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(<span class="fu">ksmooth</span>(x,y, <span class="st">&quot;normal&quot;</span>, <span class="at">bandwidth=</span><span class="dv">5</span>),<span class="at">lwd =</span> <span class="dv">3</span>,</span>
+<span id="cb198-4"><a href="chapter-9.-pragmatism-experience-experimental.html#cb198-4" aria-hidden="true" tabindex="-1"></a>      <span class="at">col =</span> <span class="st">&quot;dodgerblue4&quot;</span>)</span>
+<span id="cb198-5"><a href="chapter-9.-pragmatism-experience-experimental.html#cb198-5" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(<span class="fu">ksmooth</span>(x,y, <span class="st">&quot;normal&quot;</span>, <span class="at">bandwidth=</span><span class="dv">15</span>),<span class="at">lwd =</span> <span class="dv">3</span>,</span>
+<span id="cb198-6"><a href="chapter-9.-pragmatism-experience-experimental.html#cb198-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">col =</span> <span class="st">&quot;forestgreen&quot;</span>)</span>
+<span id="cb198-7"><a href="chapter-9.-pragmatism-experience-experimental.html#cb198-7" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="at">x =</span> <span class="st">&quot;topright&quot;</span>,</span>
+<span id="cb198-8"><a href="chapter-9.-pragmatism-experience-experimental.html#cb198-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">&quot;True function&quot;</span>, <span class="st">&quot;Kernel Reg (bw = 2)&quot;</span>,</span>
+<span id="cb198-9"><a href="chapter-9.-pragmatism-experience-experimental.html#cb198-9" aria-hidden="true" tabindex="-1"></a>                  <span class="st">&quot;Kernel Reg (bw = 5)&quot;</span>, <span class="st">&quot;Kernel Reg (bw = 15)&quot;</span>), </span>
+<span id="cb198-10"><a href="chapter-9.-pragmatism-experience-experimental.html#cb198-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">lwd =</span> <span class="fu">rep</span>(<span class="dv">3</span>, <span class="dv">4</span>),</span>
+<span id="cb198-11"><a href="chapter-9.-pragmatism-experience-experimental.html#cb198-11" aria-hidden="true" tabindex="-1"></a>       <span class="at">col =</span> <span class="fu">c</span>(<span class="st">&quot;black&quot;</span>,<span class="st">&quot;darkorange&quot;</span>,<span class="st">&quot;dodgerblue4&quot;</span>,<span class="st">&quot;forestgreen&quot;</span>), </span>
+<span id="cb198-12"><a href="chapter-9.-pragmatism-experience-experimental.html#cb198-12" aria-hidden="true" tabindex="-1"></a>       <span class="at">text.width =</span> <span class="dv">32</span>, <span class="at">cex =</span> <span class="fl">0.85</span>)</span></code></pre></div>
+<p></p>
+<p>As shown in Figure <a href="chapter-9.-pragmatism-experience-experimental.html#fig:f9-3">167</a>, the <em>bandwidth</em> parameter determines how smooth are the fitted curves: the larger the bandwidth, the smoother the regression curve<label for="tufte-sn-236" class="margin-toggle sidenote-number">236</label><input type="checkbox" id="tufte-sn-236" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">236</span> Revisit Figure <a href="chapter-9.-pragmatism-experience-experimental.html#fig:f9-gauss">166</a> and connect the observations made in both figures, i.e., which one in Figure <a href="chapter-9.-pragmatism-experience-experimental.html#fig:f9-gauss">166</a> leads to the smoothest curve in Figure <a href="chapter-9.-pragmatism-experience-experimental.html#fig:f9-3">167</a> and why?</span>.</p>
+<p>Similarly, we can use the same simulation experiment to study the KNN smoother model. We build three KNN smoother models with <span class="math inline">\(k=3\)</span>, <span class="math inline">\(k=10\)</span>, and <span class="math inline">\(k=50\)</span>, respectively.</p>
+<p></p>
+<div class="sourceCode" id="cb199"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb199-1"><a href="chapter-9.-pragmatism-experience-experimental.html#cb199-1" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages(&quot;FNN&quot;)</span></span>
+<span id="cb199-2"><a href="chapter-9.-pragmatism-experience-experimental.html#cb199-2" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(FNN)</span>
+<span id="cb199-3"><a href="chapter-9.-pragmatism-experience-experimental.html#cb199-3" aria-hidden="true" tabindex="-1"></a><span class="do">## Loading required package: FNN</span></span>
+<span id="cb199-4"><a href="chapter-9.-pragmatism-experience-experimental.html#cb199-4" aria-hidden="true" tabindex="-1"></a>xy.knn3<span class="ot">&lt;-</span> <span class="fu">knn.reg</span>(<span class="at">train =</span> x, <span class="at">y =</span> y, <span class="at">k=</span><span class="dv">3</span>)</span>
+<span id="cb199-5"><a href="chapter-9.-pragmatism-experience-experimental.html#cb199-5" aria-hidden="true" tabindex="-1"></a>xy.knn10<span class="ot">&lt;-</span> <span class="fu">knn.reg</span>(<span class="at">train =</span> x, <span class="at">y =</span> y, <span class="at">k=</span><span class="dv">10</span>)</span>
+<span id="cb199-6"><a href="chapter-9.-pragmatism-experience-experimental.html#cb199-6" aria-hidden="true" tabindex="-1"></a>xy.knn50<span class="ot">&lt;-</span> <span class="fu">knn.reg</span>(<span class="at">train =</span> x, <span class="at">y =</span> y, <span class="at">k=</span><span class="dv">50</span>)</span></code></pre></div>
+<p></p>
+<p>Similar to Figure <a href="chapter-9.-pragmatism-experience-experimental.html#fig:f9-3">167</a>, we use the following R code to draw Figure <a href="chapter-9.-pragmatism-experience-experimental.html#fig:f9-2">168</a> that contains the true model, the sampled data points, and the three fitted models.</p>
+<p></p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:f9-2"></span>
+<p class="caption marginnote shownote">
+Figure 168: KNN regression models with different choices on the number of nearest neighbors
+</p>
+<img src="graphics/9_2.png" alt="KNN regression models with different choices on the number of nearest neighbors" width="80%"  />
+</div>
+<p></p>
+<p></p>
+<div class="sourceCode" id="cb200"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb200-1"><a href="chapter-9.-pragmatism-experience-experimental.html#cb200-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the data</span></span>
+<span id="cb200-2"><a href="chapter-9.-pragmatism-experience-experimental.html#cb200-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(y <span class="sc">~</span> x, <span class="at">col =</span> <span class="st">&quot;gray&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb200-3"><a href="chapter-9.-pragmatism-experience-experimental.html#cb200-3" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(x, X <span class="sc">%*%</span> coef, <span class="at">lwd =</span> <span class="dv">3</span>, <span class="at">col =</span> <span class="st">&quot;black&quot;</span>)</span>
+<span id="cb200-4"><a href="chapter-9.-pragmatism-experience-experimental.html#cb200-4" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(x, xy.knn3<span class="sc">$</span>pred, <span class="at">lwd =</span> <span class="dv">3</span>, <span class="at">col =</span> <span class="st">&quot;darkorange&quot;</span>)</span>
+<span id="cb200-5"><a href="chapter-9.-pragmatism-experience-experimental.html#cb200-5" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(x, xy.knn10<span class="sc">$</span>pred, <span class="at">lwd =</span> <span class="dv">3</span>, <span class="at">col =</span> <span class="st">&quot;dodgerblue4&quot;</span>)</span>
+<span id="cb200-6"><a href="chapter-9.-pragmatism-experience-experimental.html#cb200-6" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(x, xy.knn50<span class="sc">$</span>pred, <span class="at">lwd =</span> <span class="dv">3</span>, <span class="at">col =</span> <span class="st">&quot;forestgreen&quot;</span>)</span>
+<span id="cb200-7"><a href="chapter-9.-pragmatism-experience-experimental.html#cb200-7" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="at">x =</span> <span class="st">&quot;topleft&quot;</span>,</span>
+<span id="cb200-8"><a href="chapter-9.-pragmatism-experience-experimental.html#cb200-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">&quot;True function&quot;</span>, <span class="st">&quot;KNN (k = 3)&quot;</span>,</span>
+<span id="cb200-9"><a href="chapter-9.-pragmatism-experience-experimental.html#cb200-9" aria-hidden="true" tabindex="-1"></a>                  <span class="st">&quot;KNN (k = 10)&quot;</span>, <span class="st">&quot;KNN (k = 50)&quot;</span>), </span>
+<span id="cb200-10"><a href="chapter-9.-pragmatism-experience-experimental.html#cb200-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">lwd =</span> <span class="fu">rep</span>(<span class="dv">3</span>, <span class="dv">4</span>),</span>
+<span id="cb200-11"><a href="chapter-9.-pragmatism-experience-experimental.html#cb200-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">col =</span> <span class="fu">c</span>(<span class="st">&quot;black&quot;</span>, <span class="st">&quot;darkorange&quot;</span>, <span class="st">&quot;dodgerblue4&quot;</span>,</span>
+<span id="cb200-12"><a href="chapter-9.-pragmatism-experience-experimental.html#cb200-12" aria-hidden="true" tabindex="-1"></a>                <span class="st">&quot;forestgreen&quot;</span>), </span>
+<span id="cb200-13"><a href="chapter-9.-pragmatism-experience-experimental.html#cb200-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">text.width =</span> <span class="dv">32</span>, <span class="at">cex =</span> <span class="fl">0.85</span>)</span></code></pre></div>
+<p></p>
+<p>Comparing Figures <a href="chapter-9.-pragmatism-experience-experimental.html#fig:f9-3">167</a> and <a href="chapter-9.-pragmatism-experience-experimental.html#fig:f9-2">168</a>, it seems that the curve of the kernel regression model is generally <em>smoother</em> than the curve of a KNN model. This observation relates to the <em>discrete</em> manner the KNN model employs, while the kernel model uses smooth kernel functions that introduce smoothness and continuity into the definition of the neighbors of a data point (thus no hard thresholding is needed to classify whether or not a data point is a neighbor of another data point).</p>
+<p>With a smaller <span class="math inline">\(k\)</span>, the fitted curve by the KNN smoother model is less smooth. This is because a KNN smoother model with a smaller <span class="math inline">\(k\)</span> predicts on a data point by relying on fewer data points in the training dataset, ignoring information provided by the other data points that are considered far away<label for="tufte-sn-237" class="margin-toggle sidenote-number">237</label><input type="checkbox" id="tufte-sn-237" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">237</span> What about a linear regression model? When it predicts on a given data point, does it use all the data points in the training data, or just a few local data points?</span>.</p>
+<p>In terms of model complexity, the smaller the parameter <span class="math inline">\(k\)</span> in the KNN model, the larger the complexity of the model. Most beginners think of the opposite when they first encounter this question.</p>
+</div>
+</div>
+<div id="conditional-variance-regression-model" class="section level2 unnumbered">
+<h2>Conditional variance regression model</h2>
+<div id="rationale-and-formulation-15" class="section level3 unnumbered">
+<h3>Rationale and formulation</h3>
+<p>Another common complication when applying linear regression model in real-world applications is that the variance of the response variable may also change. This phenomenon is called <strong>heteroscedasticity</strong> in regression analysis. This complication can be taken care of by a <em>conditional variance regression</em> model that allows the variance of the response variable to be a (usually implicit) function of the input variables. This leads to the following model</p>
+<p><span class="math display" id="eq:9-cvr">\[\begin{equation}
+\small
+    y=\boldsymbol{\beta}^T\boldsymbol{x}+\epsilon_{\boldsymbol{x}}, \epsilon_{\boldsymbol{x}} \sim N(0, \sigma^2_{\boldsymbol{x}}),
+\tag{99}
+\end{equation}\]</span></p>
+<p>with <span class="math inline">\(\epsilon_{\boldsymbol{x}}\)</span> modeled as a normal distribution with <em>varying</em> variance as a function of <span class="math inline">\(\boldsymbol{x}\)</span>.</p>
+<p></p>
+<p>
+<span class="marginnote shownote">
+<!--
+<div class="figure">--><span style="display:block;" id="fig:f9-cvr-datamodel"></span>
+<img src="graphics/9_cvr_datamodel.png" alt="The *data-generating mechanism* of a conditional variance regression model" width="80%"  />
+<!--
+<p class="caption marginnote">-->Figure 169: The <em>data-generating mechanism</em> of a conditional variance regression model<!--</p>-->
+<!--</div>--></span>
+</p>
+<p></p>
+<p></p>
+<p>
+<span class="marginnote shownote">
+<!--
+<div class="figure">--><span style="display:block;" id="fig:f9-condsigma"></span>
+<img src="graphics/9_condsigma.png" alt="$\sigma_{\boldsymbol{x}}$ is a function of $\boldsymbol{x}$" width="100%"  />
+<!--
+<p class="caption marginnote">-->Figure 170: <span class="math inline">\(\sigma_{\boldsymbol{x}}\)</span> is a function of <span class="math inline">\(\boldsymbol{x}\)</span><!--</p>-->
+<!--</div>--></span>
+</p>
+<p></p>
+<p>The conditional variance regression model differs from the regular linear regression model in terms of how it models <span class="math inline">\(\sigma_{\boldsymbol{x}}\)</span>, as illustrated in Figure <a href="chapter-9.-pragmatism-experience-experimental.html#fig:f9-cvr-datamodel">169</a>. In other words, the linear regression model is a special type of the conditional variance regression model, with <span class="math inline">\(\sigma_{\boldsymbol{x}}\)</span> being a fixed constant as the horizontal line shown in Figure <a href="chapter-9.-pragmatism-experience-experimental.html#fig:f9-condsigma">170</a>. The conditional variance regression model is a stacked model with one regression model on <span class="math inline">\(y\)</span> and another model on <span class="math inline">\(\sigma_{\boldsymbol{x}}\)</span>. The model stacking is a common strategy in statistics to handle multi-layered problems.</p>
+</div>
+<div id="theory-and-method-10" class="section level3 unnumbered">
+<h3>Theory and method</h3>
+<p>Given a dataset with <span class="math inline">\(N\)</span> data points and <span class="math inline">\(p\)</span> variables</p>
+<p><span class="math display">\[\begin{equation*}
+\small
+   
+\boldsymbol{y}=\left[ \begin{array}{c}{y_{1}} \\ {y_{2}} \\ {\vdots} \\ {y_{N}}\end{array}\right], \boldsymbol{X}=\left[ \begin{array}{ccccc}{1} &amp; {x_{11}} &amp; {x_{21}} &amp; {\cdots} &amp; {x_{p 1}} \\ {1} &amp; {x_{12}} &amp; {x_{22}} &amp; {\cdots} &amp; {x_{p 2}} \\ {\vdots} &amp; {\vdots} &amp; {\vdots} &amp; {\vdots} &amp; {\vdots} \\ {1} &amp; {x_{1 N}} &amp; {x_{2 N}} &amp; {\cdots} &amp; {x_{p N}}\end{array}\right].
+ 
+\end{equation*}\]</span></p>
+<p>where <span class="math inline">\(\boldsymbol y \in R^{N \times 1}\)</span> denotes the <span class="math inline">\(N\)</span> measurements of the outcome variable, and <span class="math inline">\(\boldsymbol{X} \in R^{N \times(p+1)}\)</span> denotes the data matrix that includes the <span class="math inline">\(N\)</span> measurements of the <span class="math inline">\(p\)</span> input variables and one dummy variable that corresponds to the intercept term <span class="math inline">\(\beta_0\)</span>. The remaining issue is how to estimate the regression parameters <span class="math inline">\(\boldsymbol{\beta}\)</span>. There are two situations: <span class="math inline">\(\sigma_{\boldsymbol{x}}^2\)</span> is known and <span class="math inline">\(\sigma_{\boldsymbol{x}}^2\)</span> is unknown.</p>
+<p>The likelihood function is<label for="tufte-sn-238" class="margin-toggle sidenote-number">238</label><input type="checkbox" id="tufte-sn-238" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">238</span> Readers can use Eq. <a href="chapter-9.-pragmatism-experience-experimental.html#eq:9-cvr">(99)</a> to derive this likelihood function.</span>
+<span class="math display">\[\begin{equation*}
+\small
+  -\frac{\pi}{2} \ln 2 \pi-\frac{1}{2} \sum_{n=1}^{N} \log \sigma_{\boldsymbol x_{n}}^{2}-\frac{1}{2} \sum_{n=1}^{N} \frac{\left(y_{n}-\boldsymbol{\beta}^{T} \boldsymbol{x}_{n}\right)^{2}}{\sigma_{\boldsymbol x_{n}}^{2}}. 
+\end{equation*}\]</span></p>
+<p>As we have known <span class="math inline">\(\sigma_{\boldsymbol x}^2\)</span>, the parameters to be estimated only involve the last part of the likelihood function. Thus, we estimate the parameters that minimize:
+<span class="math display">\[\begin{equation*}
+\small
+  \frac{1}{2} \sum_{n=1}^{N} \frac{\left(y_{n}-\boldsymbol{\beta}^{T} \boldsymbol{x}_{n}\right)^{2}}{\sigma_{\boldsymbol x_{n}}^{2}}. 
+\end{equation*}\]</span>
+This could be written in the matrix form as<label for="tufte-sn-239" class="margin-toggle sidenote-number">239</label><input type="checkbox" id="tufte-sn-239" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">239</span> <span class="math inline">\(\boldsymbol W\)</span> is a diagonal matrix with its diagonal elements as <span class="math inline">\(\boldsymbol W_{nn}=\frac{1}{\sigma_{\boldsymbol x_n}^2}\)</span>.</span></p>
+<p><span class="math display" id="eq:9-condivar-gls">\[\begin{equation}
+\small
+    \min_\beta (\boldsymbol{y}-\boldsymbol{X \beta})^T\boldsymbol{W}(\boldsymbol{y}-\boldsymbol{X\beta}).
+\tag{100}
+\end{equation}\]</span></p>
+<p>This has the same structure as the <em>generalized least squares (GLS)</em> problem we have mentioned in <strong>Chapter 3</strong>. To solve this optimization problem, we take the gradient of the objective function in Eq. <a href="chapter-9.-pragmatism-experience-experimental.html#eq:9-condivar-gls">(100)</a> and set it to be zero</p>
+<p><span class="math display">\[\begin{equation*}
+\small
+  \frac{\partial (\boldsymbol{y}-\boldsymbol{\mathrm{X} \beta})^T\boldsymbol{W}(\boldsymbol{y}-\boldsymbol{ X\beta})}{\partial \boldsymbol \beta}=0, 
+\end{equation*}\]</span></p>
+<p>which gives rise to the equation</p>
+<p><span class="math display">\[\begin{equation*}
+\small
+  \boldsymbol{X}^T \boldsymbol W (\boldsymbol y - \boldsymbol{X} \boldsymbol \beta) = 0. 
+\end{equation*}\]</span></p>
+<p>This leads to the GLS estimator of <span class="math inline">\(\boldsymbol \beta\)</span></p>
+<p><span class="math display" id="eq:9-gls">\[\begin{equation}
+\small
+    \hat{\boldsymbol{\beta}} = (\boldsymbol{X}^T\boldsymbol{WX} )^{-1}\boldsymbol{X}^T \boldsymbol{W} \boldsymbol y.
+\tag{101}
+\end{equation}\]</span></p>
+<p>A more complicated situation, also a more realistic one, is that we don’t know <span class="math inline">\(\sigma_{\boldsymbol x}^2\)</span>. If we can estimate <span class="math inline">\(\sigma_{\boldsymbol x}^2\)</span>, we can reuse the procedure we have developed for the case when we have known <span class="math inline">\(\sigma_{\boldsymbol x}^2\)</span>.</p>
+<p>As shown in Figure <a href="chapter-9.-pragmatism-experience-experimental.html#fig:f9-condsigma">170</a>, <span class="math inline">\(\sigma_{\boldsymbol x}^2\)</span> is a function of <span class="math inline">\(\boldsymbol x\)</span>. In other words, it uses the input variables <span class="math inline">\(\boldsymbol x\)</span> to predict a new outcome variable, <span class="math inline">\(\sigma_{\boldsymbol x}^2\)</span>. Isn’t this a regression problem? The problem here is we don’t have the “measurements” of the outcome variable, i.e., the outcome variable <span class="math inline">\(\sigma_{\boldsymbol x}^2\)</span> is not directly measurable<label for="tufte-sn-240" class="margin-toggle sidenote-number">240</label><input type="checkbox" id="tufte-sn-240" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">240</span> Another example of a <strong>latent variable</strong>.</span>.</p>
+<p>To overcome this problem, we estimate the <em>measurements</em> of the latent variable<label for="tufte-sn-241" class="margin-toggle sidenote-number">241</label><input type="checkbox" id="tufte-sn-241" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">241</span> I.e., just like what we did in the EM algorithm to estimate <span class="math inline">\(z_{nm}\)</span>. See <strong>Chapter 6</strong>.</span>, denoted as <span class="math inline">\(\hat{\sigma}_{\boldsymbol{x}_n}^2\)</span> for <span class="math inline">\(n=1, 2, \dots, N\)</span>. We propose the following steps:</p>
+<p><!-- begin{enumerate} --></p>
+<p>1. Initialize <span class="math inline">\(\hat{\sigma}_{\boldsymbol{x}_n}^2\)</span> for <span class="math inline">\(n=1, 2, \dots, N\)</span> by any reasonable approach (i.e., a trivial but popular approach, randomization).</p>
+<p>2. Estimate <span class="math inline">\(\hat{\boldsymbol{\beta}}\)</span> using the GLS estimator shown in Eq. <a href="chapter-9.-pragmatism-experience-experimental.html#eq:9-gls">(101)</a>, and get <span class="math inline">\(\hat{y}_n=\hat{\boldsymbol \beta}^T \boldsymbol{x}_n\)</span> for <span class="math inline">\(n=1, 2, \dots, N\)</span>.</p>
+<p>3. Derive the residuals <span class="math inline">\(\hat{\epsilon}_n = y_n-\hat{y}_n\)</span> for <span class="math inline">\(n=1, 2, \dots, N\)</span>.</p>
+<p>4. Build a regression model, e.g., using the kernel regression model, to fit <span class="math inline">\(\hat \epsilon\)</span> using <span class="math inline">\(\boldsymbol x\)</span>.<label for="tufte-sn-242" class="margin-toggle sidenote-number">242</label><input type="checkbox" id="tufte-sn-242" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">242</span> I.e., the training dataset is <span class="math inline">\(\{\boldsymbol x_n, \hat{\epsilon}_n, n=1, 2, \dots, N\}\)</span>.</span></p>
+<p>5. Predict <span class="math inline">\(\hat{\sigma}^2_{\boldsymbol x_n}\)</span> for <span class="math inline">\(n=1,2,\dots,N\)</span> using the fitted model in Step 4.</p>
+<p>6. Repeat Steps 2 – 5 until convergence or satisfaction of a stopping criteria<label for="tufte-sn-243" class="margin-toggle sidenote-number">243</label><input type="checkbox" id="tufte-sn-243" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">243</span> E.g., fix the number of iterations, or set a threshold for changes in the parameter estimation.</span>.</p>
+<p><!-- end{enumerate} --></p>
+<p>This approach of taking some variables as latent variables and further using statistical estimation/inference to fill in the unseen measurements has been useful in statistics and used in many models, such as the latent factor models, structural equation models, missing values imputation, EM algorithm, Gaussian mixture model, graphical models with latent variables, etc.</p>
+</div>
+<div id="r-lab-14" class="section level3 unnumbered">
+<h3>R Lab</h3>
+<p><em>Simulation Experiment.</em> We simulate a dataset to see how well the proposed iterative procedure works for the parameter estimation when <span class="math inline">\(\sigma_{\boldsymbol x}^2\)</span> is unknown. The simulated data has one predictor and one outcome variable. The true model is</p>
+<p><span class="math display">\[\begin{equation*}
+\small
+  
+  y = 1 + 0.5 x + \epsilon_x, \quad \sigma^2_x = 0.5 + 0.8 x^2.
+ 
+\end{equation*}\]</span></p>
+<p>We stimulate <span class="math inline">\(100\)</span> data points from this model using the R script shown below.</p>
+<p></p>
+<div class="sourceCode" id="cb201"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb201-1"><a href="chapter-9.-pragmatism-experience-experimental.html#cb201-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Conditional variance function</span></span>
+<span id="cb201-2"><a href="chapter-9.-pragmatism-experience-experimental.html#cb201-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulate a regression model with heterogeneous variance</span></span>
+<span id="cb201-3"><a href="chapter-9.-pragmatism-experience-experimental.html#cb201-3" aria-hidden="true" tabindex="-1"></a>gen_data <span class="ot">&lt;-</span> <span class="cf">function</span>(n, coef) {</span>
+<span id="cb201-4"><a href="chapter-9.-pragmatism-experience-experimental.html#cb201-4" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">100</span>,<span class="dv">0</span>,<span class="dv">2</span>)</span>
+<span id="cb201-5"><a href="chapter-9.-pragmatism-experience-experimental.html#cb201-5" aria-hidden="true" tabindex="-1"></a>eps <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">100</span>,<span class="dv">0</span>,<span class="fu">sapply</span>(x,<span class="cf">function</span>(x){<span class="fl">0.5+0.8</span><span class="sc">*</span>x<span class="sc">^</span><span class="dv">2</span>}))</span>
+<span id="cb201-6"><a href="chapter-9.-pragmatism-experience-experimental.html#cb201-6" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">cbind</span>(<span class="dv">1</span>,x)</span>
+<span id="cb201-7"><a href="chapter-9.-pragmatism-experience-experimental.html#cb201-7" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(X <span class="sc">%*%</span> coef <span class="sc">+</span> eps)</span>
+<span id="cb201-8"><a href="chapter-9.-pragmatism-experience-experimental.html#cb201-8" aria-hidden="true" tabindex="-1"></a><span class="fu">return</span>(<span class="fu">data.frame</span>(<span class="at">x =</span> x, <span class="at">y =</span> y))</span>
+<span id="cb201-9"><a href="chapter-9.-pragmatism-experience-experimental.html#cb201-9" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb201-10"><a href="chapter-9.-pragmatism-experience-experimental.html#cb201-10" aria-hidden="true" tabindex="-1"></a>n_train <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb201-11"><a href="chapter-9.-pragmatism-experience-experimental.html#cb201-11" aria-hidden="true" tabindex="-1"></a>coef <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="fl">0.5</span>)</span>
+<span id="cb201-12"><a href="chapter-9.-pragmatism-experience-experimental.html#cb201-12" aria-hidden="true" tabindex="-1"></a>tempData <span class="ot">&lt;-</span> <span class="fu">gen_data</span>(n_train, coef)</span></code></pre></div>
+<p></p>
+<p></p>
+<p>
+<span class="marginnote shownote">
+<!--
+<div class="figure">--><span style="display:block;" id="fig:f9-4"></span>
+<img src="graphics/9_4.png" alt="Linear regression model to fit a heteroscedastic dataset" width="100%"  />
+<!--
+<p class="caption marginnote">-->Figure 171: Linear regression model to fit a heteroscedastic dataset<!--</p>-->
+<!--</div>--></span>
+</p>
+<p></p>
+<p>The simulated data points are shown in Figure <a href="chapter-9.-pragmatism-experience-experimental.html#fig:f9-4">171</a>, together with the true model (the black line).</p>
+<p>To initialize the iterative procedure of parameter estimation for the conditional variance regression model, we fit a regular linear regression model using the following R code.</p>
+<p></p>
+<div class="sourceCode" id="cb202"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb202-1"><a href="chapter-9.-pragmatism-experience-experimental.html#cb202-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit the data using linear regression model (OLS)</span></span>
+<span id="cb202-2"><a href="chapter-9.-pragmatism-experience-experimental.html#cb202-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> tempData[, <span class="st">&quot;x&quot;</span>]</span>
+<span id="cb202-3"><a href="chapter-9.-pragmatism-experience-experimental.html#cb202-3" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> tempData[, <span class="st">&quot;y&quot;</span>]</span>
+<span id="cb202-4"><a href="chapter-9.-pragmatism-experience-experimental.html#cb202-4" aria-hidden="true" tabindex="-1"></a>fit.ols <span class="ot">&lt;-</span> <span class="fu">lm</span>(y<span class="sc">~</span>x,<span class="at">data=</span>tempData)</span>
+<span id="cb202-5"><a href="chapter-9.-pragmatism-experience-experimental.html#cb202-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the data and the models</span></span>
+<span id="cb202-6"><a href="chapter-9.-pragmatism-experience-experimental.html#cb202-6" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> tempData<span class="sc">$</span>x</span>
+<span id="cb202-7"><a href="chapter-9.-pragmatism-experience-experimental.html#cb202-7" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">cbind</span>(<span class="dv">1</span>, x)</span>
+<span id="cb202-8"><a href="chapter-9.-pragmatism-experience-experimental.html#cb202-8" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> tempData<span class="sc">$</span>y</span>
+<span id="cb202-9"><a href="chapter-9.-pragmatism-experience-experimental.html#cb202-9" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(y <span class="sc">~</span> x, <span class="at">col =</span> <span class="st">&quot;gray&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb202-10"><a href="chapter-9.-pragmatism-experience-experimental.html#cb202-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the true model</span></span>
+<span id="cb202-11"><a href="chapter-9.-pragmatism-experience-experimental.html#cb202-11" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(x, X <span class="sc">%*%</span> coef, <span class="at">lwd =</span> <span class="dv">3</span>, <span class="at">col =</span> <span class="st">&quot;black&quot;</span>)</span>
+<span id="cb202-12"><a href="chapter-9.-pragmatism-experience-experimental.html#cb202-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the linear regression model (OLS)</span></span>
+<span id="cb202-13"><a href="chapter-9.-pragmatism-experience-experimental.html#cb202-13" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(x, <span class="fu">fitted</span>(fit.ols), <span class="at">lwd =</span> <span class="dv">3</span>, <span class="at">col =</span> <span class="st">&quot;darkorange&quot;</span>)</span>
+<span id="cb202-14"><a href="chapter-9.-pragmatism-experience-experimental.html#cb202-14" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="at">x =</span> <span class="st">&quot;topleft&quot;</span>, <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">&quot;True function&quot;</span>,</span>
+<span id="cb202-15"><a href="chapter-9.-pragmatism-experience-experimental.html#cb202-15" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;Linear model (OLS)&quot;</span>), </span>
+<span id="cb202-16"><a href="chapter-9.-pragmatism-experience-experimental.html#cb202-16" aria-hidden="true" tabindex="-1"></a><span class="at">lwd =</span> <span class="fu">rep</span>(<span class="dv">4</span>, <span class="dv">4</span>), <span class="at">col =</span> <span class="fu">c</span>(<span class="st">&quot;black&quot;</span>, <span class="st">&quot;darkorange&quot;</span>),</span>
+<span id="cb202-17"><a href="chapter-9.-pragmatism-experience-experimental.html#cb202-17" aria-hidden="true" tabindex="-1"></a>      <span class="at">text.width =</span> <span class="dv">4</span>, <span class="at">cex =</span> <span class="dv">1</span>)</span></code></pre></div>
+<p></p>
+<p>The fitted line is shown in Figure <a href="chapter-9.-pragmatism-experience-experimental.html#fig:f9-4">171</a>, which has a significant deviation from the true regression model. We use the fitted line as a starting point, i.e., so that we can estimate the residuals<label for="tufte-sn-244" class="margin-toggle sidenote-number">244</label><input type="checkbox" id="tufte-sn-244" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">244</span>  Residuals <span class="math inline">\(\hat{\epsilon}_n = y_n-\hat{y}_n\)</span> for <span class="math inline">\(n=1, 2, \dots, N\)</span>.</span> based on the fitted linear regression model. The estimated residuals are plotted in Figure <a href="chapter-9.-pragmatism-experience-experimental.html#fig:f9-5">172</a> as grey dots. A nonlinear regression model, the kernel regression model implemented by <code>npreg()</code>, is fitted on these residuals and shown in Figure <a href="chapter-9.-pragmatism-experience-experimental.html#fig:f9-5">172</a> as the orange curve. The true function of the variance, i.e., <span class="math inline">\(\sigma^2_x = 0.5 + 0.8 x^2\)</span>, is also shown in Figure <a href="chapter-9.-pragmatism-experience-experimental.html#fig:f9-5">172</a> as the black curve.</p>
+<p>It can be seen that the residuals provide a good starting point for us to approximate the underlying true variance function. To reproduce Figure <a href="chapter-9.-pragmatism-experience-experimental.html#fig:f9-5">172</a>, use the following R script.</p>
+<p></p>
+<p>
+<span class="marginnote shownote">
+<!--
+<div class="figure">--><span style="display:block;" id="fig:f9-5"></span>
+<img src="graphics/9_5.png" alt="Nonlinear regression model to fit the residuals (i.e., the grey dots)" width="100%"  />
+<!--
+<p class="caption marginnote">-->Figure 172: Nonlinear regression model to fit the residuals (i.e., the grey dots)<!--</p>-->
+<!--</div>--></span>
+</p>
+<p></p>
+<p></p>
+<div class="sourceCode" id="cb203"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb203-1"><a href="chapter-9.-pragmatism-experience-experimental.html#cb203-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the residual estimated from the linear regression model (OLS)</span></span>
+<span id="cb203-2"><a href="chapter-9.-pragmatism-experience-experimental.html#cb203-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(x,<span class="fu">residuals</span>(fit.ols)<span class="sc">^</span><span class="dv">2</span>,<span class="at">ylab=</span><span class="st">&quot;squared residuals&quot;</span>,</span>
+<span id="cb203-3"><a href="chapter-9.-pragmatism-experience-experimental.html#cb203-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">col =</span> <span class="st">&quot;gray&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb203-4"><a href="chapter-9.-pragmatism-experience-experimental.html#cb203-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the true model underlying the variance of the</span></span>
+<span id="cb203-5"><a href="chapter-9.-pragmatism-experience-experimental.html#cb203-5" aria-hidden="true" tabindex="-1"></a><span class="co"># error term</span></span>
+<span id="cb203-6"><a href="chapter-9.-pragmatism-experience-experimental.html#cb203-6" aria-hidden="true" tabindex="-1"></a><span class="fu">curve</span>((<span class="dv">1</span><span class="fl">+0.8</span><span class="sc">*</span>x<span class="sc">^</span><span class="dv">2</span>)<span class="sc">^</span><span class="dv">2</span>,<span class="at">col =</span> <span class="st">&quot;black&quot;</span>, <span class="at">lwd =</span> <span class="dv">3</span>, <span class="at">add=</span><span class="cn">TRUE</span>)</span>
+<span id="cb203-7"><a href="chapter-9.-pragmatism-experience-experimental.html#cb203-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit a nonlinear regression model for residuals</span></span>
+<span id="cb203-8"><a href="chapter-9.-pragmatism-experience-experimental.html#cb203-8" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages(&quot;np&quot;)</span></span>
+<span id="cb203-9"><a href="chapter-9.-pragmatism-experience-experimental.html#cb203-9" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(np)</span>
+<span id="cb203-10"><a href="chapter-9.-pragmatism-experience-experimental.html#cb203-10" aria-hidden="true" tabindex="-1"></a>var1 <span class="ot">&lt;-</span> <span class="fu">npreg</span>(<span class="fu">residuals</span>(fit.ols)<span class="sc">^</span><span class="dv">2</span> <span class="sc">~</span> x)</span>
+<span id="cb203-11"><a href="chapter-9.-pragmatism-experience-experimental.html#cb203-11" aria-hidden="true" tabindex="-1"></a>grid.x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="at">from=</span><span class="fu">min</span>(x),<span class="at">to=</span><span class="fu">max</span>(x),<span class="at">length.out=</span><span class="dv">300</span>)</span>
+<span id="cb203-12"><a href="chapter-9.-pragmatism-experience-experimental.html#cb203-12" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(grid.x,<span class="fu">predict</span>(var1,<span class="at">exdat=</span>grid.x), <span class="at">lwd =</span> <span class="dv">3</span>,</span>
+<span id="cb203-13"><a href="chapter-9.-pragmatism-experience-experimental.html#cb203-13" aria-hidden="true" tabindex="-1"></a>      <span class="at">col =</span> <span class="st">&quot;darkorange&quot;</span>)</span>
+<span id="cb203-14"><a href="chapter-9.-pragmatism-experience-experimental.html#cb203-14" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="at">x =</span> <span class="st">&quot;topleft&quot;</span>,</span>
+<span id="cb203-15"><a href="chapter-9.-pragmatism-experience-experimental.html#cb203-15" aria-hidden="true" tabindex="-1"></a>       <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">&quot;True function&quot;</span>,</span>
+<span id="cb203-16"><a href="chapter-9.-pragmatism-experience-experimental.html#cb203-16" aria-hidden="true" tabindex="-1"></a>                  <span class="st">&quot;Fitted nonlinear model (1st iter)&quot;</span>), </span>
+<span id="cb203-17"><a href="chapter-9.-pragmatism-experience-experimental.html#cb203-17" aria-hidden="true" tabindex="-1"></a>       <span class="at">lwd =</span> <span class="fu">rep</span>(<span class="dv">4</span>, <span class="dv">4</span>), <span class="at">col =</span> <span class="fu">c</span>(<span class="st">&quot;black&quot;</span>, <span class="st">&quot;darkorange&quot;</span>),</span>
+<span id="cb203-18"><a href="chapter-9.-pragmatism-experience-experimental.html#cb203-18" aria-hidden="true" tabindex="-1"></a>       <span class="at">text.width =</span> <span class="dv">5</span>, <span class="at">cex =</span> <span class="fl">1.2</span>)</span></code></pre></div>
+<p></p>
+<p>The orange curve shown in Figure <a href="chapter-9.-pragmatism-experience-experimental.html#fig:f9-5">172</a> provides an approach to initialize the iterative procedure of parameter estimation for the conditional variance regression model: to estimate the <span class="math inline">\(\hat{\sigma}_{\boldsymbol{x}_n}^2\)</span> for <span class="math inline">\(n=1, 2, \dots, N\)</span> in Step 1.<label for="tufte-sn-245" class="margin-toggle sidenote-number">245</label><input type="checkbox" id="tufte-sn-245" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">245</span> In R, this is done by <code>fitted(var1)</code>.</span> Then, for Step 2, we fit a linear regression model according to Eq. <a href="chapter-9.-pragmatism-experience-experimental.html#eq:9-gls">(101)</a>. This is done by the following R code.</p>
+<p></p>
+<div class="sourceCode" id="cb204"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb204-1"><a href="chapter-9.-pragmatism-experience-experimental.html#cb204-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit a linear regression model (WLS) with the weights specified </span></span>
+<span id="cb204-2"><a href="chapter-9.-pragmatism-experience-experimental.html#cb204-2" aria-hidden="true" tabindex="-1"></a><span class="co"># by the fitted nonlinear model of the residuals</span></span>
+<span id="cb204-3"><a href="chapter-9.-pragmatism-experience-experimental.html#cb204-3" aria-hidden="true" tabindex="-1"></a>fit.wls <span class="ot">&lt;-</span> <span class="fu">lm</span>(y<span class="sc">~</span>x,<span class="at">weights=</span><span class="dv">1</span><span class="sc">/</span><span class="fu">fitted</span>(var1))</span>
+<span id="cb204-4"><a href="chapter-9.-pragmatism-experience-experimental.html#cb204-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(y <span class="sc">~</span> x, <span class="at">col =</span> <span class="st">&quot;gray&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>,<span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">20</span>,<span class="dv">20</span>))</span>
+<span id="cb204-5"><a href="chapter-9.-pragmatism-experience-experimental.html#cb204-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the true model</span></span>
+<span id="cb204-6"><a href="chapter-9.-pragmatism-experience-experimental.html#cb204-6" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(x, X <span class="sc">%*%</span> coef, <span class="at">lwd =</span> <span class="dv">3</span>, <span class="at">col =</span> <span class="st">&quot;black&quot;</span>)</span>
+<span id="cb204-7"><a href="chapter-9.-pragmatism-experience-experimental.html#cb204-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the linear regression model (OLS)</span></span>
+<span id="cb204-8"><a href="chapter-9.-pragmatism-experience-experimental.html#cb204-8" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(x, <span class="fu">fitted</span>(fit.ols), <span class="at">lwd =</span> <span class="dv">3</span>, <span class="at">col =</span> <span class="st">&quot;darkorange&quot;</span>)</span>
+<span id="cb204-9"><a href="chapter-9.-pragmatism-experience-experimental.html#cb204-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the linear regression model (WLS) with estimated </span></span>
+<span id="cb204-10"><a href="chapter-9.-pragmatism-experience-experimental.html#cb204-10" aria-hidden="true" tabindex="-1"></a><span class="co"># variance function</span></span>
+<span id="cb204-11"><a href="chapter-9.-pragmatism-experience-experimental.html#cb204-11" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(x, <span class="fu">fitted</span>(fit.wls), <span class="at">lwd =</span> <span class="dv">3</span>, <span class="at">col =</span> <span class="st">&quot;forestgreen&quot;</span>)</span>
+<span id="cb204-12"><a href="chapter-9.-pragmatism-experience-experimental.html#cb204-12" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="at">x =</span> <span class="st">&quot;topleft&quot;</span>, </span>
+<span id="cb204-13"><a href="chapter-9.-pragmatism-experience-experimental.html#cb204-13" aria-hidden="true" tabindex="-1"></a>       <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">&quot;True function&quot;</span>, <span class="st">&quot;Linear (OLS)&quot;</span>, </span>
+<span id="cb204-14"><a href="chapter-9.-pragmatism-experience-experimental.html#cb204-14" aria-hidden="true" tabindex="-1"></a>                  <span class="st">&quot;Linear (WLS) + estimated variance&quot;</span>), </span>
+<span id="cb204-15"><a href="chapter-9.-pragmatism-experience-experimental.html#cb204-15" aria-hidden="true" tabindex="-1"></a>       <span class="at">lwd =</span> <span class="fu">rep</span>(<span class="dv">4</span>, <span class="dv">4</span>), </span>
+<span id="cb204-16"><a href="chapter-9.-pragmatism-experience-experimental.html#cb204-16" aria-hidden="true" tabindex="-1"></a>       <span class="at">col =</span> <span class="fu">c</span>(<span class="st">&quot;black&quot;</span>, <span class="st">&quot;darkorange&quot;</span>,<span class="st">&quot;forestgreen&quot;</span>),</span>
+<span id="cb204-17"><a href="chapter-9.-pragmatism-experience-experimental.html#cb204-17" aria-hidden="true" tabindex="-1"></a>       <span class="at">text.width =</span> <span class="dv">5</span>, <span class="at">cex =</span> <span class="dv">1</span>)</span></code></pre></div>
+<p></p>
+<p></p>
+<p>
+<span class="marginnote shownote">
+<!--
+<div class="figure">--><span style="display:block;" id="fig:f9-6"></span>
+<img src="graphics/9_6.png" alt="Fit the heteroscedastic dataset with two linear regression models using OLS and GLS (that accounts for the heteroscedastic effects with a nonlinear regression model to model the variance regression)" width="100%"  />
+<!--
+<p class="caption marginnote">-->Figure 173: Fit the heteroscedastic dataset with two linear regression models using OLS and GLS (that accounts for the heteroscedastic effects with a nonlinear regression model to model the variance regression)<!--</p>-->
+<!--</div>--></span>
+</p>
+<p></p>
+<p>The new regression model is added to Figure <a href="chapter-9.-pragmatism-experience-experimental.html#fig:f9-4">171</a> as the green line, which generates Figure <a href="chapter-9.-pragmatism-experience-experimental.html#fig:f9-6">173</a>. The new regression model is closer to the true model.</p>
+<p>And we could continue this iterative procedure until a convergence criterion is met.</p>
+<p><em>Real data.</em> Now let’s apply the conditional variance regression model on the AD dataset. Like what we did in the simulation experiment, we first fit a regular linear regression model, then, use the kernel regression model to fit the residuals, then obtain the estimates of the variances, then estimate the regression parameters using Eq. <a href="chapter-9.-pragmatism-experience-experimental.html#eq:9-gls">(101)</a>. The R code is shown below. Results are shown in Figure <a href="chapter-9.-pragmatism-experience-experimental.html#fig:f9-8">174</a>.</p>
+<p></p>
+<div class="sourceCode" id="cb205"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb205-1"><a href="chapter-9.-pragmatism-experience-experimental.html#cb205-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(RCurl)</span>
+<span id="cb205-2"><a href="chapter-9.-pragmatism-experience-experimental.html#cb205-2" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;https://raw.githubusercontent.com&quot;</span>,</span>
+<span id="cb205-3"><a href="chapter-9.-pragmatism-experience-experimental.html#cb205-3" aria-hidden="true" tabindex="-1"></a>              <span class="st">&quot;/analyticsbook/book/main/data/AD.csv&quot;</span>)</span>
+<span id="cb205-4"><a href="chapter-9.-pragmatism-experience-experimental.html#cb205-4" aria-hidden="true" tabindex="-1"></a>AD <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="at">text=</span><span class="fu">getURL</span>(url))</span>
+<span id="cb205-5"><a href="chapter-9.-pragmatism-experience-experimental.html#cb205-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb205-6"><a href="chapter-9.-pragmatism-experience-experimental.html#cb205-6" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(AD)</span>
+<span id="cb205-7"><a href="chapter-9.-pragmatism-experience-experimental.html#cb205-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit the data using linear regression model (OLS)</span></span>
+<span id="cb205-8"><a href="chapter-9.-pragmatism-experience-experimental.html#cb205-8" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> AD<span class="sc">$</span>HippoNV</span>
+<span id="cb205-9"><a href="chapter-9.-pragmatism-experience-experimental.html#cb205-9" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> AD<span class="sc">$</span>MMSCORE</span>
+<span id="cb205-10"><a href="chapter-9.-pragmatism-experience-experimental.html#cb205-10" aria-hidden="true" tabindex="-1"></a>fit.ols <span class="ot">&lt;-</span> <span class="fu">lm</span>(y<span class="sc">~</span>x,<span class="at">data=</span>AD)</span>
+<span id="cb205-11"><a href="chapter-9.-pragmatism-experience-experimental.html#cb205-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit a linear regression model (WLS) with the weights specified </span></span>
+<span id="cb205-12"><a href="chapter-9.-pragmatism-experience-experimental.html#cb205-12" aria-hidden="true" tabindex="-1"></a><span class="co"># by the fitted nonlinear model of the residuals</span></span>
+<span id="cb205-13"><a href="chapter-9.-pragmatism-experience-experimental.html#cb205-13" aria-hidden="true" tabindex="-1"></a>var1 <span class="ot">&lt;-</span> <span class="fu">npreg</span>(<span class="fu">residuals</span>(fit.ols)<span class="sc">^</span><span class="dv">2</span> <span class="sc">~</span> HippoNV, <span class="at">data =</span> AD)         </span>
+<span id="cb205-14"><a href="chapter-9.-pragmatism-experience-experimental.html#cb205-14" aria-hidden="true" tabindex="-1"></a>fit.wls <span class="ot">&lt;-</span> <span class="fu">lm</span>(y<span class="sc">~</span>x,<span class="at">weights=</span><span class="dv">1</span><span class="sc">/</span><span class="fu">fitted</span>(var1))</span>
+<span id="cb205-15"><a href="chapter-9.-pragmatism-experience-experimental.html#cb205-15" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(y <span class="sc">~</span> x, <span class="at">col =</span> <span class="st">&quot;gray&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb205-16"><a href="chapter-9.-pragmatism-experience-experimental.html#cb205-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the linear regression model (OLS)</span></span>
+<span id="cb205-17"><a href="chapter-9.-pragmatism-experience-experimental.html#cb205-17" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(x, <span class="fu">fitted</span>(fit.ols), <span class="at">lwd =</span> <span class="dv">3</span>, <span class="at">col =</span> <span class="st">&quot;darkorange&quot;</span>)</span>
+<span id="cb205-18"><a href="chapter-9.-pragmatism-experience-experimental.html#cb205-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the linear regression model (WLS) with estimated variance</span></span>
+<span id="cb205-19"><a href="chapter-9.-pragmatism-experience-experimental.html#cb205-19" aria-hidden="true" tabindex="-1"></a><span class="co"># function</span></span>
+<span id="cb205-20"><a href="chapter-9.-pragmatism-experience-experimental.html#cb205-20" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(x, <span class="fu">fitted</span>(fit.wls), <span class="at">lwd =</span> <span class="dv">3</span>, <span class="at">col =</span> <span class="st">&quot;forestgreen&quot;</span>)</span>
+<span id="cb205-21"><a href="chapter-9.-pragmatism-experience-experimental.html#cb205-21" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="at">x =</span> <span class="st">&quot;topleft&quot;</span>,</span>
+<span id="cb205-22"><a href="chapter-9.-pragmatism-experience-experimental.html#cb205-22" aria-hidden="true" tabindex="-1"></a>       <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">&quot;Linear (OLS)&quot;</span>,</span>
+<span id="cb205-23"><a href="chapter-9.-pragmatism-experience-experimental.html#cb205-23" aria-hidden="true" tabindex="-1"></a>                  <span class="st">&quot;Linear (WLS) + estimated variance&quot;</span>), </span>
+<span id="cb205-24"><a href="chapter-9.-pragmatism-experience-experimental.html#cb205-24" aria-hidden="true" tabindex="-1"></a>       <span class="at">lwd =</span> <span class="fu">rep</span>(<span class="dv">4</span>, <span class="dv">4</span>), <span class="at">col =</span> <span class="fu">c</span>(<span class="st">&quot;darkorange&quot;</span>,<span class="st">&quot;forestgreen&quot;</span>),</span>
+<span id="cb205-25"><a href="chapter-9.-pragmatism-experience-experimental.html#cb205-25" aria-hidden="true" tabindex="-1"></a>       <span class="at">text.width =</span> <span class="fl">0.2</span>, <span class="at">cex =</span> <span class="dv">1</span>)</span></code></pre></div>
+<p></p>
+<p></p>
+<p>
+<span class="marginnote shownote">
+<!--
+<div class="figure">--><span style="display:block;" id="fig:f9-8"></span>
+<img src="graphics/9_8.png" alt="Fit the AD dataset with two linear regression models using OLS and GLS (that accounts for the heteroscedastic effects with a nonlinear regression model to model the variance regression)" width="100%"  />
+<!--
+<p class="caption marginnote">-->Figure 174: Fit the AD dataset with two linear regression models using OLS and GLS (that accounts for the heteroscedastic effects with a nonlinear regression model to model the variance regression)<!--</p>-->
+<!--</div>--></span>
+</p>
+<p></p>
+<p>We also visualize the fitted variance functions in Figure <a href="chapter-9.-pragmatism-experience-experimental.html#fig:f9-9">175</a> via the following R code.</p>
+<p></p>
+<div class="sourceCode" id="cb206"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb206-1"><a href="chapter-9.-pragmatism-experience-experimental.html#cb206-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the residual estimated from the linear regression </span></span>
+<span id="cb206-2"><a href="chapter-9.-pragmatism-experience-experimental.html#cb206-2" aria-hidden="true" tabindex="-1"></a><span class="co"># model (OLS)</span></span>
+<span id="cb206-3"><a href="chapter-9.-pragmatism-experience-experimental.html#cb206-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(x,<span class="fu">residuals</span>(fit.ols)<span class="sc">^</span><span class="dv">2</span>,<span class="at">ylab=</span><span class="st">&quot;squared residuals&quot;</span>,</span>
+<span id="cb206-4"><a href="chapter-9.-pragmatism-experience-experimental.html#cb206-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">col =</span> <span class="st">&quot;gray&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb206-5"><a href="chapter-9.-pragmatism-experience-experimental.html#cb206-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit a nonlinear regression model for residuals</span></span>
+<span id="cb206-6"><a href="chapter-9.-pragmatism-experience-experimental.html#cb206-6" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages(&quot;np&quot;)</span></span>
+<span id="cb206-7"><a href="chapter-9.-pragmatism-experience-experimental.html#cb206-7" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(np)</span>
+<span id="cb206-8"><a href="chapter-9.-pragmatism-experience-experimental.html#cb206-8" aria-hidden="true" tabindex="-1"></a>var2 <span class="ot">&lt;-</span> <span class="fu">npreg</span>(<span class="fu">residuals</span>(fit.wls)<span class="sc">^</span><span class="dv">2</span> <span class="sc">~</span> x)</span>
+<span id="cb206-9"><a href="chapter-9.-pragmatism-experience-experimental.html#cb206-9" aria-hidden="true" tabindex="-1"></a>grid.x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="at">from=</span><span class="fu">min</span>(x),<span class="at">to=</span><span class="fu">max</span>(x),<span class="at">length.out=</span><span class="dv">300</span>)</span>
+<span id="cb206-10"><a href="chapter-9.-pragmatism-experience-experimental.html#cb206-10" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(grid.x,<span class="fu">predict</span>(var1,<span class="at">exdat=</span>grid.x), <span class="at">lwd =</span> <span class="dv">3</span>,</span>
+<span id="cb206-11"><a href="chapter-9.-pragmatism-experience-experimental.html#cb206-11" aria-hidden="true" tabindex="-1"></a>      <span class="at">col =</span> <span class="st">&quot;darkorange&quot;</span>)</span>
+<span id="cb206-12"><a href="chapter-9.-pragmatism-experience-experimental.html#cb206-12" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(grid.x,<span class="fu">predict</span>(var2,<span class="at">exdat=</span>grid.x), <span class="at">lwd =</span> <span class="dv">3</span>,</span>
+<span id="cb206-13"><a href="chapter-9.-pragmatism-experience-experimental.html#cb206-13" aria-hidden="true" tabindex="-1"></a>      <span class="at">col =</span> <span class="st">&quot;forestgreen&quot;</span>)</span>
+<span id="cb206-14"><a href="chapter-9.-pragmatism-experience-experimental.html#cb206-14" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="at">x =</span> <span class="st">&quot;topleft&quot;</span>,</span>
+<span id="cb206-15"><a href="chapter-9.-pragmatism-experience-experimental.html#cb206-15" aria-hidden="true" tabindex="-1"></a>       <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">&quot;Fitted nonlinear model (1st iter)&quot;</span>,</span>
+<span id="cb206-16"><a href="chapter-9.-pragmatism-experience-experimental.html#cb206-16" aria-hidden="true" tabindex="-1"></a>                <span class="st">&quot;Fitted nonlinear model (2nd iter)&quot;</span>), </span>
+<span id="cb206-17"><a href="chapter-9.-pragmatism-experience-experimental.html#cb206-17" aria-hidden="true" tabindex="-1"></a>                <span class="at">lwd =</span> <span class="fu">rep</span>(<span class="dv">4</span>, <span class="dv">4</span>),</span>
+<span id="cb206-18"><a href="chapter-9.-pragmatism-experience-experimental.html#cb206-18" aria-hidden="true" tabindex="-1"></a>                <span class="at">col =</span> <span class="fu">c</span>( <span class="st">&quot;darkorange&quot;</span>, <span class="st">&quot;forestgreen&quot;</span>),</span>
+<span id="cb206-19"><a href="chapter-9.-pragmatism-experience-experimental.html#cb206-19" aria-hidden="true" tabindex="-1"></a>                <span class="at">text.width =</span> <span class="fl">0.25</span>, <span class="at">cex =</span> <span class="fl">1.2</span>)</span></code></pre></div>
+<p></p>
+<p>Figure <a href="chapter-9.-pragmatism-experience-experimental.html#fig:f9-9">175</a> shows that in the data the heteroscedasticity is significant. Learning the variance function is helpful in this context. First, in terms of the statistical aspect, it improves the fitting of the regression line. Second, knowing the variance function itself is important knowledge in healthcare, e.g., variance often implies unpredictability or low quality in healthcare operations, pointing out root causes of quality problems or areas of improvement.</p>
+<p></p>
+<p>
+<span class="marginnote shownote">
+<!--
+<div class="figure">--><span style="display:block;" id="fig:f9-9"></span>
+<img src="graphics/9_9.png" alt="Nonlinear regression model to fit the residuals in the 2nd iteration for the AD data" width="100%"  />
+<!--
+<p class="caption marginnote">-->Figure 175: Nonlinear regression model to fit the residuals in the 2nd iteration for the AD data<!--</p>-->
+<!--</div>--></span>
+</p>
+<p></p>
+<div style="page-break-after: always;"></div>
+</div>
+</div>
+<div id="remarks-7" class="section level2 unnumbered">
+<h2>Remarks</h2>
+<div id="experiment" class="section level3 unnumbered">
+<h3>Experiment</h3>
+<p>The following R code conducts the experiment in Figure <a href="chapter-9.-pragmatism-experience-experimental.html#fig:f9-1">164</a> (left).</p>
+<p></p>
+<div class="sourceCode" id="cb207"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb207-1"><a href="chapter-9.-pragmatism-experience-experimental.html#cb207-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Write a nice simulator to generate dataset with one</span></span>
+<span id="cb207-2"><a href="chapter-9.-pragmatism-experience-experimental.html#cb207-2" aria-hidden="true" tabindex="-1"></a><span class="co"># predictor and one outcome from a polynomial regression</span></span>
+<span id="cb207-3"><a href="chapter-9.-pragmatism-experience-experimental.html#cb207-3" aria-hidden="true" tabindex="-1"></a><span class="co"># model</span></span>
+<span id="cb207-4"><a href="chapter-9.-pragmatism-experience-experimental.html#cb207-4" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(splines)</span>
+<span id="cb207-5"><a href="chapter-9.-pragmatism-experience-experimental.html#cb207-5" aria-hidden="true" tabindex="-1"></a>seed <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">1</span>)</span>
+<span id="cb207-6"><a href="chapter-9.-pragmatism-experience-experimental.html#cb207-6" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(seed)</span>
+<span id="cb207-7"><a href="chapter-9.-pragmatism-experience-experimental.html#cb207-7" aria-hidden="true" tabindex="-1"></a>gen_data <span class="ot">&lt;-</span> <span class="cf">function</span>(n, coef, v_noise) {</span>
+<span id="cb207-8"><a href="chapter-9.-pragmatism-experience-experimental.html#cb207-8" aria-hidden="true" tabindex="-1"></a>  eps <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="dv">0</span>, v_noise)</span>
+<span id="cb207-9"><a href="chapter-9.-pragmatism-experience-experimental.html#cb207-9" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">sort</span>(<span class="fu">runif</span>(n, <span class="dv">0</span>, <span class="dv">100</span>))</span>
+<span id="cb207-10"><a href="chapter-9.-pragmatism-experience-experimental.html#cb207-10" aria-hidden="true" tabindex="-1"></a>  X <span class="ot">&lt;-</span> <span class="fu">cbind</span>(<span class="dv">1</span>,<span class="fu">ns</span>(x, <span class="at">df =</span> (<span class="fu">length</span>(coef) <span class="sc">-</span> <span class="dv">1</span>)))</span>
+<span id="cb207-11"><a href="chapter-9.-pragmatism-experience-experimental.html#cb207-11" aria-hidden="true" tabindex="-1"></a>  y <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(X <span class="sc">%*%</span> coef <span class="sc">+</span> eps)</span>
+<span id="cb207-12"><a href="chapter-9.-pragmatism-experience-experimental.html#cb207-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">data.frame</span>(<span class="at">x =</span> x, <span class="at">y =</span> y))</span>
+<span id="cb207-13"><a href="chapter-9.-pragmatism-experience-experimental.html#cb207-13" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb207-14"><a href="chapter-9.-pragmatism-experience-experimental.html#cb207-14" aria-hidden="true" tabindex="-1"></a>n_train <span class="ot">&lt;-</span> <span class="dv">30</span></span>
+<span id="cb207-15"><a href="chapter-9.-pragmatism-experience-experimental.html#cb207-15" aria-hidden="true" tabindex="-1"></a>coef <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="fl">0.5</span>)</span>
+<span id="cb207-16"><a href="chapter-9.-pragmatism-experience-experimental.html#cb207-16" aria-hidden="true" tabindex="-1"></a>v_noise <span class="ot">&lt;-</span> <span class="dv">3</span></span>
+<span id="cb207-17"><a href="chapter-9.-pragmatism-experience-experimental.html#cb207-17" aria-hidden="true" tabindex="-1"></a>tempData <span class="ot">&lt;-</span> <span class="fu">gen_data</span>(n_train, coef, v_noise)</span>
+<span id="cb207-18"><a href="chapter-9.-pragmatism-experience-experimental.html#cb207-18" aria-hidden="true" tabindex="-1"></a>tempData[<span class="dv">31</span>,] <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">200</span>,<span class="dv">200</span>)</span>
+<span id="cb207-19"><a href="chapter-9.-pragmatism-experience-experimental.html#cb207-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit the data using linear regression model</span></span>
+<span id="cb207-20"><a href="chapter-9.-pragmatism-experience-experimental.html#cb207-20" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> tempData[, <span class="st">&quot;x&quot;</span>]</span>
+<span id="cb207-21"><a href="chapter-9.-pragmatism-experience-experimental.html#cb207-21" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> tempData[, <span class="st">&quot;y&quot;</span>]</span>
+<span id="cb207-22"><a href="chapter-9.-pragmatism-experience-experimental.html#cb207-22" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(y<span class="sc">~</span>x,<span class="at">data=</span>tempData)</span>
+<span id="cb207-23"><a href="chapter-9.-pragmatism-experience-experimental.html#cb207-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the data</span></span>
+<span id="cb207-24"><a href="chapter-9.-pragmatism-experience-experimental.html#cb207-24" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> tempData<span class="sc">$</span>x</span>
+<span id="cb207-25"><a href="chapter-9.-pragmatism-experience-experimental.html#cb207-25" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">cbind</span>(<span class="dv">1</span>, x)</span>
+<span id="cb207-26"><a href="chapter-9.-pragmatism-experience-experimental.html#cb207-26" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> tempData<span class="sc">$</span>y</span>
+<span id="cb207-27"><a href="chapter-9.-pragmatism-experience-experimental.html#cb207-27" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(y <span class="sc">~</span> x, <span class="at">col =</span> <span class="st">&quot;gray&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb207-28"><a href="chapter-9.-pragmatism-experience-experimental.html#cb207-28" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(x, X <span class="sc">%*%</span> coef, <span class="at">lwd =</span> <span class="dv">3</span>, <span class="at">col =</span> <span class="st">&quot;black&quot;</span>)</span>
+<span id="cb207-29"><a href="chapter-9.-pragmatism-experience-experimental.html#cb207-29" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(x, <span class="fu">fitted</span>(fit), <span class="at">lwd =</span> <span class="dv">3</span>, <span class="at">col =</span> <span class="st">&quot;darkorange&quot;</span>)</span>
+<span id="cb207-30"><a href="chapter-9.-pragmatism-experience-experimental.html#cb207-30" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="at">x =</span> <span class="st">&quot;topleft&quot;</span>, <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">&quot;True function&quot;</span>,</span>
+<span id="cb207-31"><a href="chapter-9.-pragmatism-experience-experimental.html#cb207-31" aria-hidden="true" tabindex="-1"></a>       <span class="st">&quot;Fitted linear model&quot;</span>), <span class="at">lwd =</span> <span class="fu">rep</span>(<span class="dv">4</span>, <span class="dv">4</span>),</span>
+<span id="cb207-32"><a href="chapter-9.-pragmatism-experience-experimental.html#cb207-32" aria-hidden="true" tabindex="-1"></a>       <span class="at">col =</span> <span class="fu">c</span>(<span class="st">&quot;black&quot;</span>, <span class="st">&quot;darkorange&quot;</span>),</span>
+<span id="cb207-33"><a href="chapter-9.-pragmatism-experience-experimental.html#cb207-33" aria-hidden="true" tabindex="-1"></a>       <span class="at">text.width =</span> <span class="dv">100</span>, <span class="at">cex =</span> <span class="fl">1.5</span>)</span></code></pre></div>
+<p></p>
+</div>
+<div id="linear-regression-as-a-kernel-regression-model" class="section level3 unnumbered">
+<h3>Linear regression as a kernel regression model</h3>
+<p>Let’s consider a simple linear regression problem that has one predictor, <span class="math inline">\(x\)</span>, and no intercept</p>
+<p><span class="math display">\[\begin{equation*}
+\small
+  y=\beta x + \epsilon. 
+\end{equation*}\]</span></p>
+<p>Given a dataset with <span class="math inline">\(N\)</span> samples, i.e., <span class="math inline">\(\{x_n, y_n, n = 1, 2, \ldots, N. \}\)</span>, the least squares estimator of <span class="math inline">\(\beta\)</span> is</p>
+<p><span class="math display">\[\begin{equation*}
+\small
+  \hat{\beta}=\frac{\left(\sum_{i=1}^{N} x_{n} y_{n}\right)}{\sum_{n=1}^{N} x_{n}^{2}}. 
+\end{equation*}\]</span></p>
+<p>Now comes a new data point, <span class="math inline">\(x^*\)</span>. To derive the prediction <span class="math inline">\(y^*\)</span>,</p>
+<p><span class="math display">\[\begin{equation*}
+\small
+  y^{*} = \hat{\beta}x^{*} =x^{*} \frac{\left(\sum_{n=1}^{N} x_{n} y_{n}\right)}{\sum_{n=1}^{N} x_{n}^{2}}. 
+\end{equation*}\]</span></p>
+<p>This could be further reformed as</p>
+<p><span class="math display">\[\begin{equation*}
+\small
+  y^{*}=\sum_{n=1}^{N} y_{n} \frac{x_{n}x^{*}}{\sum_{n=1}^{N} x_{n}^{2}}. 
+\end{equation*}\]</span></p>
+<p>This fits the form of the kernel regression as defined in Eq. <a href="chapter-9.-pragmatism-experience-experimental.html#eq:9-kr">(98)</a>.<label for="tufte-sn-246" class="margin-toggle sidenote-number">246</label><input type="checkbox" id="tufte-sn-246" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">246</span> I.e., <span class="math inline">\(w(x_{n},x^{*}) = \sum_{n=1}^{N} \frac{x_{n}x^{*}}{\sum_{n=1}^{N} x_{n}^{2}}.\)</span></span></p>
+<!-- % Now if we look closely at this formula, we can draw interesting observations how linear regression model works in prediction on a new location using its knowledge on other locations (e.g., the historical data points $(x_i,y_i )$ for $i=1,2,\dots,n$). It first evaluates the similarity between the new location with each of the knowing locations, as reflected in $\frac{x_i x^*}{nS_x^2}$, where $x_i x^*$ calculates the similarity and $nS_x^2$ is a normalization factor. Then, the prediction $y^*$ is a weighted sum of $y_i$ for $i=1,2,\dots,n$ while the weight of $y_i$ is proportional to the similarity between $x_i$ and $x^*$. From this perspective, we see linear regression model as a very empirical prediction model that bears the same idea with those lazy learning methods such as k-nearest-neighbor regression model or local regression models. The difference here, in the linear regression model, is that a special similarity measure (i.e., $\frac{x_i x^*}{nS_x^2}$) is used, that means the weight of a data point depends on how far it is from the center of the data, not how far it is from the point at which we are trying to predict. Thus, for this similarity measure to work we need to hope that the underlying model is globally linear. -->
+</div>
+<div id="more-about-heteroscedasticity" class="section level3 unnumbered">
+<h3>More about heteroscedasticity</h3>
+<p>For regression problems, the interest is usually in the modeling of the relationship between the <em>mean</em><label for="tufte-sn-247" class="margin-toggle sidenote-number">247</label><input type="checkbox" id="tufte-sn-247" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">247</span> See sidenote 11 and Figure <a href="chapter-2.-abstraction-regression-tree-models.html#fig:f2-lrpred">6</a>.</span> of the outcome variable with the input variables. Thus, when there is heteroscedasticity in the data, a nonparametric regression method is recommended to estimate the latent variance, more from a curve-fitting perspective which is to smooth and estimate, rather than a modeling perspective which is to study the relationship between the outcome variable with input variables. But, of course, we can still study how the input variables affect the variance of the response variable explicitly. Specifically, we can use a linear regression model to link the variance of <span class="math inline">\(y\)</span> with the input variables. The iterative procedure developed for the case when <span class="math inline">\(\sigma_{\boldsymbol{x}}^2\)</span> is unknown is still applicable here for parameter estimation.</p>
+</div>
+</div>
+<div id="exercises-7" class="section level2 unnumbered">
+<h2>Exercises</h2>
+<p></p>
+<p><!--
+<caption>--><span class="marginnote shownote"><span id="tab:t9-hw-kr">Table 51: </span>Dataset for building a kernel regression model</span><!--</caption>--></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">ID</th>
+<th align="left"><span class="math inline">\(x_1\)</span></th>
+<th align="left"><span class="math inline">\(y\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><span class="math inline">\(1\)</span></td>
+<td align="left"><span class="math inline">\(-0.32\)</span></td>
+<td align="left"><span class="math inline">\(0.66\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(2\)</span></td>
+<td align="left"><span class="math inline">\(-0.1\)</span></td>
+<td align="left"><span class="math inline">\(0.82\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(3\)</span></td>
+<td align="left"><span class="math inline">\(0.74\)</span></td>
+<td align="left"><span class="math inline">\(-0.37\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(4\)</span></td>
+<td align="left"><span class="math inline">\(1.21\)</span></td>
+<td align="left"><span class="math inline">\(-0.8\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(5\)</span></td>
+<td align="left"><span class="math inline">\(0.44\)</span></td>
+<td align="left"><span class="math inline">\(0.52\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(6\)</span></td>
+<td align="left"><span class="math inline">\(-0.68\)</span></td>
+<td align="left"><span class="math inline">\(0.97\)</span></td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<p><!-- begin{enumerate} --></p>
+<p>1. Manually build a kernel regression model with Gaussian kernel with bandwidth parameter <span class="math inline">\(\gamma=1\)</span> using the data shown in Table <a href="chapter-9.-pragmatism-experience-experimental.html#tab:t9-hw-kr">51</a>, and predict on the data points shown in Table <a href="chapter-9.-pragmatism-experience-experimental.html#tab:t9-hw-kr2">52</a>.</p>
+<p></p>
+<p><!--
+<caption>--><span class="marginnote shownote"><span id="tab:t9-hw-kr2">Table 52: </span>Testing dataset for the kernel regression model</span><!--</caption>--></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">ID</th>
+<th align="left"><span class="math inline">\(x_1\)</span></th>
+<th align="left"><span class="math inline">\(y\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><span class="math inline">\(1\)</span></td>
+<td align="left"><span class="math inline">\(-1\)</span></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(2\)</span></td>
+<td align="left"><span class="math inline">\(0\)</span></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(3\)</span></td>
+<td align="left"><span class="math inline">\(1\)</span></td>
+<td align="left"></td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<p>2. Follow up on the dataset in Q1. Manually build a KNN regression model with <span class="math inline">\(K = 2\)</span>. Predict on the testing data in Table <a href="chapter-9.-pragmatism-experience-experimental.html#tab:t9-hw-kr2">52</a>.</p>
+<p></p>
+<p>
+<span class="marginnote shownote">
+<!--
+<div class="figure">--><span style="display:block;" id="fig:f9-sampledcurve"></span>
+<img src="graphics/9_sampledcurve.png" alt="The true model and its sampled data points" width="100%"  />
+<!--
+<p class="caption marginnote">-->Figure 176: The true model and its sampled data points<!--</p>-->
+<!--</div>--></span>
+</p>
+<p>
+3. Follow up on the dataset in Q1. Use the R pipeline for KNN regression on this data. Compare the result from R and the result by your manual calculation.</p>
+<p>4. Follow up on the dataset in Q1. Use the <code>gausskernel()</code> function from the R package <code>KRLS</code> to calculate the similarity between the data points (including the <span class="math inline">\(6\)</span> training data points and the <span class="math inline">\(3\)</span> testing data points in Tables <a href="chapter-9.-pragmatism-experience-experimental.html#tab:t9-hw-kr">51</a> and <a href="chapter-9.-pragmatism-experience-experimental.html#tab:t9-hw-kr2">52</a>).</p>
+<p></p>
+<p>
+<span class="marginnote shownote">
+<!--
+<div class="figure">--><span style="display:block;" id="fig:f9-linetobesampled"></span>
+<img src="graphics/9_linetobesampled.png" alt="The true model and its sampled data points" width="100%"  />
+<!--
+<p class="caption marginnote">-->Figure 177: The true model and its sampled data points<!--</p>-->
+<!--</div>--></span>
+</p>
+<p></p>
+<p>5. Use the <code>BostonHousing</code> dataset from the R package <code>mlbench</code>, select the variable <code>medv</code> as the outcome, and use other numeric variables as the predictors. Run the R pipeline for KNN regression on it. Use cross-validation to select the best number of nearest neighbor, and summarize your findings.</p>
+<p>6. Use the <code>BostonHousing</code> dataset from the R package <code>mlbench</code> and select the variable <code>lstat</code> as the predictor and <code>medv</code> as the outcome, and run the R pipeline for kernel regression on it. Try the Gaussian kernel function with its bandwidth parameter taking values as <span class="math inline">\(5, 10, 30, 100\)</span>.</p>
+<p>7. Figure <a href="chapter-9.-pragmatism-experience-experimental.html#fig:f9-sampledcurve">176</a> shows a nonlinear model (i.e., the curve) and its sampled points. Suppose that the curve is unknown to us, and our task is to build a KNN regression model with <span class="math inline">\(K=2\)</span> based on the samples. Draw the fitted curve of this KNN regression model.</p>
+<p>8. Suppose that the underlying model is a linear model, as shown in Figure <a href="chapter-9.-pragmatism-experience-experimental.html#fig:f9-linetobesampled">177</a>. To use KNN model to approximate the underlying model, we need samples. Suppose that we could afford sampling <span class="math inline">\(8\)</span> data points. Which locations would you like to acquire samples in order to achieve best approximation of the underlying model using your later fitted KNN model?</p>
+<p><!-- end{enumerate} --></p>
+<!-- \begin{figure*} -->
+<!--    \centering -->
+<!--    \checkoddpage \ifoddpage \forcerectofloat \else \forceversofloat \fi -->
+<!--    \includegraphics[width = 0.05\textwidth]{graphics/9points_4lines2.png} -->
+<!-- \end{figure*} -->
+
+</div>
+</div>
+<p style="text-align: center;">
+<a href="chapter-8.-scalability-lasso-pca.html"><button class="btn btn-default">Previous</button></a>
+<a href="chapter-10.-synthesis-architecture-pipeline.html"><button class="btn btn-default">Next</button></a>
+</p>
+</div>
+</div>
+
+<script src="js/jquery.js"></script>
+<script src="js/tablesaw-stackonly.js"></script>
+<script src="js/nudge.min.js"></script>
+
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+</body>
+</html>

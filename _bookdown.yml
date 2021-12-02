@@ -1,0 +1,23 @@
+book_filename: "DataAnalytics"
+rmd_files: ["index.Rmd"
+ ##########,"foreward_python.Rmd"
+ #########,"Acknowledgement_python.Rmd"
+,"01-intro_python.Rmd"
+,"02-abstraction_python.Rmd"
+,"03-recognition_python.Rmd"
+,"04-resonance_python.Rmd"
+, "05-learning_python.Rmd"
+, "06-diagnosis_python.Rmd"
+, "07-svm_ensemble_python.Rmd"
+, "08-scalability_python.Rmd"
+,"09-pragmatism_python.Rmd"
+,"10-synthesis_python.Rmd"
+, "conclusion_python.Rmd"
+, "Appendix_background_python.Rmd"
+]
+ui:
+    edit: Edit
+    chapter_name: 'xx'
+    appendix_name: 'tt'
+delete_merged_file: true
+

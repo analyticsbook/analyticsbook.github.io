@@ -1,0 +1,24 @@
+
+# Conclusion {-}
+
+In his book^[Shewhart, W.A., *Statistical Method from the Viewpoint of Quality Control*, The Department of Agriculture, 1939.] published in 1939---the era when statistics and mass production found each other---Walter A. Shewhart wrote, "*In any case ... an observed sequence is or is not random can be verified only in the future*". The sequence of observations shown in Figure \@ref(fig:f3-spcintro) in **Chapter 3** must have puzzled many in his time, and we know it was a time of chaos. The *data* without being looked at by a model is like a mountain in the Cascade Range that has not been named. Why, according to Ayn Rand, do the machines have their moral code\space "*Every part of the motors was an embodied answer to 'Why?' and 'What for?'*"^[Rand, A., *Atlas Shrugged*, Random House, 1957.]. Not surprisingly, but still conceptually challenging even nowadays for newcomers to accept his idea, Walter A. Shewhart created the concept of a control chart to frame the sequence of observations in Figure \@ref(fig:f3-spcintro). His brilliant and bold idea is shown in Figure \@ref(fig:f3-spcintro2). 
+
+We are still doing the same thing Shewhart had done to create a *frame* and look at the data *within* the frame, as Figure \@ref(fig:f9points) shows. 
+
+Sometimes, we even love the frame more than the picture. But any valuable effort in practice must meet a specific goal, and how the frame can help us reach the goal is the first step to exercise our knowledge, willpower, and judgment. So, without further rambling, we invite you to answer this question: how do you connect the $9$ points in Figure \@ref(fig:f9points) with $4$ lines?
+
+  
+
+```{r f9points, echo=FALSE,out.width="80%", fig.align='center', fig.margin=FALSE, fig.cap="(Left) the *data*; (right) the *data* being looked at *within* a frame" } 
+ knitr::include_graphics('graphics/9points.png',dpi = 300)   
+``` 
+
+Readers, congratulations. The answer is illustrated in Figure \@ref(fig:f9points-4lines).
+
+\newpage
+
+  
+
+```{r f9points-4lines, echo=FALSE,out.width="40%", fig.align='center', fig.margin=FALSE, fig.cap="The answer to connecting $9$ points with $4$ lines" } 
+ knitr::include_graphics('graphics/9points_4lines.png',dpi = 300)   
+```  

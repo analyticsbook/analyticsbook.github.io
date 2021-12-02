@@ -1,0 +1,18 @@
+book_filename: "bookdownv1"
+rmd_files: ["index.Rmd",
+"foreward.Rmd",
+"01-intro.Rmd",
+"02-abstraction.Rmd",
+"03-recognition.Rmd",
+"04-resonance.Rmd",
+"05-learning.Rmd",
+"06-diagnosis.Rmd",
+"07-svm_ensemble.Rmd",
+"08-scalability.Rmd",
+"09-pragmatism.Rmd",
+"10-synthesis.Rmd",
+"conclusion.Rmd",
+"Appendix_background.Rmd",
+"Acknowledgement.Rmd"]
+delete_merged_file: true
+

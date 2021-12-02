@@ -1,0 +1,100 @@
+\usepackage{listings}
+\usepackage{multirow}
+\usepackage{multicol}
+\usepackage[caption=false]{subfig}
+\usepackage{makecell}
+\usepackage[10pt]{moresize} % otherwise code size is too large and change lines
+% change listing color and layout
+
+% added for resumed items
+\usepackage{enumitem}
+
+\usepackage{afterpage}
+\newcommand\blankpage{%
+    \null
+    \thispagestyle{empty}%
+    \newpage}
+
+%     \addtocounter{page}{-1}%
+\lstset{
+  frame=shadowbox,
+  basicstyle=\small,
+  upquote=true,
+  numbers=left,
+  numberstyle=\small,
+  numbersep=5pt,
+  backgroundcolor=\color[rgb]{0.9, 0.9, 0.9},
+  columns=fixed,
+  extendedchars=true,
+  identifierstyle=\ttfamily,
+  captionpos=b,
+  keywordstyle=\color[rgb]{0, 0, 1},
+  commentstyle=\color[rgb]{0.133, 0.545, 0.133},
+  stringstyle=\color[rgb]{0.627, 0.126, 0.941},
+  frame=single,
+  breaklines=true,
+  escapeinside=``,
+  xleftmargin=2em, 
+  xrightmargin=2em, 
+  aboveskip=1em,
+  tabsize=4,
+  showspaces=false
+}
+
+%\definecolor{bgcolor}{HTML}{E0E0E0}
+\definecolor{bgcolor}{RGB}{240,240,240}
+\let\oldtexttt\texttt
+
+\renewcommand{\texttt}[1]{
+	\colorbox{bgcolor}{\oldtexttt{#1}} 
+}
+
+
+\usepackage{marginfix} %fix issues where margin figure and/or its caption out of page
+
+%%%% Kevin Godny's code for title page and contents from https://groups.google.com/forum/#!topic/tufte-latex/ujdzrktC1BQ
+\makeatletter
+\renewcommand{\maketitlepage}{%
+\begingroup%
+\setlength{\parindent}{0pt}
+\doublespacing
+
+%HS change the font size of title
+{\fontsize{22}{22}\selectfont\textit{\@author}\par}
+
+\vspace{1.75in}{\fontsize{36}{36}\selectfont\mbox{\textbf{\@title}}\par}
+
+\vspace{0.5in}{\fontsize{24}{24}\selectfont\textsf{\sc{\@date}}\par}
+
+\vfill{\fontsize{24}{24}\selectfont\textit{\@publisher}\par}
+
+\thispagestyle{empty}
+\endgroup
+}
+\makeatother
+
+
+\usepackage{imakeidx}
+\makeindex[intoc]
+
+% HS: set font size of chapter title
+\titleformat{\chapter}{\huge\bfseries}{\thechapter}{0pt}{\huge\bfseries\raggedright}
+\usepackage[normalem]{ulem}
+
+% added font for tufte
+% Palatino for main text and math
+\usepackage[osf,sc]{mathpazo}
+% Helvetica for sans serif
+% (scaled to match size of Palatino)
+\usepackage[scaled=0.90]{helvet}
+% Bera Mono for monospaced
+% (scaled to match size of Palatino)
+\usepackage[scaled=0.85]{beramono}
+
+% avoid single line overflow
+% \clubpenalty = 10000
+% \widowpenalty = 10000
+% \displaywidowpenalty = 10000
+
+\cleardoublepage
+\pagenumbering{roman}
