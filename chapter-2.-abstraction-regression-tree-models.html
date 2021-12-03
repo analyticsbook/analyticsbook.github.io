@@ -17,7 +17,7 @@
 
 <meta name="author" content="Shuai Huang &amp; Houtao Deng" />
 
-<meta name="date" content="2021-12-02" />
+<meta name="date" content="2021-12-03" />
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -1529,7 +1529,7 @@ and calculate the regression parameters <span class="math inline">\(\beta_{0},\b
 </tbody>
 </table>
 <p></p>
-<p>5. Follow up on the dataset in Q5. Use the R pipeline for building a decision tree model. Compare the result from R and the result by your manual calculation.</p>
+<p>5. Follow up on the dataset in Q4. Use the R pipeline for building a decision tree model. Compare the result from R and the result by your manual calculation.</p>
 <p>6. Use the <code>mtcars</code> dataset in R, select the variable <code>mpg</code> as the outcome variable and other variables as predictors, run the R pipeline for linear regression, and summarize your findings.</p>
 <p>7. Use the <code>mtcars</code> dataset in R, select the variable <code>mpg</code> as the outcome variable and other variables as predictors, run the R pipeline for decision tree, and summarize your findings. Another dataset is to use the <code>iris</code> dataset, select the variable <code>Species</code> as the outcome variable (i.e., to build a classification tree).</p>
 <p>8. Design a simulated experiment to evaluate the effectiveness of the <code>lm()</code> in R. For instance, you can simulate <span class="math inline">\(100\)</span> samples from a linear regression model with <span class="math inline">\(2\)</span> variables,
@@ -1547,7 +1547,7 @@ where <span class="math inline">\(\beta_{1} = 1\)</span>, <span class="math inli
      
 \end{equation*}\]</span>
 You can simulate <span class="math inline">\(x_1\)</span> and <span class="math inline">\(x_2\)</span> using the standard normal distribution <span class="math inline">\(N\left(0, 1\right)\)</span>. Run <code>lm()</code> on the simulated data, and see how close the fitted model is with the true model.</p>
-<p>9. Follow up on the experiment in Q9. Let’s add two more variables <span class="math inline">\(x_3\)</span> and <span class="math inline">\(x_4\)</span> into the dataset but still generate <span class="math inline">\(100\)</span> samples from a linear regression model from the same underlying model
+<p>9. Follow up on the experiment in Q8. Let’s add two more variables <span class="math inline">\(x_3\)</span> and <span class="math inline">\(x_4\)</span> into the dataset but still generate <span class="math inline">\(100\)</span> samples from a linear regression model from the same underlying model
 <span class="math display">\[\begin{equation*}
 \small
   
@@ -1560,8 +1560,7 @@ where <span class="math inline">\(\beta_{1} = 1\)</span>, <span class="math inli
   
     \epsilon \sim N\left(0, 1\right).
      
-\end{equation*}\]</span>
-In other words, <span class="math inline">\(x_3\)</span> and <span class="math inline">\(x_4\)</span> are insignificant variables. You can simulate <span class="math inline">\(x_1\)</span> to <span class="math inline">\(x_4\)</span> using the standard normal distribution <span class="math inline">\(N\left(0, 1\right)\)</span>. Run <code>lm()</code> on the simulated data, and see how close the fitted model is with the true model.</p>
+\end{equation*}\]</span></p>
 <p><!-- end{enumerate} --></p>
 <p></p>
 <p>
@@ -1575,7 +1574,8 @@ In other words, <span class="math inline">\(x_3\)</span> and <span class="math i
 </p>
 <p></p>
 <p><!-- begin{enumerate}[resume] --></p>
-<p>10. Follow up on the experiment in Q10. Run <code>rpart()</code> on the simulated data, and see how close the fitted model is with the true model.</p>
+<p>In other words, <span class="math inline">\(x_3\)</span> and <span class="math inline">\(x_4\)</span> are insignificant variables. You can simulate <span class="math inline">\(x_1\)</span> to <span class="math inline">\(x_4\)</span> using the standard normal distribution <span class="math inline">\(N\left(0, 1\right)\)</span>. Run <code>lm()</code> on the simulated data, and see how close the fitted model is with the true model.</p>
+<p>10. Follow up on the experiment in Q9. Run <code>rpart()</code> on the simulated data, and see how close the fitted model is with the true model.</p>
 <p>11. Design a simulated experiment to evaluate the effectiveness of the <code>rpart()</code> in R package <code>rpart</code>. For instance, you can simulate <span class="math inline">\(100\)</span> samples from a tree model as shown in Figure <a href="chapter-2.-abstraction-regression-tree-models.html#fig:f2-hw-dt">26</a>, run <code>rpart()</code> on the simulated data, and see how close the fitted model is with the true model.</p>
 <p><!-- end{enumerate} --></p>
 <!-- \begin{figure*} -->
