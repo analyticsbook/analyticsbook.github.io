@@ -1553,13 +1553,6 @@ You can simulate <span class="math inline">\(x_1\)</span> and <span class="math 
   
     y = \beta_{1}x_1 +\beta_{2}x_2 + \epsilon,
      
-\end{equation*}\]</span>
-where <span class="math inline">\(\beta_{1} = 1\)</span>, <span class="math inline">\(\beta_{2} = 1\)</span>, and
-<span class="math display">\[\begin{equation*}
-\small
-  
-    \epsilon \sim N\left(0, 1\right).
-     
 \end{equation*}\]</span></p>
 <p><!-- end{enumerate} --></p>
 <p></p>
@@ -1574,6 +1567,13 @@ where <span class="math inline">\(\beta_{1} = 1\)</span>, <span class="math inli
 </p>
 <p></p>
 <p><!-- begin{enumerate}[resume] --></p>
+<p>where <span class="math inline">\(\beta_{1} = 1\)</span>, <span class="math inline">\(\beta_{2} = 1\)</span>, and
+<span class="math display">\[\begin{equation*}
+\small
+  
+    \epsilon \sim N\left(0, 1\right).
+     
+\end{equation*}\]</span></p>
 <p>In other words, <span class="math inline">\(x_3\)</span> and <span class="math inline">\(x_4\)</span> are insignificant variables. You can simulate <span class="math inline">\(x_1\)</span> to <span class="math inline">\(x_4\)</span> using the standard normal distribution <span class="math inline">\(N\left(0, 1\right)\)</span>. Run <code>lm()</code> on the simulated data, and see how close the fitted model is with the true model.</p>
 <p>10. Follow up on the experiment in Q9. Run <code>rpart()</code> on the simulated data, and see how close the fitted model is with the true model.</p>
 <p>11. Design a simulated experiment to evaluate the effectiveness of the <code>rpart()</code> in R package <code>rpart</code>. For instance, you can simulate <span class="math inline">\(100\)</span> samples from a tree model as shown in Figure <a href="chapter-2.-abstraction-regression-tree-models.html#fig:f2-hw-dt">26</a>, run <code>rpart()</code> on the simulated data, and see how close the fitted model is with the true model.</p>
