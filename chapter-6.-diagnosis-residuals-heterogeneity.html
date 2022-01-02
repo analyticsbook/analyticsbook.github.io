@@ -17,7 +17,7 @@
 
 <meta name="author" content="Shuai Huang &amp; Houtao Deng" />
 
-<meta name="date" content="2021-12-03" />
+<meta name="date" content="2022-01-02" />
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -775,9 +775,9 @@ p\left(z_{71}=1 | x_7 = 0.98 \right)=\frac{0.21 \times 0.714}{0.21 \times 0.714+
 <h3>Formal definition of the GMM</h3>
 <p>As a <em>data modeling</em> approach, the GMM implies a <em>data-generating mechanism</em>, that is summarized in below.</p>
 <p><!-- begin{enumerate} --></p>
-<p>1. [1.] Suppose that there are <span class="math inline">\(M\)</span> distributions mixed together.</p>
-<p>2. [2.] In GMM, we assume that all the distributions are Gaussian distributions, i.e., the parameters of the <span class="math inline">\(m^{\text{th}}\)</span> distribution are <span class="math inline">\(\left\{\boldsymbol{\mu}_{m},\boldsymbol{\Sigma}_{m}\right\}\)</span>, and <span class="math inline">\(m=1,2, \ldots, M\)</span>.<label for="tufte-sn-152" class="margin-toggle sidenote-number">152</label><input type="checkbox" id="tufte-sn-152" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">152</span> <span class="math inline">\(\boldsymbol{\mu}_{m}\)</span> is the mean vector; <span class="math inline">\(\boldsymbol{\Sigma}_{m}\)</span> is the covariance matrix.</span></p>
-<p>3. [3.] For any data point <span class="math inline">\(\boldsymbol{x}\)</span>, without knowing its specific value, the prior probability that it comes from the <span class="math inline">\(m^{\text{th}}\)</span> distribution is denoted as <span class="math inline">\(\pi_m\)</span>.<label for="tufte-sn-153" class="margin-toggle sidenote-number">153</label><input type="checkbox" id="tufte-sn-153" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">153</span> In other words, this is the percentage of the data points in the whole mix that come from the <span class="math inline">\(m^{th}\)</span> distribution.</span> Note that <span class="math inline">\(\sum_{m=1}^{M} \pi_m=1\)</span>.</p>
+<p>1. Suppose that there are <span class="math inline">\(M\)</span> distributions mixed together.</p>
+<p>2. In GMM, we assume that all the distributions are Gaussian distributions, i.e., the parameters of the <span class="math inline">\(m^{\text{th}}\)</span> distribution are <span class="math inline">\(\left\{\boldsymbol{\mu}_{m},\boldsymbol{\Sigma}_{m}\right\}\)</span>, and <span class="math inline">\(m=1,2, \ldots, M\)</span>.<label for="tufte-sn-152" class="margin-toggle sidenote-number">152</label><input type="checkbox" id="tufte-sn-152" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">152</span> <span class="math inline">\(\boldsymbol{\mu}_{m}\)</span> is the mean vector; <span class="math inline">\(\boldsymbol{\Sigma}_{m}\)</span> is the covariance matrix.</span></p>
+<p>3. For any data point <span class="math inline">\(\boldsymbol{x}\)</span>, without knowing its specific value, the prior probability that it comes from the <span class="math inline">\(m^{\text{th}}\)</span> distribution is denoted as <span class="math inline">\(\pi_m\)</span>.<label for="tufte-sn-153" class="margin-toggle sidenote-number">153</label><input type="checkbox" id="tufte-sn-153" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">153</span> In other words, this is the percentage of the data points in the whole mix that come from the <span class="math inline">\(m^{th}\)</span> distribution.</span> Note that <span class="math inline">\(\sum_{m=1}^{M} \pi_m=1\)</span>.</p>
 <p><!-- end{enumerate} --></p>
 <p>The final distribution form of <span class="math inline">\(\boldsymbol{x}\)</span> is a mixed distribution with <span class="math inline">\(m\)</span> components</p>
 <p><span class="math display">\[\begin{equation*}
@@ -897,8 +897,8 @@ Figure 114: Clustering results of the AD dataset
 <!-- % \end{marginfigure} -->
 <p>The task of the EM algorithm is to learn the unknown parameters <span class="math inline">\(\boldsymbol{\Theta}\)</span> from a given dataset. The <span class="math inline">\(\boldsymbol{\Theta}\)</span> includes</p>
 <p><!-- begin{enumerate} --></p>
-<p>1. [1.] The parameters of the <span class="math inline">\(M\)</span> Gaussian distributions: <span class="math inline">\(\left\{\boldsymbol{\mu}_{m}, \boldsymbol{\Sigma}_{m}, m=1,2, \ldots, M\right\}\)</span>.</p>
-<p>2. [2.] The probability vector <span class="math inline">\(\boldsymbol{\pi}\)</span> that includes the elements <span class="math inline">\(\left\{\pi_{m}, m=1,2, \ldots, M\right\}\)</span>.</p>
+<p>1. The parameters of the <span class="math inline">\(M\)</span> Gaussian distributions: <span class="math inline">\(\left\{\boldsymbol{\mu}_{m}, \boldsymbol{\Sigma}_{m}, m=1,2, \ldots, M\right\}\)</span>.</p>
+<p>2. The probability vector <span class="math inline">\(\boldsymbol{\pi}\)</span> that includes the elements <span class="math inline">\(\left\{\pi_{m}, m=1,2, \ldots, M\right\}\)</span>.</p>
 <p><!-- end{enumerate} --></p>
 <p>Don’t forget the binary indicator variable for each data point, denoted as <span class="math inline">\(z_{n m}\)</span>: <span class="math inline">\(z_{n m}=1\)</span> indicates that the data point <span class="math inline">\(x_{n}\)</span> was sampled from the <span class="math inline">\(m^{th}\)</span> cluster<label for="tufte-sn-155" class="margin-toggle sidenote-number">155</label><input type="checkbox" id="tufte-sn-155" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">155</span> The reason that <span class="math inline">\(z_{n m}\)</span> is not included in <span class="math inline">\(\boldsymbol{\Theta}\)</span>, as it could be seen later, after the presentation of the EM algorithm, is that <span class="math inline">\(z_{n m}\)</span> provides a bridge to facilitate the learning of <span class="math inline">\(\boldsymbol{\Theta}\)</span>. They are not essential parameters of the model, although they are useful to facilitate the estimation of the parameters of the model. Entities like <span class="math inline">\(z_{n m}\)</span> are often called <strong>latent variables</strong> instead of <em>parameters</em>.</span>.</p>
 <p><em>The Likelihood Function.</em> To learn these parameters from data, like in the logistic regression model, we derive a likelihood function to connect the data and parameters. For GMM, we cannot write <span class="math inline">\(p\left(\boldsymbol{x}_{n} | \boldsymbol{\Theta}\right)\)</span> directly. But it is possible to write <span class="math inline">\(p\left(\boldsymbol{x}_{n}, z_{n m} | \boldsymbol{\Theta}\right)\)</span> directly<label for="tufte-sn-156" class="margin-toggle sidenote-number">156</label><input type="checkbox" id="tufte-sn-156" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">156</span> That is what <span class="math inline">\(z_{n m}\)</span> is needed for.</span></p>
@@ -973,7 +973,8 @@ Figure 114: Clustering results of the AD dataset
 <p><span class="math display" id="eq:6-likehihood-eznm">\[\begin{equation}
 \small
 \begin{gathered}
-    \langle l(\boldsymbol{\Theta})\rangle_{p(\boldsymbol{Z} | \boldsymbol{X}, \boldsymbol{\Theta})}=\sum_{n=1}^{N} \sum_{m=1}^{M}\left[\left\langle z_{n m}\right\rangle_{p\left(z_{n m}  =1 | \boldsymbol{x}_{n}, \boldsymbol{\Theta}\right)} \log p\left(\boldsymbol{x}_{n} | z_{n m}=1, \boldsymbol{\Theta}\right)+\right. \\      \left\langle z_{n m}\right\rangle_{p\left(z_{n m}  =1 | \boldsymbol{x}_{n}, \boldsymbol{\Theta}\right)} \log \pi_{m} ].
+    \langle l(\boldsymbol{\Theta})\rangle_{p(\boldsymbol{Z} | \boldsymbol{X}, \boldsymbol{\Theta})}=\sum_{n=1}^{N} \sum_{m=1}^{M}\left[\left\langle z_{n m}\right\rangle_{p\left(z_{n m}  =1 | \boldsymbol{x}_{n}, \boldsymbol{\Theta}\right)} \log p\left(\boldsymbol{x}_{n} | z_{n m}=1, \boldsymbol{\Theta}\right)+\right. \\
+    \left\langle z_{n m}\right\rangle_{p\left(z_{n m}  =1 | \boldsymbol{x}_{n}, \boldsymbol{\Theta}\right)} \log \pi_{m} ].
 \end{gathered}   
 \tag{44}
 \end{equation}\]</span></p>

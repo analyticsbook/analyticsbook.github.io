@@ -17,7 +17,7 @@
 
 <meta name="author" content="Shuai Huang &amp; Houtao Deng" />
 
-<meta name="date" content="2021-12-03" />
+<meta name="date" content="2022-01-02" />
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -400,23 +400,27 @@ Figure 60:  The (parametric) Bootstrap scheme to computationally evaluate the sa
 <span id="cb76-5"><a href="chapter-4.-resonance-bootstrap-random-forests.html#cb76-5" aria-hidden="true" tabindex="-1"></a>bs1_mean <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA</span>, R)</span>
 <span id="cb76-6"><a href="chapter-4.-resonance-bootstrap-random-forests.html#cb76-6" aria-hidden="true" tabindex="-1"></a><span class="co"># draw R bootstrap resamples and obtain the estimates</span></span>
 <span id="cb76-7"><a href="chapter-4.-resonance-bootstrap-random-forests.html#cb76-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>R) {</span>
-<span id="cb76-8"><a href="chapter-4.-resonance-bootstrap-random-forests.html#cb76-8" aria-hidden="true" tabindex="-1"></a>resam0 <span class="ot">&lt;-</span> <span class="fu">sample</span>(tempData<span class="sc">$</span>HippoNV[<span class="fu">which</span>(tempData<span class="sc">$</span>DX_bl<span class="sc">==</span>    <span class="st">&quot;Normal&quot;</span>)],<span class="fu">length</span>(tempData<span class="sc">$</span>HippoNV[<span class="fu">which</span>(tempData<span class="sc">$</span>DX_bl<span class="sc">==</span>                               <span class="st">&quot;Normal&quot;</span>)]),<span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb76-9"><a href="chapter-4.-resonance-bootstrap-random-forests.html#cb76-9" aria-hidden="true" tabindex="-1"></a>fit0 <span class="ot">&lt;-</span> <span class="fu">fitdistr</span>(resam0 , <span class="at">densfun=</span><span class="st">&quot;normal&quot;</span>)  </span>
-<span id="cb76-10"><a href="chapter-4.-resonance-bootstrap-random-forests.html#cb76-10" aria-hidden="true" tabindex="-1"></a>bs0_mean[i] <span class="ot">&lt;-</span> fit0<span class="sc">$</span>estimate[<span class="dv">1</span>]</span>
-<span id="cb76-11"><a href="chapter-4.-resonance-bootstrap-random-forests.html#cb76-11" aria-hidden="true" tabindex="-1"></a>resam1 <span class="ot">&lt;-</span> <span class="fu">sample</span>(tempData<span class="sc">$</span>HippoNV[<span class="fu">which</span>(tempData<span class="sc">$</span>DX_bl<span class="sc">==</span>               <span class="st">&quot;Diseased&quot;</span>)],</span>
-<span id="cb76-12"><a href="chapter-4.-resonance-bootstrap-random-forests.html#cb76-12" aria-hidden="true" tabindex="-1"></a>         <span class="fu">length</span>(tempData<span class="sc">$</span>HippoNV[<span class="fu">which</span>(tempData<span class="sc">$</span>DX_bl<span class="sc">==</span>               <span class="st">&quot;Diseased&quot;</span>)]),<span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb76-13"><a href="chapter-4.-resonance-bootstrap-random-forests.html#cb76-13" aria-hidden="true" tabindex="-1"></a>fit1 <span class="ot">&lt;-</span> <span class="fu">fitdistr</span>(resam1 , <span class="at">densfun=</span><span class="st">&quot;normal&quot;</span>) </span>
-<span id="cb76-14"><a href="chapter-4.-resonance-bootstrap-random-forests.html#cb76-14" aria-hidden="true" tabindex="-1"></a>bs1_mean[i] <span class="ot">&lt;-</span> fit1<span class="sc">$</span>estimate[<span class="dv">1</span>]</span>
-<span id="cb76-15"><a href="chapter-4.-resonance-bootstrap-random-forests.html#cb76-15" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb76-16"><a href="chapter-4.-resonance-bootstrap-random-forests.html#cb76-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb76-17"><a href="chapter-4.-resonance-bootstrap-random-forests.html#cb76-17" aria-hidden="true" tabindex="-1"></a>bs_meanDiff <span class="ot">&lt;-</span> bs0_mean <span class="sc">-</span> bs1_mean</span>
-<span id="cb76-18"><a href="chapter-4.-resonance-bootstrap-random-forests.html#cb76-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb76-19"><a href="chapter-4.-resonance-bootstrap-random-forests.html#cb76-19" aria-hidden="true" tabindex="-1"></a><span class="co"># sort the mean estimates to obtain bootstrap CI</span></span>
-<span id="cb76-20"><a href="chapter-4.-resonance-bootstrap-random-forests.html#cb76-20" aria-hidden="true" tabindex="-1"></a>bs_meanDiff.sorted <span class="ot">&lt;-</span> <span class="fu">sort</span>(bs_meanDiff)</span>
-<span id="cb76-21"><a href="chapter-4.-resonance-bootstrap-random-forests.html#cb76-21" aria-hidden="true" tabindex="-1"></a><span class="co"># 0.025th and 0.975th quantile gives equal-tail bootstrap CI</span></span>
-<span id="cb76-22"><a href="chapter-4.-resonance-bootstrap-random-forests.html#cb76-22" aria-hidden="true" tabindex="-1"></a>CI.bs <span class="ot">&lt;-</span> <span class="fu">c</span>(bs_meanDiff.sorted[<span class="fu">round</span>(<span class="fl">0.025</span><span class="sc">*</span>R)],</span>
-<span id="cb76-23"><a href="chapter-4.-resonance-bootstrap-random-forests.html#cb76-23" aria-hidden="true" tabindex="-1"></a>           bs_meanDiff.sorted[<span class="fu">round</span>(<span class="fl">0.975</span><span class="sc">*</span>R<span class="sc">+</span><span class="dv">1</span>)])</span>
-<span id="cb76-24"><a href="chapter-4.-resonance-bootstrap-random-forests.html#cb76-24" aria-hidden="true" tabindex="-1"></a>CI.bs</span></code></pre></div>
+<span id="cb76-8"><a href="chapter-4.-resonance-bootstrap-random-forests.html#cb76-8" aria-hidden="true" tabindex="-1"></a>resam0 <span class="ot">&lt;-</span> <span class="fu">sample</span>(tempData<span class="sc">$</span>HippoNV[<span class="fu">which</span>(tempData<span class="sc">$</span>DX_bl<span class="sc">==</span></span>
+<span id="cb76-9"><a href="chapter-4.-resonance-bootstrap-random-forests.html#cb76-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;Normal&quot;</span>)],<span class="fu">length</span>(tempData<span class="sc">$</span>HippoNV[<span class="fu">which</span>(tempData<span class="sc">$</span>DX_bl<span class="sc">==</span></span>
+<span id="cb76-10"><a href="chapter-4.-resonance-bootstrap-random-forests.html#cb76-10" aria-hidden="true" tabindex="-1"></a>                             <span class="st">&quot;Normal&quot;</span>)]),<span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb76-11"><a href="chapter-4.-resonance-bootstrap-random-forests.html#cb76-11" aria-hidden="true" tabindex="-1"></a>fit0 <span class="ot">&lt;-</span> <span class="fu">fitdistr</span>(resam0 , <span class="at">densfun=</span><span class="st">&quot;normal&quot;</span>)  </span>
+<span id="cb76-12"><a href="chapter-4.-resonance-bootstrap-random-forests.html#cb76-12" aria-hidden="true" tabindex="-1"></a>bs0_mean[i] <span class="ot">&lt;-</span> fit0<span class="sc">$</span>estimate[<span class="dv">1</span>]</span>
+<span id="cb76-13"><a href="chapter-4.-resonance-bootstrap-random-forests.html#cb76-13" aria-hidden="true" tabindex="-1"></a>resam1 <span class="ot">&lt;-</span> <span class="fu">sample</span>(tempData<span class="sc">$</span>HippoNV[<span class="fu">which</span>(tempData<span class="sc">$</span>DX_bl<span class="sc">==</span></span>
+<span id="cb76-14"><a href="chapter-4.-resonance-bootstrap-random-forests.html#cb76-14" aria-hidden="true" tabindex="-1"></a>             <span class="st">&quot;Diseased&quot;</span>)],</span>
+<span id="cb76-15"><a href="chapter-4.-resonance-bootstrap-random-forests.html#cb76-15" aria-hidden="true" tabindex="-1"></a>         <span class="fu">length</span>(tempData<span class="sc">$</span>HippoNV[<span class="fu">which</span>(tempData<span class="sc">$</span>DX_bl<span class="sc">==</span></span>
+<span id="cb76-16"><a href="chapter-4.-resonance-bootstrap-random-forests.html#cb76-16" aria-hidden="true" tabindex="-1"></a>             <span class="st">&quot;Diseased&quot;</span>)]),<span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb76-17"><a href="chapter-4.-resonance-bootstrap-random-forests.html#cb76-17" aria-hidden="true" tabindex="-1"></a>fit1 <span class="ot">&lt;-</span> <span class="fu">fitdistr</span>(resam1 , <span class="at">densfun=</span><span class="st">&quot;normal&quot;</span>) </span>
+<span id="cb76-18"><a href="chapter-4.-resonance-bootstrap-random-forests.html#cb76-18" aria-hidden="true" tabindex="-1"></a>bs1_mean[i] <span class="ot">&lt;-</span> fit1<span class="sc">$</span>estimate[<span class="dv">1</span>]</span>
+<span id="cb76-19"><a href="chapter-4.-resonance-bootstrap-random-forests.html#cb76-19" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb76-20"><a href="chapter-4.-resonance-bootstrap-random-forests.html#cb76-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb76-21"><a href="chapter-4.-resonance-bootstrap-random-forests.html#cb76-21" aria-hidden="true" tabindex="-1"></a>bs_meanDiff <span class="ot">&lt;-</span> bs0_mean <span class="sc">-</span> bs1_mean</span>
+<span id="cb76-22"><a href="chapter-4.-resonance-bootstrap-random-forests.html#cb76-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb76-23"><a href="chapter-4.-resonance-bootstrap-random-forests.html#cb76-23" aria-hidden="true" tabindex="-1"></a><span class="co"># sort the mean estimates to obtain bootstrap CI</span></span>
+<span id="cb76-24"><a href="chapter-4.-resonance-bootstrap-random-forests.html#cb76-24" aria-hidden="true" tabindex="-1"></a>bs_meanDiff.sorted <span class="ot">&lt;-</span> <span class="fu">sort</span>(bs_meanDiff)</span>
+<span id="cb76-25"><a href="chapter-4.-resonance-bootstrap-random-forests.html#cb76-25" aria-hidden="true" tabindex="-1"></a><span class="co"># 0.025th and 0.975th quantile gives equal-tail bootstrap CI</span></span>
+<span id="cb76-26"><a href="chapter-4.-resonance-bootstrap-random-forests.html#cb76-26" aria-hidden="true" tabindex="-1"></a>CI.bs <span class="ot">&lt;-</span> <span class="fu">c</span>(bs_meanDiff.sorted[<span class="fu">round</span>(<span class="fl">0.025</span><span class="sc">*</span>R)],</span>
+<span id="cb76-27"><a href="chapter-4.-resonance-bootstrap-random-forests.html#cb76-27" aria-hidden="true" tabindex="-1"></a>           bs_meanDiff.sorted[<span class="fu">round</span>(<span class="fl">0.975</span><span class="sc">*</span>R<span class="sc">+</span><span class="dv">1</span>)])</span>
+<span id="cb76-28"><a href="chapter-4.-resonance-bootstrap-random-forests.html#cb76-28" aria-hidden="true" tabindex="-1"></a>CI.bs</span></code></pre></div>
 <p></p>
 <p></p>
 <p>

@@ -17,7 +17,7 @@
 
 <meta name="author" content="Shuai Huang &amp; Houtao Deng" />
 
-<meta name="date" content="2021-12-03" />
+<meta name="date" content="2022-01-02" />
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -851,13 +851,14 @@ Figure 87: Prediction errors of the models (from (<code>df</code><span class="ma
 <span id="cb121-3"><a href="chapter-5.-learning-i-cross-validation-oob.html#cb121-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">50</span>) {</span>
 <span id="cb121-4"><a href="chapter-5.-learning-i-cross-validation-oob.html#cb121-4" aria-hidden="true" tabindex="-1"></a>train.ix <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">nrow</span>(data), <span class="fu">floor</span>(<span class="fu">nrow</span>(data)<span class="sc">/</span><span class="dv">2</span>))</span>
 <span id="cb121-5"><a href="chapter-5.-learning-i-cross-validation-oob.html#cb121-5" aria-hidden="true" tabindex="-1"></a>rf <span class="ot">&lt;-</span> <span class="fu">randomForest</span>(DX_bl <span class="sc">~</span> ., <span class="at">nodesize =</span> ipara, </span>
-<span id="cb121-6"><a href="chapter-5.-learning-i-cross-validation-oob.html#cb121-6" aria-hidden="true" tabindex="-1"></a>                   <span class="at">data =</span> data[train.ix,   ])</span>
-<span id="cb121-7"><a href="chapter-5.-learning-i-cross-validation-oob.html#cb121-7" aria-hidden="true" tabindex="-1"></a>pred.test <span class="ot">&lt;-</span> <span class="fu">predict</span>(rf, data[<span class="sc">-</span>train.ix, ], <span class="at">type =</span> <span class="st">&quot;class&quot;</span>)</span>
-<span id="cb121-8"><a href="chapter-5.-learning-i-cross-validation-oob.html#cb121-8" aria-hidden="true" tabindex="-1"></a>this.err <span class="ot">&lt;-</span> <span class="fu">length</span>(</span>
-<span id="cb121-9"><a href="chapter-5.-learning-i-cross-validation-oob.html#cb121-9" aria-hidden="true" tabindex="-1"></a>      <span class="fu">which</span>(pred.test <span class="sc">!=</span> data[<span class="sc">-</span>train.ix, ]<span class="sc">$</span>DX_bl))<span class="sc">/</span><span class="fu">length</span>(pred.test)</span>
-<span id="cb121-10"><a href="chapter-5.-learning-i-cross-validation-oob.html#cb121-10" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span> <span class="fu">rbind</span>(results, <span class="fu">c</span>(<span class="st">&quot;Validation_Error&quot;</span>, ipara, this.err))</span>
-<span id="cb121-11"><a href="chapter-5.-learning-i-cross-validation-oob.html#cb121-11" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb121-12"><a href="chapter-5.-learning-i-cross-validation-oob.html#cb121-12" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<span id="cb121-6"><a href="chapter-5.-learning-i-cross-validation-oob.html#cb121-6" aria-hidden="true" tabindex="-1"></a>                   <span class="at">data =</span> data[train.ix, </span>
+<span id="cb121-7"><a href="chapter-5.-learning-i-cross-validation-oob.html#cb121-7" aria-hidden="true" tabindex="-1"></a>])</span>
+<span id="cb121-8"><a href="chapter-5.-learning-i-cross-validation-oob.html#cb121-8" aria-hidden="true" tabindex="-1"></a>pred.test <span class="ot">&lt;-</span> <span class="fu">predict</span>(rf, data[<span class="sc">-</span>train.ix, ], <span class="at">type =</span> <span class="st">&quot;class&quot;</span>)</span>
+<span id="cb121-9"><a href="chapter-5.-learning-i-cross-validation-oob.html#cb121-9" aria-hidden="true" tabindex="-1"></a>this.err <span class="ot">&lt;-</span> <span class="fu">length</span>(</span>
+<span id="cb121-10"><a href="chapter-5.-learning-i-cross-validation-oob.html#cb121-10" aria-hidden="true" tabindex="-1"></a>      <span class="fu">which</span>(pred.test <span class="sc">!=</span> data[<span class="sc">-</span>train.ix, ]<span class="sc">$</span>DX_bl))<span class="sc">/</span><span class="fu">length</span>(pred.test)</span>
+<span id="cb121-11"><a href="chapter-5.-learning-i-cross-validation-oob.html#cb121-11" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span> <span class="fu">rbind</span>(results, <span class="fu">c</span>(<span class="st">&quot;Validation_Error&quot;</span>, ipara, this.err))</span>
+<span id="cb121-12"><a href="chapter-5.-learning-i-cross-validation-oob.html#cb121-12" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb121-13"><a href="chapter-5.-learning-i-cross-validation-oob.html#cb121-13" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 <p></p>
 <p>Then, we obtain the training errors of the models.</p>
 <p></p>
